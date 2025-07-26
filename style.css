@@ -1,0 +1,116 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+body {
+    font-family: "Lato", sans-serif;
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #FFF;
+}
+
+body {
+    margin: 20px;
+}
+.main {
+    padding: 20px;
+    border-radius: 2ch;
+    background-color: #999;
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 400px;
+}
+.characters-title {
+    margin-bottom: 10px;;
+}
+
+.character-container {
+    margin-bottom: 20px
+}
+.character-name {
+    margin-bottom: 5px;
+}
+.character-card {
+    background-color: white;
+    height: 75px;
+    max-height: 75px;
+    overflow: hidden;
+    border-radius: 5px 10px 10px 5px;
+    display: flex;
+    transition: all .2s;
+}
+.character-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+.character-card:active {
+    transform: translateY(-1px);
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    cursor: pointer;
+}
+.character-icon {
+    z-index: 5;
+    padding: 10px;
+    clip-path: polygon(0 0, 90px 0, 75px 100%, 0 100%);
+    width: 100px;
+    height: 80px;
+}
+.character-icon-blue {
+    background-color: rgb(107, 107, 212);
+}
+.character-icon-red {
+    background-color: rgb(218, 95, 87);
+}
+.character-icon-green {
+    background-color: rgb(87, 151, 62);
+}
+.character-icon > span {
+    line-height: 55px;
+}
+.character-stats {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    gap: 3px;
+    color: #777;
+}
+
+/* Main */
+.content {
+    background-color: #EEE;
+    flex-grow: 2;
+}
