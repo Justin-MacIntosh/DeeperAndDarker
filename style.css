@@ -17,11 +17,13 @@ body {
 body {
     margin: 25px;
 }
+.planet-description {
+    margin-bottom: 20px;
+}
 .main {
     padding: 20px;
     border-radius: 10px;
     background-color: #4A314d;
-    height: 200vh;
     display: flex;
     flex-direction: row;
     gap: 30px;
@@ -57,55 +59,70 @@ body {
     margin-bottom: 10px;;
 }
 
-.character-container {
+.card-container {
     margin-bottom: 20px
 }
-.character-name {
+.card-name {
     margin-bottom: 5px;
 }
-.character-card {
-    background-color: #eee;
+.card {
+    background-color: #6B6570;
     height: 75px;
     max-height: 75px;
     overflow: hidden;
     border-radius: 5px 10px 10px 5px;
     display: flex;
     transition: all .2s;
+    position: relative;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
 }
-.character-card:hover {
-    transform: translateY(-3px);
+.card:hover {
+    transform: translateY(-5px);
+    filter: brightness(90%);
     cursor: pointer;
 }
-.character-card:active {
-    transform: translateY(-1px);
+.card:active {
+    transform: translateY(-2px);
     cursor: pointer;
 }
-.character-icon {
-    z-index: 5;
+
+.card-icon {
     padding: 10px;
     clip-path: polygon(0 0, 90px 0, 75px 100%, 0 100%);
     width: 100px;
-    height: 80px;
+    height: 75px;
 }
-.character-icon-blue {
+.card-blue > .card-icon,
+.card-blue > .card-cost {
     background-color: rgb(107, 107, 212);
 }
-.character-icon-red {
+.card-red > .card-icon,
+.card-red > .card-cost {
     background-color: rgb(218, 95, 87);
 }
-.character-icon-green {
+.card-green > .card-icon,
+.card-green > .card-cost {
     background-color: rgb(87, 151, 62);
 }
-.character-icon > span {
+.card-icon > span {
     line-height: 55px;
 }
-.character-stats {
+.card-description {
     flex-grow: 1;
     display: flex;
     align-items: center;
     align-content: center;
     gap: 3px;
-    color: #4A314d;
+    color: #eee;
+}
+.card-cost {
+    width: 90px;
+    font-size: larger;
+    text-align: center;
+    align-content: center;
+    background-color: rgb(107, 107, 212);
+    clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%);
 }
 
 /* Main */
