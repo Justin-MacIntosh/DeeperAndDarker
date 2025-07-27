@@ -6,9 +6,9 @@
     -webkit-backface-visibility: hidden;
 }
 body {
-    font-family: "Lato", sans-serif;
-    font-weight: 400;
-    font-size: 16px;
+    font-family: "Audiowide", sans-serif;
+    font-weight: 100;
+    font-size: 15px;
     line-height: 1.7;
     color: #eee;
     background-color: #1A090D;
@@ -70,7 +70,7 @@ body {
     height: 75px;
     max-height: 75px;
     overflow: hidden;
-    border-radius: 5px 10px 10px 5px;
+    border-radius: 20px;
     display: flex;
     transition: all .2s;
     position: relative;
@@ -78,8 +78,8 @@ body {
     -webkit-backface-visibility: hidden;
 }
 .card:hover {
-    transform: translateY(-5px);
-    filter: brightness(90%);
+    transform: translateY(-4px);
+    filter: brightness(92%);
     cursor: pointer;
 }
 .card:active {
@@ -118,7 +118,7 @@ body {
 }
 .card-cost {
     width: 90px;
-    font-size: larger;
+    font-size:medium;
     text-align: center;
     align-content: center;
     background-color: rgb(107, 107, 212);
@@ -127,7 +127,47 @@ body {
 
 /* Main */
 .content {
-    background-color: #6B6570;
     border-radius: 10px;
     flex-grow: 2;
+
+    display: flex;
+    flex-direction: column;
+}
+.content-row-1 {
+    height: 400px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.planet-display {
+    border-radius: 10px 0px 0px 0px;
+    width: 500px;
+    background-color: black;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.mining-display {
+    border-radius: 0px 10px 0px 0px;
+    background-color: #6B6570;
+    padding: 10px 10px 10px 25px;
+    flex: 2;
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.content-row-2 {
+    min-height: 300px;
+    border-radius: 10px;
+}
+.expeditions-display {
+    border-radius: 0px 0px 0px 10px;
+    flex: 1;
+    background-color: #6B6570;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.dungeoneers-display {
+    border-radius: 0px 0px 10px 0px;
+    padding: 10px;
+    flex: 1;
+    background-color: #6B6570;
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
 }
