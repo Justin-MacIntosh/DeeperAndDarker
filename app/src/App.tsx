@@ -1,4 +1,8 @@
+import { createContext } from 'react';
+
 import Card from './components/Card';
+
+export const LevelContext = createContext(1);
 
 const App = () => {
   return (
