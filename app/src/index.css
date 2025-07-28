@@ -1,0 +1,173 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+body {
+    font-family: "Audiowide", sans-serif;
+    font-weight: 100;
+    font-size: 15px;
+    line-height: 1.7;
+    color: #eee;
+    background-color: #1A090D;
+}
+
+body {
+    margin: 25px;
+}
+.planet-description {
+    margin-bottom: 20px;
+}
+.main {
+    padding: 20px;
+    border-radius: 10px;
+    background-color: #4A314d;
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+}
+
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+.row {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  width: 100%;
+}
+.column {
+  display: flex;
+  flex-direction: column;
+  flex-basis: 100%;
+  flex: 1;
+}
+
+/* Sidebar */
+.sidebar {
+    width: 400px;
+}
+.characters-title {
+    margin-bottom: 10px;;
+}
+
+.card-container {
+    margin-bottom: 20px
+}
+.card-name {
+    margin-bottom: 5px;
+}
+.card {
+    background-color: #6B6570;
+    height: 75px;
+    max-height: 75px;
+    overflow: hidden;
+    border-radius: 20px;
+    display: flex;
+    transition: all .2s;
+    position: relative;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+}
+.card:hover {
+    transform: translateY(-4px);
+    filter: brightness(92%);
+    cursor: pointer;
+}
+.card:active {
+    transform: translateY(-2px);
+    cursor: pointer;
+}
+
+.card-icon {
+    padding: 10px;
+    clip-path: polygon(0 0, 90px 0, 75px 100%, 0 100%);
+    width: 100px;
+    height: 75px;
+}
+.card-blue > .card-icon,
+.card-blue > .card-cost {
+    background-color: rgb(107, 107, 212);
+}
+.card-red > .card-icon,
+.card-red > .card-cost {
+    background-color: rgb(218, 95, 87);
+}
+.card-green > .card-icon,
+.card-green > .card-cost {
+    background-color: rgb(87, 151, 62);
+}
+.card-icon > span {
+    line-height: 55px;
+}
+.card-description {
+    flex-grow: 1;
+    display: flex;
+    align-items: center;
+    align-content: center;
+    gap: 3px;
+    color: #eee;
+}
+.card-cost {
+    width: 90px;
+    font-size:medium;
+    text-align: center;
+    align-content: center;
+    background-color: rgb(107, 107, 212);
+    clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Main */
+.content {
+    border-radius: 10px;
+    flex-grow: 2;
+
+    display: flex;
+    flex-direction: column;
+}
+.content-row-1 {
+    height: 400px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+}
+.planet-display {
+    border-radius: 10px 0px 0px 0px;
+    width: 500px;
+    background-color: black;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.mining-display {
+    border-radius: 0px 10px 0px 0px;
+    background-color: #6B6570;
+    padding: 10px 10px 10px 25px;
+    flex: 2;
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+.content-row-2 {
+    min-height: 300px;
+    border-radius: 10px;
+}
+.expeditions-display {
+    border-radius: 0px 0px 0px 10px;
+    flex: 1;
+    background-color: #6B6570;
+    clip-path: polygon(0 0, 100% 0, calc(100% - 10px) 100%, 0 100%);
+}
+.dungeoneers-display {
+    border-radius: 0px 0px 10px 0px;
+    padding: 10px;
+    flex: 1;
+    background-color: #6B6570;
+    clip-path: polygon(10px 0, 100% 0, 100% 100%, 0 100%);
+}
