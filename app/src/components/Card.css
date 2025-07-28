@@ -23,9 +23,28 @@
 .card-icon {
   padding: 10px;
   clip-path: polygon(0 0, 90px 0, 75px 100%, 0 100%);
-  width: 100px;
+  min-width: 100px;
   height: 75px;
 }
+.card-icon > span {
+  line-height: 55px;
+}
+.card-content {
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  gap: 3px;
+}
+.card-suffix {
+  min-width: 90px;
+  font-size:medium;
+  text-align: center;
+  align-content: center;
+  clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%);
+}
+
+/* Color-specific styles */
 .card-blue > .card-icon,
 .card-blue > .card-suffix {
   background-color: rgb(107, 107, 212);
@@ -37,23 +56,4 @@
 .card-green > .card-icon,
 .card-green > .card-suffix {
   background-color: rgb(87, 151, 62);
-}
-.card-icon > span {
-  line-height: 55px;
-}
-.card-content {
-  flex-grow: 1;
-  display: flex;
-  align-items: center;
-  align-content: center;
-  gap: 3px;
-  color: #eee;
-}
-.card-suffix {
-  width: 90px;
-  font-size:medium;
-  text-align: center;
-  align-content: center;
-  background-color: rgb(107, 107, 212);
-  clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%);
 }

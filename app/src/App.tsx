@@ -14,7 +14,7 @@ const App = () => {
           <div className="content-row-1 row">
             <div className="planet-display"></div>
             <div className="mining-display">
-              <h3>PLANETARY RESOURCES</h3>
+              <h3>PLANETARY DATA</h3>
             </div>
           </div>
         </div>
@@ -24,7 +24,7 @@ const App = () => {
             <h2 className="robot-name">MNR-N1</h2>
             <Card
               color="blue"
-              icon={<span className="fa-solid fa-robot fa-3x"></span>}
+              iconName="fa-robot"
               content={<>Basic resource miner</>}
               suffix={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
             />
@@ -33,8 +33,17 @@ const App = () => {
             <h2 className="robot-name">MNR-X1</h2>
             <Card
               color="red"
-              icon={<span className="fa-solid fa-robot fa-3x"></span>}
+              iconName="fa-robot"
               content={<>Supercharged gatherer</>}
+              suffix={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
+            />
+          </div>
+          <div className="robot-container">
+            <h2 className="robot-name">MNR-S1</h2>
+            <Card
+              color="green"
+              iconName="fa-robot"
+              content={<>Gatherer that works better with space</>}
               suffix={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
             />
           </div>

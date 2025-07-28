@@ -1,7 +1,7 @@
 import './Card.css';
 
 interface CardProperties {
-  icon: React.ReactNode,
+  iconName: String,
   content: React.ReactNode
   suffix: React.ReactNode,
   color: 'blue' | 'red' | 'green';
@@ -12,7 +12,7 @@ const Card = (props: CardProperties) => {
   return (
     <div className={`card noselect ${colorClass}`}>
       <div className="card-icon">
-        {props.icon}
+        <span className={`fa-solid fa-3x ${props.iconName}`}></span>
       </div>
       <div className="card-content">
         {props.content}
