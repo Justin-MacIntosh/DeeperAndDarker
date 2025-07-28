@@ -2,8 +2,8 @@ import './Card.css';
 
 interface CardProperties {
   iconName: String,
-  content: React.ReactNode
-  suffix: React.ReactNode,
+  contentElement: React.ReactNode
+  suffixElement: React.ReactNode,
   color: 'blue' | 'red' | 'green';
 }
 
@@ -15,13 +15,12 @@ const Card = (props: CardProperties) => {
         <span className={`fa-solid fa-3x ${props.iconName}`}></span>
       </div>
       <div className="card-content">
-        {props.content}
+        {props.contentElement}
       </div>
       <div className="card-suffix">
-        {props.suffix}
+        {props.suffixElement}
       </div>
     </div>
   )
 }
-
 export default Card;

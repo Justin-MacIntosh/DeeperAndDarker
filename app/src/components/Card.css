@@ -12,11 +12,12 @@
 }
 .card:hover {
   transform: translateY(-4px);
-  filter: brightness(92%);
+  filter: brightness(108%);
   cursor: pointer;
 }
 .card:active {
   transform: translateY(-2px);
+  filter: brightness(105%);
   cursor: pointer;
 }
 

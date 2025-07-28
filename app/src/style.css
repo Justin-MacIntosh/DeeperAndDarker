@@ -1,0 +1,107 @@
+
+/* Global Style Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+body {
+  font-family: "Audiowide", sans-serif;
+  font-weight: 100;
+  font-size: 15px;
+  line-height: 1.7;
+  color: #eee;
+}
+.noselect {
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+/* App-specific styles */
+body {
+  background-color: #1A090D;
+  margin: 25px;
+}
+
+.header {
+  margin-bottom: 20px;
+}
+.planet-description {
+  /* TODO */
+}
+.main {
+  padding: 20px;
+  border-radius: 10px;
+  background-color: #4A314d;
+  display: flex;
+  flex-direction: row;
+  gap: 30px;
+  min-width: 1100px;
+}
+
+/* Content */
+.content {
+  border-radius: 10px;
+  flex: 4;
+  min-width: 500px;
+
+  display: flex;
+  flex-direction: column;
+}
+.content-planetary-row {
+  display: flex;
+  flex-direction: row;
+
+  border-radius: 10px;
+  margin-bottom: 10px;
+  gap: 10px;
+}
+.planet-display {
+  min-height: 400px;
+  width: 500px;
+  border-radius: 10px 0px 0px 10px;
+  background-color: black;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.planetary-data-display {
+  min-height: 400px;
+  border-radius: 0px 10px 10px 0px;
+  background-color: #6B6570;
+  padding: 10px 10px 10px 25px;
+  flex: 2;
+}
+
+@media (max-width: 1440px) {
+  .content-planetary-row {
+    flex-direction: column;
+  }
+  .planet-display {
+    width: 100%;
+    border-radius: 10px;
+    clip-path: none;
+  }
+  .planetary-data-display {
+    border-radius: 10px;
+    clip-path: none;
+  }
+}
+
+/* Sidebar */
+.sidebar {
+  min-width: 400px;
+  flex: 1
+}
+.robot-container {
+  margin-bottom: 20px
+}
+.robot-name {
+  margin-bottom: 5px;
+}
