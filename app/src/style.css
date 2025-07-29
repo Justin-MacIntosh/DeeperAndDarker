@@ -31,10 +31,20 @@ body {
 }
 
 .header {
+  padding: 0px 20px;
   margin-bottom: 20px;
+  display: flex;
+  min-width: 1100px;
 }
-.planet-description {
-  /* TODO */
+.header-left {
+  min-width: 400px;
+}
+.header-middle {
+  flex-grow: 1;
+}
+.header-right {
+  min-width: 400px;
+  text-align: right;
 }
 .main {
   padding: 20px;

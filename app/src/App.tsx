@@ -1,16 +1,37 @@
-import { createContext } from 'react';
+import { createContext, useEffect, useReducer } from 'react';
 
-import Card from './components/Card';
+import {
+  INITIAL_GAME_STATE,
+  gameStateReducer,
+  GameStateContext,
+} from './game_state/GameState';
+import RobotDisplay from './components/RobotDisplay';
+
 
 export const LevelContext = createContext(1);
 
 const App = () => {
+  const [gameState, dispatch] = useReducer(gameStateReducer, INITIAL_GAME_STATE);
+
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      dispatch({ type: "tenthTick" });
+    }, 100);
+
+    return () => clearInterval(intervalId);
+  }, []);
+
   return (
-    <>
+    <GameStateContext value={{state: gameState, dispatch: dispatch}}>
       <header className="header">
-        <div className="planet-description">
+        <div className="header-left">
           <h1>PLANET GOBAJ</h1>
           <h3 style={{"paddingLeft": "5px"}}>SWAMP BIOME</h3>
+        </div>
+        <div className="header-middle"/>
+        <div className="header-right">
+          <h4>{gameState.currentMoney}<i className="fa-solid fa-dollar-sign fa-xs"/></h4>
+          <h4>{gameState.moneyPerTick}<i className="fa-solid fa-dollar-sign fa-xs"/>/sec</h4>
         </div>
       </header>
       <div className="main">
@@ -24,36 +45,13 @@ const App = () => {
         </div>
         <div className="sidebar">
           <h1 className="bots-title">AUTOMATONS</h1>
-          <div className="robot-container">
-            <h2 className="robot-name">MNR-N1</h2>
-            <Card
-              color="blue"
-              iconName="fa-robot"
-              contentElement={<>Basic resource miner</>}
-              suffixElement={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
-            />
-          </div>
-          {/* <div className="robot-container">
-            <h2 className="robot-name">MNR-X1</h2>
-            <Card
-              color="red"
-              iconName="fa-robot"
-              contentElement={<>Supercharged miner</>}
-              suffixElement={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
-            />
-          </div>
-          <div className="robot-container">
-            <h2 className="robot-name">MNR-S1</h2>
-            <Card
-              color="green"
-              iconName="fa-robot"
-              contentElement={<>Miner that works better with space</>}
-              suffixElement={<>1<i className="fa-solid fa-dollar-sign fa-xs"></i></>}
-            />
-          </div> */}
+
+          {Object.entries(gameState.robots).map(([_, robot]) => (
+            <RobotDisplay robot={robot}/>
+          ))}
         </div>
       </div>
-    </>
+    </GameStateContext>
   );
 }
 

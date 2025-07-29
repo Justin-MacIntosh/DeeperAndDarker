@@ -10,12 +10,16 @@
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-.card:hover {
+.card-disabled {
+  filter: brightness(75%);
+  cursor: not-allowed;
+}
+.card:hover:not(.card-disabled) {
   transform: translateY(-4px);
   filter: brightness(108%);
   cursor: pointer;
 }
-.card:active {
+.card:active:not(.card-disabled) {
   transform: translateY(-2px);
   filter: brightness(105%);
   cursor: pointer;
