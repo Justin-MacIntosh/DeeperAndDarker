@@ -23,11 +23,12 @@ export interface Robot {
     // Whether to be shown
     minMoneyToShow: number;
     isBeingShown: boolean;
+    animateAppearance: boolean;
 }
 
 // Initial State
 export const INITIAL_GAME_STATE: GameState = {
-    currentMoney: 10000,
+    currentMoney: 100,
     moneyPerTick: 0,
     robots: [
         {
@@ -39,9 +40,10 @@ export const INITIAL_GAME_STATE: GameState = {
             currentCost: 100,
             baseCost: 100,
             baseRate: 1.15,
-            baseProduction: 100,
+            baseProduction: 150,
             minMoneyToShow: 0,
             isBeingShown: true,
+            animateAppearance: false,
         },
         {
             id: 2,
@@ -52,9 +54,10 @@ export const INITIAL_GAME_STATE: GameState = {
             currentCost: 5000,
             baseCost: 5000,
             baseRate: 1.15,
-            baseProduction: 3000,
-            minMoneyToShow: 12000,
+            baseProduction: 2500,
+            minMoneyToShow: 10000,
             isBeingShown: false,
+            animateAppearance: true,
         }
     ]
 };

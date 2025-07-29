@@ -42,11 +42,12 @@
   gap: 3px;
 }
 .card-suffix {
-  min-width: 100px;
+  min-width: 110px;
   font-size:medium;
   text-align: center;
   align-content: center;
   clip-path: polygon(15px 0, 100% 0, 100% 100%, 0 100%);
+  padding-left: 5px;
 }
 
 /* Color-specific styles */
