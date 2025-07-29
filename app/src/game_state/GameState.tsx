@@ -52,6 +52,7 @@ type GameStateAction =
 
 // Reducer to define the ways that the state can be updated
 export const gameStateReducer = (state: GameState, action: GameStateAction): GameState => {
+    /* TODO: Allow use of StrictMode, stop mutating state */
     switch (action.type) {
     case 'tenthTick':
         const updatedMoney = state.currentMoney + (state.moneyPerTick / 10);

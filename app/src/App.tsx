@@ -1,14 +1,9 @@
-import { createContext, useEffect, useReducer } from 'react';
+import { useEffect, useReducer } from 'react';
 
 import {
-  INITIAL_GAME_STATE,
-  gameStateReducer,
-  GameStateContext,
+  INITIAL_GAME_STATE, gameStateReducer, GameStateContext,
 } from './game_state/GameState';
 import RobotDisplay from './components/RobotDisplay';
-
-
-export const LevelContext = createContext(1);
 
 const App = () => {
   const [gameState, dispatch] = useReducer(gameStateReducer, INITIAL_GAME_STATE);
@@ -25,7 +20,7 @@ const App = () => {
     <GameStateContext value={{state: gameState, dispatch: dispatch}}>
       <header className="header">
         <div className="header-left">
-          <h1>PLANET GOBAJ</h1>
+          <h1>PLANET BAJ</h1>
           <h3 style={{"paddingLeft": "5px"}}>SWAMP BIOME</h3>
         </div>
         <div className="header-middle"/>
@@ -54,5 +49,4 @@ const App = () => {
     </GameStateContext>
   );
 }
-
 export default App;
