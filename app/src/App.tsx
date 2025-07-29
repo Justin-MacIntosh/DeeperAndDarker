@@ -10,8 +10,8 @@ const App = () => {
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      dispatch({ type: "tenthTick" });
-    }, 100);
+      dispatch({ type: "fifthTick" });
+    }, 200);
 
     return () => clearInterval(intervalId);
   }, []);
@@ -25,8 +25,8 @@ const App = () => {
         </div>
         <div className="header-middle"/>
         <div className="header-right">
-          <h4>{gameState.currentMoney}<i className="fa-solid fa-dollar-sign fa-xs"/></h4>
-          <h4>{gameState.moneyPerTick}<i className="fa-solid fa-dollar-sign fa-xs"/>/sec</h4>
+          <h1>{gameState.currentMoney}<i className="fa-solid fa-dollar-sign fa-xs"/></h1>
+          <h3 className="global-production">{gameState.moneyPerTick}<i className="fa-solid fa-dollar-sign fa-xs"/>/sec</h3>
         </div>
       </header>
       <div className="main">
@@ -34,7 +34,7 @@ const App = () => {
           <div className="content-planetary-row">
             <div className="planet-display"></div>
             <div className="planetary-data-display">
-              <h3>PLANETARY DATA</h3>
+              <h3>STRUCTURES</h3>
             </div>
           </div>
         </div>
@@ -42,7 +42,7 @@ const App = () => {
           <h1 className="bots-title">AUTOMATONS</h1>
 
           {Object.entries(gameState.robots).map(([_, robot]) => (
-            <RobotDisplay robot={robot}/>
+            robot.isBeingShown && <RobotDisplay robot={robot}/>
           ))}
         </div>
       </div>

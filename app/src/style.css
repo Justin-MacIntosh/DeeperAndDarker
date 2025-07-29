@@ -46,6 +46,9 @@ body {
   min-width: 400px;
   text-align: right;
 }
+.global-production {
+  padding-right: 7px;
+}
 .main {
   padding: 20px;
   border-radius: 10px;
@@ -112,6 +115,15 @@ body {
 .robot-container {
   margin-bottom: 20px
 }
+.robot-stats-container {
+  display: flex;
+  flex-direction: row;
+  margin-bottom: 10px;
+}
 .robot-name {
-  margin-bottom: 5px;
+  flex: 1;
+}
+.robot-production {
+  flex: 1;
+  text-align: right;
 }

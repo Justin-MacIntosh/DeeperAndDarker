@@ -11,7 +11,7 @@ export interface Robot {
     id: number;
     name: string;
     description: string;
-    tier: number;
+    color: 'blue' | 'red' | 'green';
 
     // Production stats
     count: number;
@@ -34,7 +34,7 @@ export const INITIAL_GAME_STATE: GameState = {
             id: 1,
             name: "MNR-N1",
             description: "Basic mining robot",
-            tier: 1,
+            color: 'blue',
             count: 0,
             currentCost: 100,
             baseCost: 100,
@@ -42,60 +42,85 @@ export const INITIAL_GAME_STATE: GameState = {
             baseProduction: 100,
             minMoneyToShow: 0,
             isBeingShown: true,
+        },
+        {
+            id: 2,
+            name: "MNR-X1",
+            description: "Supercharged mining robot",
+            color: 'red',
+            count: 0,
+            currentCost: 5000,
+            baseCost: 5000,
+            baseRate: 1.15,
+            baseProduction: 3000,
+            minMoneyToShow: 12000,
+            isBeingShown: false,
         }
     ]
 };
 
 type GameStateAction =
- | { type: 'tenthTick' }
+ | { type: 'fifthTick' }
  | { type: 'purchaseRobot', robotId: number };
 
-// Reducer to define the ways that the state can be updated
+// Reducer to define the ways that the game state can be updated
 export const gameStateReducer = (state: GameState, action: GameStateAction): GameState => {
-    /* TODO: Allow use of StrictMode, stop mutating state */
     switch (action.type) {
-    case 'tenthTick':
-        const updatedMoney = state.currentMoney + (state.moneyPerTick / 10);
-        state.robots.forEach(robot => {
-            if(!robot.isBeingShown && robot.minMoneyToShow < updatedMoney) {
-                robot.isBeingShown = true;
+        case 'fifthTick': {
+            const updatedMoney = state.currentMoney + (state.moneyPerTick / 5);
+            const updatedRobots = state.robots.map(robot => {
+                if (!robot.isBeingShown && robot.minMoneyToShow < updatedMoney) {
+                    return { ...robot, isBeingShown: true };
+                }
+                return robot;
+            });
+            return {
+                ...state,
+                currentMoney: updatedMoney,
+                robots: updatedRobots,
+            };
+        }
+        case 'purchaseRobot': {
+            const robotIndex = state.robots.findIndex(robot => robot.id === action.robotId);
+            if (robotIndex === -1) {
+                console.log(`ERROR: Robot not found for ID ${action.robotId}`);
+                return state;
             }
-        });
-        state.currentMoney = updatedMoney;
-        return {...state};
-    case 'purchaseRobot':
-        const robot = state.robots.find(robot => robot.id == action.robotId);
-        if (robot === undefined) {
-            console.log(`ERROR: Robot not found for ID ${action.robotId}`);
-            return state;
+            const robot = state.robots[robotIndex];
+            if (state.currentMoney < robot.currentCost) {
+                console.log(`ERROR: Not enough money to purchase Robot with ID ${action.robotId}`);
+                return state;
+            }
+
+            // Update the robot in the Robots array
+            const updatedRobots = [
+                ...state.robots.slice(0, robotIndex),
+                updateRobotStateAfterPurchase(robot, 1), // TODO: Allow multiple purchases at once
+                ...state.robots.slice(robotIndex + 1),
+            ];
+            return {
+                ...state,
+                currentMoney: state.currentMoney - robot.currentCost,
+                moneyPerTick: state.moneyPerTick + robot.baseProduction, // TODO: Retroactively take upgrades into account
+                robots: updatedRobots,
+            };
         }
-        if (state.currentMoney < robot.currentCost) {
-            console.log(`ERROR: Not enough money to purchase Robot with ID ${action.robotId}`);
+        default:
+            console.log("ERROR: Action type not found");
             return state;
-        }
-
-        // Update global game state
-        const moneyAfterPurchase = state.currentMoney - robot.currentCost;
-        state.currentMoney = moneyAfterPurchase;
-        state.moneyPerTick = state.moneyPerTick + robot.baseProduction; /* TODO: retroactively take upgrades inbto account */
-
-        // Update robot state
-        let newCost = robot.currentCost + (robot.baseCost * (robot.baseRate ** robot.count));
-        newCost = Math.round(newCost);
-        robot.currentCost = newCost;
-        robot.count = robot.count + 1;
-
-        return {...state};
     }
-
-    console.log("ERROR: Action type not found");
-    return state;
 }
 
-const updateRobotStateAfterPurchase = (initialRobotState: Robot): Robot => {
-    /* TODO */
-    
-    return initialRobotState;
+const updateRobotStateAfterPurchase = (robotToUpdate: Robot, numPurchased: number): Robot => {
+    /* Update the robot's count and cost */
+    const updatedCount = robotToUpdate.count + 1;
+    let updatedCost = robotToUpdate.currentCost + (robotToUpdate.baseCost * (robotToUpdate.baseRate ** updatedCount));
+    updatedCost = Math.round(updatedCost);
+    return {
+        ...robotToUpdate,
+        count: updatedCount,
+        currentCost: updatedCost,
+    };
 }
 
 // Contexts for passing the game state to components

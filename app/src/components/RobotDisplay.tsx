@@ -12,9 +12,12 @@ const RobotDisplay = (props: RobotDisplayProps) => {
   const {state, dispatch} = useContext(GameStateContext);
   return (
     <div className="robot-container">
-      <h2 className="robot-name">{robot.name}</h2>
+      <div className="robot-stats-container">
+        <h2 className="robot-name">{robot.name}: {robot.count}</h2>
+        <h2 className="robot-production">{robot.count * robot.baseProduction}/sec</h2>
+      </div>
       <Card
-        color="blue"
+        color={robot.color}
         iconName="fa-robot"
         contentElement={<>{robot.description}</>}
         suffixElement={<>{robot.currentCost}<i className="fa-solid fa-dollar-sign fa-xs"/></>}
