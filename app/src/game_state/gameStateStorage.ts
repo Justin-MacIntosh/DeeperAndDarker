@@ -24,3 +24,7 @@ export const loadGameState = (): GameState | null => {
 
   return { ...parsedState };
 }
+
+export const resetGameState = () => {
+  localStorage.removeItem(GAME_STATE_KEY);
+}

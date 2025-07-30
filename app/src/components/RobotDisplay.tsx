@@ -1,8 +1,20 @@
-import { useContext } from 'react';
+import { memo, useContext } from 'react';
 
 import Card from './Card';
 import { GameStateContext, Robot } from '../game_state/GameState';
 import { formatNumber } from '../helpers/formatNumber';
+
+const RobotsList = memo(
+  ({ robots }: { robots: Robot[] }) => {
+    return (
+      <div className="flex flex-col">
+        {robots.map((robot) => (
+          robot.isBeingShown && <RobotDisplay key={robot.id} robot={robot} />
+        ))}
+      </div>
+    );
+  }
+);
 
 const RobotDisplay = (props: { robot: Robot; }) => {
   const robot = props.robot;
@@ -26,4 +38,4 @@ const RobotDisplay = (props: { robot: Robot; }) => {
     </div>
   );
 }
-export default RobotDisplay;
+export default RobotsList;

@@ -6,10 +6,11 @@ export interface GameState {
     currentMoney: number;
     moneyPerSecond: number;
     timeSaved: number; // Optional field to track last save time
-    timeOfflineData?: {
-        moneyEarned: number;
-        timeElapsed: number;
-    }; // Optional field to track offline earnings
+    timeOfflineData?: OfflineData; // Optional field to track offline earnings
+}
+export interface OfflineData {
+    moneyEarned: number;
+    timeElapsed: number;
 }
 export interface Robot {
     // Robot identification
@@ -71,7 +72,8 @@ export const INITIAL_GAME_STATE: GameState = {
 type GameStateAction =
  | { type: 'tick', milliseconds: number }
  | { type: 'purchaseRobot', robotId: number }
- | { type: 'updateTimeSaved', timeSaved: number };
+ | { type: 'updateTimeSaved', timeSaved: number }
+ | { type: 'resetGame' };
 
 // Reducer to define the ways that the game state can be updated
 export const gameStateReducer = (state: GameState, action: GameStateAction): GameState => {
@@ -121,6 +123,9 @@ export const gameStateReducer = (state: GameState, action: GameStateAction): Gam
                 ...state,
                 timeSaved: action.timeSaved,
             };
+        }
+        case 'resetGame': {
+            return { ...INITIAL_GAME_STATE };
         }
         default:
             console.log("ERROR: Action type not found");
