@@ -72,14 +72,14 @@ const App = () => {
   }
 
   return (
-    <div className="p-7 bg-dark-purple">
+    <div className="bg-dark-purple">
       <GameStateContext value={{state: gameState, dispatch: dispatch}}>
         { offlineDataElement }
         <header
           className="
-            min-w-[1100px] sticky top-2.5 z-10 p-5 mb-5
+            min-w-[1100px] sticky top-0 z-10 p-5 mb-5
             bg-med-purple
-            border-gray-300 border-solid border-2 rounded-xl
+            border-gray-300 border-solid border-2 border-l-0 border-r-0 
             flex flex-row
             shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
         >
@@ -104,8 +104,9 @@ const App = () => {
           </div>
         </header>
         <div
+          id="main"
           className="
-            min-w-[1100px] p-5
+            min-w-[1100px] p-5 mx-7
             bg-med-purple
             border-gray-300 border-solid border-2 rounded-xl
             flex flex-row gap-6"
@@ -157,11 +158,20 @@ const App = () => {
             ))}
           </div>
         </div>
-        <footer className="h-5 mb-2 py-3 flex-display">
+        <footer className="h-full py-3 mx-7 flex content-center">
           <div className="flex-1"></div>
           <div className="min-w-[400px] text-right">
             { lastDateTimeSaved && <span className="mr-3">Last saved {lastDateTimeSaved}</span> }
-            <button className="save-button" onClick={saveCurrentGameData}>Save</button>
+            <button
+              className="
+                bg-med-purple px-4 py-2 rounded-lg shadow-md
+                hover:brightness-125
+                active:brightness-110 active:scale-95
+              "
+              onClick={saveCurrentGameData}
+            >
+              Save
+            </button>
           </div>
         </footer>
       </GameStateContext>
