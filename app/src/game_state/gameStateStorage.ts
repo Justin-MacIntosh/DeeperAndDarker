@@ -20,6 +20,7 @@ export const loadGameState = (): GameState | null => {
     moneyEarned: moneyEarned,
     timeElapsed: timeElapsed
   };
+  console.log(parsedState)
 
   return { ...parsedState };
 }

@@ -4,20 +4,16 @@ import Card from './Card';
 import { GameStateContext, Robot } from '../game_state/GameState';
 import { formatNumber } from '../helpers/formatNumber';
 
-interface RobotDisplayProps {
-  robot: Robot;
-}
-
-const RobotDisplay = (props: RobotDisplayProps) => {
+const RobotDisplay = (props: { robot: Robot; }) => {
   const robot = props.robot;
   const {state, dispatch} = useContext(GameStateContext);
 
-  const animateClass = robot.animateAppearance ? "robot-fade-in" : "";
+  const animateClass = robot.animateAppearance ? "fade-in" : "";
   return (
-    <div className={`robot-container ${animateClass}`}>
-      <div className="robot-stats-container">
-        <h2 className="robot-name">{robot.name}: {robot.count}</h2>
-        <h2 className="robot-production">{formatNumber(robot.count * robot.baseProduction)}<i className="fa-regular fa-gem fa-xs"/>/sec</h2>
+    <div className={`mb-5 ${animateClass}`}>
+      <div className="text-lg flex flex-row mb-2">
+        <h2 className="flex-1">{robot.name}: {robot.count}</h2>
+        <h2 className="flex-1 text-right">{formatNumber(robot.count * robot.baseProduction)}<i className="fa-regular fa-gem fa-xs"/>/sec</h2>
       </div>
       <Card
         color={robot.color}

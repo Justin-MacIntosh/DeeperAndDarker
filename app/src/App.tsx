@@ -1,4 +1,6 @@
-import { useEffect, useReducer, useRef } from 'react';
+import { useEffect, useReducer, useRef, useState } from 'react';
+
+import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 import {
   INITIAL_GAME_STATE, gameStateReducer, GameStateContext,
@@ -8,12 +10,12 @@ import RobotDisplay from './components/RobotDisplay';
 import { formatNumber } from './helpers/formatNumber';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
-if (LOADED_GAME_STATE.timeOfflineData) {
-  alert(`You were offline for ${Math.floor(LOADED_GAME_STATE.timeOfflineData.timeElapsed / 1000)} seconds and earned ${formatNumber(LOADED_GAME_STATE.timeOfflineData.moneyEarned)} gems!`);
-}
 
 const App = () => {
   const [gameState, dispatch] = useReducer(gameStateReducer, LOADED_GAME_STATE);
+
+  console.log("rerender");
+  let [isOpen, setIsOpen] = useState(LOADED_GAME_STATE.timeOfflineData !== undefined);
 
   const saveCurrentGameData = () => {
     const timeSaved = Date.now();
@@ -45,49 +47,125 @@ const App = () => {
 
   const lastDateTimeSaved = new Date(gameState.timeSaved).toLocaleString();
 
-  return (
-    <GameStateContext value={{state: gameState, dispatch: dispatch}}>
-      <header className="header">
-        <div className="header-left">
-          <h1>PLANET BAJ</h1>
-          <h3 style={{"paddingLeft": "5px"}}>SWAMP BIOME</h3>
+  let offlineDataElement = null;
+  if (gameState.timeOfflineData) {
+    const { moneyEarned, timeElapsed } = gameState.timeOfflineData;
+    offlineDataElement = (
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/50" />
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel
+            className="
+              max-w-lg p-12
+              bg-dark-purple
+              border-gray-300 border-solid border-2 rounded-xl"
+          >
+            <DialogTitle className="text-2xl mb-3">Offline earnings</DialogTitle>
+            <Description>
+              You were offline for {Math.round(timeElapsed/ 1000)} second(s) and
+              earned {formatNumber(moneyEarned)} resources!
+            </Description>
+          </DialogPanel>
         </div>
-        <div className="header-middle"/>
-        <div className="header-right">
-          <h1>{formatNumber(gameState.currentMoney)}<i className="fa-regular fa-gem fa-xs"/></h1>
-          <h3 className="global-production">{formatNumber(gameState.moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec</h3>
-        </div>
-      </header>
-      <div className="main">
-        <div className="content">
-          <div className="content-planetary-row">
-            <div className="planet-display"></div>
-            <div className="planetary-data-display">
-              <h3>PLANETARY DATA</h3>
-            </div>
-          </div>
-          <div className="content-structures-row">
-            <div className="structure-display">
-              <h3>STRUCTURES</h3>
-            </div>
-          </div>
-        </div>
-        <div className="sidebar">
-          <h1 className="bots-title">AUTOMATONS</h1>
+      </Dialog>
+    );
+  }
 
-          {Object.entries(gameState.robots).map(([_, robot]) => (
-            robot.isBeingShown && <RobotDisplay robot={robot}/>
-          ))}
+  return (
+    <div className="p-7 bg-dark-purple">
+      <GameStateContext value={{state: gameState, dispatch: dispatch}}>
+        { offlineDataElement }
+        <header
+          className="
+            min-w-[1100px] sticky top-2.5 z-10 p-5 mb-5
+            bg-med-purple
+            border-gray-300 border-solid border-2 rounded-xl
+            flex flex-row
+            shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
+        >
+          <div
+            id="planet-title"
+            className="min-w-[400px]"
+          >
+            <h1 className='text-3xl font-bold'>PLANET BAJ</h1>
+            <h3 className="text-lg">SWAMP BIOME</h3>
+          </div>
+          <div className="flex-grow"/>
+          <div
+            id="production-stats"
+            className="min-w-[400px] text-right"
+          >
+            <h1 className="text-3xl font-bold">
+              {formatNumber(gameState.currentMoney)}<i className="fa-regular fa-gem fa-xs"/>
+            </h1>
+            <h3 className="text-lg">
+              {formatNumber(gameState.moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec
+            </h3>
+          </div>
+        </header>
+        <div
+          className="
+            min-w-[1100px] p-5
+            bg-med-purple
+            border-gray-300 border-solid border-2 rounded-xl
+            flex flex-row gap-6"
+        >
+          <div
+            id="content"
+            className="
+              min-w-[500px] flex-grow-[4]
+              rounded-xl
+              flex flex-col gap-3"
+          >
+            <div
+              id="content-planetary-row"
+              className="flex flex-col 2xl:flex-row rounded-xl gap-3"
+            >
+              <div
+                id="planet-display"
+                className="
+                  min-h-[400px] bg-black
+                  w-full rounded-xl
+                  2xl:w-[500px] 2xl:rounded-l-xl 2xl:rounded-r-none"
+              ></div>
+              <div
+                id="planetary-data-display"
+                className="
+                  p-4 min-h-[400px] bg-light-purple
+                  flex-1 rounded-xl
+                  2xl:rounded-l-none 2xl:rounded-r-xl"
+              >
+                <h3>PLANETARY DATA</h3>
+              </div>
+            </div>
+            <div className="content-structures-row">
+              <div
+                id="structure-display"
+                className="
+                  p-4 min-h-[400px] bg-light-purple
+                  flex-1 rounded-xl"
+              >
+                <h3>STRUCTURES</h3>
+              </div>
+            </div>
+          </div>
+          <div className="flex-1 min-w-[400px]">
+            <h1 className="text-2xl font-bold">AUTOMATONS</h1>
+
+            {Object.entries(gameState.robots).map(([_, robot]) => (
+              robot.isBeingShown && <RobotDisplay robot={robot}/>
+            ))}
+          </div>
         </div>
-      </div>
-      <footer className="footer">
-        <div className="footer-middle"></div>
-        <div className="footer-right">
-          { lastDateTimeSaved && <span className="last-saved-display">Last saved {lastDateTimeSaved}</span> }
-          <button className="save-button" onClick={saveCurrentGameData}>Save</button>
-        </div>
-      </footer>
-    </GameStateContext>
+        <footer className="h-5 mb-2 py-3 flex-display">
+          <div className="flex-1"></div>
+          <div className="min-w-[400px] text-right">
+            { lastDateTimeSaved && <span className="mr-3">Last saved {lastDateTimeSaved}</span> }
+            <button className="save-button" onClick={saveCurrentGameData}>Save</button>
+          </div>
+        </footer>
+      </GameStateContext>
+    </div>
   );
 }
 export default App;
