@@ -1,23 +1,29 @@
-import { memo, useContext } from 'react';
+import { memo } from 'react';
 
-import { GameStateContext } from '../game_state/GameState';
+import { useGameStore } from '../game_state/GameStateZustand';
 import { formatNumber } from '../helpers/formatNumber';
 
-const ProductionDisplay = () => {
-  const { state: gameState } = useContext(GameStateContext);
+const CurrentMoneyDisplay = () => {
+  console.log("CurrentMoneyDisplay render");
+  const currentMoney = useGameStore((state) => state.currentMoney);
   return (
-    <div id="production-stats" className="min-w-[400px] text-right">
-      <h1 className="text-3xl font-bold">
-        {formatNumber(gameState.currentMoney)}<i className="fa-regular fa-gem fa-xs"/>
-      </h1>
-      <h3 className="text-lg">
-        {formatNumber(gameState.moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec
-      </h3>
-    </div>
+    <h1 className="text-3xl font-bold">
+      {formatNumber(currentMoney)}<i className="fa-regular fa-gem fa-xs"/>
+    </h1>
+  );
+};
+const MoneyPerSecondDisplay = () => {
+  console.log("MoneyPerSecondDisplay render");
+  const moneyPerSecond = useGameStore((state) => state.moneyPerSecond);
+  return (
+    <h3 className="text-lg">
+      {formatNumber(moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec
+    </h3>
   );
 };
 
 const Header = memo(() => {
+  console.log("Header render");
   return (
     <header
       id="header"
@@ -34,9 +40,11 @@ const Header = memo(() => {
         <h3 className="text-lg">SWAMP BIOME</h3>
       </div>
       <div className="flex-grow"/>
-      <ProductionDisplay/>
+      <div id="production-stats" className="min-w-[400px] text-right">
+        <CurrentMoneyDisplay />
+        <MoneyPerSecondDisplay />
+      </div>
     </header>
   )
 });
-
-export default Header
+export default Header;

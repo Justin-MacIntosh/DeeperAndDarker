@@ -1,16 +1,15 @@
-import { memo, useContext, useState } from 'react';
+import { memo, useState } from 'react';
 
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
-import { GameStateContext } from '../game_state/GameState';
 import { formatNumber } from '../helpers/formatNumber';
+import { useGameStore } from '../game_state/GameStateZustand';
 
 const OfflineDataDialog = memo(() => {
-  const { state: gameState } = useContext(GameStateContext);
-  const offlineData = gameState.timeOfflineData;
+  const timeOfflineData = useGameStore((state) => state.timeOfflineData);
 
-  let [isOpen, setIsOpen] = useState(offlineData !== undefined);
-  if (offlineData === undefined) {
+  let [isOpen, setIsOpen] = useState(timeOfflineData !== undefined);
+  if (timeOfflineData === undefined) {
     return null; // No offline data to display
   }
 
@@ -28,8 +27,8 @@ const OfflineDataDialog = memo(() => {
         >
           <DialogTitle className="text-2xl mb-3">Offline earnings</DialogTitle>
           <Description>
-            You were offline for {Math.round(offlineData.timeElapsed / 1000)} second(s) and
-            earned {formatNumber(offlineData.moneyEarned)} resources!
+            You were offline for {Math.round(timeOfflineData.timeElapsed / 1000)} second(s) and
+            earned {formatNumber(timeOfflineData.moneyEarned)} resources!
           </Description>
         </DialogPanel>
       </div>

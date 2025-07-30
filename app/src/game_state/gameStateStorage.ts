@@ -1,4 +1,4 @@
-import { GameState } from "./GameState";
+import { GameState } from "./GameStateZustand";
 
 const GAME_STATE_KEY = 'planet_cracker_game_state';
 

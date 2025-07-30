@@ -1,24 +1,22 @@
-import { memo, useContext } from 'react';
-
 import Card from './Card';
-import { GameStateContext, Robot } from '../game_state/GameState';
 import { formatNumber } from '../helpers/formatNumber';
+import { Robot, useGameStore } from '../game_state/GameStateZustand';
 
-const RobotsList = memo(
-  ({ robots }: { robots: Robot[] }) => {
-    return (
-      <div className="flex flex-col">
-        {robots.map((robot) => (
-          robot.isBeingShown && <RobotDisplay key={robot.id} robot={robot} />
-        ))}
-      </div>
-    );
-  }
-);
+const RobotsList = () => {
+  const { robots } = useGameStore();
+  return (
+    <div className="flex flex-col">
+      {robots.map((robot) => (
+        robot.isBeingShown && <RobotDisplay key={robot.id} robot={robot} />
+      ))}
+    </div>
+  );
+};
 
 const RobotDisplay = (props: { robot: Robot; }) => {
   const robot = props.robot;
-  const {state, dispatch} = useContext(GameStateContext);
+  const { currentMoney } = useGameStore();
+  const purchaseRobotAction = useGameStore((state) => state.purchaseRobot)
 
   const animateClass = robot.animateAppearance ? "fade-in" : "";
   return (
@@ -32,8 +30,8 @@ const RobotDisplay = (props: { robot: Robot; }) => {
         iconName="fa-robot"
         contentElement={<>{robot.description}</>}
         suffixElement={<>{formatNumber(robot.currentCost)}<i className="fa-regular fa-gem fa-xs"/></>}
-        onClick={() => {dispatch({type: "purchaseRobot", robotId: robot.id})}}
-        isClickDisabled={robot.currentCost > state.currentMoney}
+        onClick={() => {purchaseRobotAction(robot.id)}}
+        isClickDisabled={robot.currentCost > currentMoney}
       />
     </div>
   );
