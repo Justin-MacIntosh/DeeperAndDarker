@@ -7,9 +7,9 @@ module.exports = {
         'dark-purple': '#1A090D',
         'med-purple': '#4A314d',
         'light-purple': '#6B6570',
-        'card-blue': '#6B6BD4',
-        'card-red': '#DA5F57',
-        'card-green': '#57973E',
+        'crd-blue': '#6B6BD4',
+        'crd-red': '#DA5F57',
+        'crd-green': '#57973E',
       },
     }
   },

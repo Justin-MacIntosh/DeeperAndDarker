@@ -10,7 +10,13 @@ interface CardProps {
 }
 
 const Card = (props: CardProps) => {
-  const colorClass = `bg-card-${props.color}`;
+  const colorClassMapping: Record<string, string> = {
+    blue: 'bg-crd-blue',
+    red: 'bg-crd-red',
+    green: 'bg-crd-green',
+  };
+
+  const colorClass = colorClassMapping[props.color] || 'bg-crd-blue';
   const disabledClass = props.isClickDisabled ? "card-disabled" : "";
   return (
     <div
