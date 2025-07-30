@@ -1,21 +1,49 @@
-import { useEffect, useReducer } from 'react';
+import { useEffect, useReducer, useRef } from 'react';
 
 import {
   INITIAL_GAME_STATE, gameStateReducer, GameStateContext,
 } from './game_state/GameState';
+import { saveGameState, loadGameState } from './game_state/gameStateStorage';
 import RobotDisplay from './components/RobotDisplay';
 import { formatNumber } from './helpers/formatNumber';
 
+const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
+if (LOADED_GAME_STATE.timeOfflineData) {
+  alert(`You were offline for ${Math.floor(LOADED_GAME_STATE.timeOfflineData.timeElapsed / 1000)} seconds and earned ${formatNumber(LOADED_GAME_STATE.timeOfflineData.moneyEarned)} gems!`);
+}
+
 const App = () => {
-  const [gameState, dispatch] = useReducer(gameStateReducer, INITIAL_GAME_STATE);
+  const [gameState, dispatch] = useReducer(gameStateReducer, LOADED_GAME_STATE);
 
+  const saveCurrentGameData = () => {
+    const timeSaved = Date.now();
+    dispatch({ type: "updateTimeSaved", timeSaved: timeSaved });
+    saveGameState({ ...gameStateRef.current, timeSaved: timeSaved });
+  }
+
+  // Effect to handle game ticks
   useEffect(() => {
-    const intervalId = setInterval(() => {
-      dispatch({ type: "fifthTick" });
+    const tickIntervalId = setInterval(() => {
+      dispatch({ type: "tick", milliseconds: 200 });
     }, 200);
-
-    return () => clearInterval(intervalId);
+    return () => clearInterval(tickIntervalId);
   }, []);
+
+  // Ref to always have the latest gameState in the interval
+  const gameStateRef = useRef(gameState);
+  useEffect(() => {
+    gameStateRef.current = gameState;
+  }, [gameState]);
+
+  // Effects to save game state periodically
+  useEffect(() => {
+    const saveStateIntervalId = setInterval(() => {
+      saveCurrentGameData();
+    }, 5000);
+    return () => clearInterval(saveStateIntervalId);
+  }, []);
+
+  const lastDateTimeSaved = new Date(gameState.timeSaved).toLocaleString();
 
   return (
     <GameStateContext value={{state: gameState, dispatch: dispatch}}>
@@ -27,7 +55,7 @@ const App = () => {
         <div className="header-middle"/>
         <div className="header-right">
           <h1>{formatNumber(gameState.currentMoney)}<i className="fa-regular fa-gem fa-xs"/></h1>
-          <h3 className="global-production">{formatNumber(gameState.moneyPerTick)}<i className="fa-regular fa-gem fa-xs"/>/sec</h3>
+          <h3 className="global-production">{formatNumber(gameState.moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec</h3>
         </div>
       </header>
       <div className="main">
@@ -52,6 +80,13 @@ const App = () => {
           ))}
         </div>
       </div>
+      <footer className="footer">
+        <div className="footer-middle"></div>
+        <div className="footer-right">
+          { lastDateTimeSaved && <span className="last-saved-display">Last saved {lastDateTimeSaved}</span> }
+          <button className="save-button" onClick={saveCurrentGameData}>Save</button>
+        </div>
+      </footer>
     </GameStateContext>
   );
 }

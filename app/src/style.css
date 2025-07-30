@@ -157,3 +157,35 @@ body {
     transform: translateY(0);
   }
 }
+
+/* Footer */
+.footer {
+  height: 20px;
+  padding: 10px;
+  display: flex;
+}
+.footer-middle {
+  flex-grow: 1;
+}
+.footer-right {
+  min-width: 400px;
+  text-align: right;
+}
+.last-saved-display {
+  margin-right: 10px;
+}
+.save-button {
+  background-color: #4A314d;
+  color: #eee;
+  padding: 5px;
+  border-radius: 5px;
+  border: none;
+}
+.save-button:hover {
+  filter: brightness(115%);
+  cursor: pointer;
+}
+.save-button:active {
+  filter: brightness(110%);
+  transform: scale(0.95);
+}

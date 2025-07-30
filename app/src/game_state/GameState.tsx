@@ -4,7 +4,12 @@ import { createContext, Dispatch } from 'react';
 export interface GameState {
     robots: Robot[];
     currentMoney: number;
-    moneyPerTick: number;
+    moneyPerSecond: number;
+    timeSaved: number; // Optional field to track last save time
+    timeOfflineData?: {
+        moneyEarned: number;
+        timeElapsed: number;
+    }; // Optional field to track offline earnings
 }
 export interface Robot {
     // Robot identification
@@ -29,7 +34,8 @@ export interface Robot {
 // Initial State
 export const INITIAL_GAME_STATE: GameState = {
     currentMoney: 100,
-    moneyPerTick: 0,
+    moneyPerSecond: 0,
+    timeSaved: 0,
     robots: [
         {
             id: 1,
@@ -63,14 +69,16 @@ export const INITIAL_GAME_STATE: GameState = {
 };
 
 type GameStateAction =
- | { type: 'fifthTick' }
- | { type: 'purchaseRobot', robotId: number };
+ | { type: 'tick', milliseconds: number }
+ | { type: 'purchaseRobot', robotId: number }
+ | { type: 'updateTimeSaved', timeSaved: number };
 
 // Reducer to define the ways that the game state can be updated
 export const gameStateReducer = (state: GameState, action: GameStateAction): GameState => {
     switch (action.type) {
-        case 'fifthTick': {
-            const updatedMoney = state.currentMoney + (state.moneyPerTick / 5);
+        case 'tick': {
+            const tickRate = action.milliseconds / 1000;
+            const updatedMoney = state.currentMoney + (state.moneyPerSecond * tickRate);
             const updatedRobots = state.robots.map(robot => {
                 if (!robot.isBeingShown && robot.minMoneyToShow < updatedMoney) {
                     return { ...robot, isBeingShown: true };
@@ -104,8 +112,14 @@ export const gameStateReducer = (state: GameState, action: GameStateAction): Gam
             return {
                 ...state,
                 currentMoney: state.currentMoney - robot.currentCost,
-                moneyPerTick: state.moneyPerTick + robot.baseProduction, // TODO: Retroactively take upgrades into account
+                moneyPerSecond: state.moneyPerSecond + robot.baseProduction, // TODO: Retroactively take upgrades into account
                 robots: updatedRobots,
+            };
+        }
+        case 'updateTimeSaved': {
+            return {
+                ...state,
+                timeSaved: action.timeSaved,
             };
         }
         default:
