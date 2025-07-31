@@ -6,7 +6,7 @@ import { formatNumber } from '../helpers/formatNumber';
 
 /* Header component displays the planet title and current production statistics. */
 const Header = memo(() => {
-  console.log("Header render");
+  // console.log("Header render");
   return (
     <header
       id="header"
@@ -29,7 +29,7 @@ const Header = memo(() => {
 
 /* PlanetTitle component displays the planet name and biome. */
 const PlanetTitle = () => {
-  console.log("PlanetTitle render");
+  // console.log("PlanetTitle render");
   const planet = useGameStore((state) => state.planet);
   return (
     <>
@@ -44,7 +44,7 @@ const PlanetTitle = () => {
  * current resources and resources per second respectively.
  */
 const CurrentResourcesDisplay = () => {
-  console.log("CurrentResourcesDisplay render");
+  // console.log("CurrentResourcesDisplay render");
   const currentResources = useGameStore((state) => state.currentResources);
   return (
     <h1 className="text-3xl font-bold">
@@ -53,7 +53,7 @@ const CurrentResourcesDisplay = () => {
   );
 };
 const ResourcesPerSecondDisplay = () => {
-  console.log("ResourcesPerSecondDisplay render");
+  // console.log("ResourcesPerSecondDisplay render");
   const resourcesPerSecond = useGameStore((state) => state.resourcesPerSecond);
   return (
     <h3 className="text-lg">

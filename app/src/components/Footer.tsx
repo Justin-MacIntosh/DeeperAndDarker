@@ -30,7 +30,7 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
 const LastDateTimeSavedDisplay = () => {
   console.log("LastDateTimeSavedDisplay render");
 
-  const timeSaved = useGameStore((state) => state.timeSaved);
+  const timeSaved = useGameStore((state) => state.lastTimeSaved);
   if (!timeSaved) {
     // Render nothing if no data available
     return null;

@@ -1,24 +1,11 @@
-import { memo } from 'react';
+import { memo, useState } from 'react';
 
-import { StructureSlot, useGameStore } from '../game_state/GameStore';
-
-
-const StructureCell = ({ slot }: { slot: StructureSlot }) => {
-  console.log("StructureCell render");
-
-  return (
-    <li className="
-      bg-med-purple h-32 w-32
-      border-gray-300 border-solid border-2 rounded-xl
-      hover:brightness-125 hover:-translate-y-1
-      active:brightness-125 active:-translate-y-0.5
-      cursor-pointer transition-all duration-75"
-    ></li>
-  )
-}
+import { Popover } from 'react-tiny-popover'
+import { Structure, StructureSlot, useGameStore } from '../game_state/GameStore';
+import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 
 const PlanetContent = memo(() => {
-  console.log("PlanetContent render");
+  // console.log("PlanetContent render");
   const planet = useGameStore((state) => state.planet);
 
   return (
@@ -73,5 +60,120 @@ const PlanetContent = memo(() => {
     </div>
   )
 });
+
+const StructureCell = ({ slot }: { slot: StructureSlot }) => {
+  // console.log("StructureCell render");
+
+  const purchaseStructureAction = useGameStore((state) => state.purchaseStructure);
+
+  const [isOpen, setIsOpen] = useState(false);
+  return (
+    <>
+      <Dialog open={isOpen} onClose={() => setIsOpen(false)} className="relative z-50">
+        <DialogBackdrop className="fixed inset-0 bg-black/50"/>
+        <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
+          <DialogPanel
+            className="
+              max-w-lg p-12
+              bg-dark-purple
+              border-gray-300 border-solid border-2 rounded-xl"
+          >
+            <DialogTitle className="text-2xl mb-3">Build structure</DialogTitle>
+            <Description>
+              <table>
+                <thead>
+                  <tr>
+                    <th className="text-left">Name</th>
+                    <th className="text-left">Description</th>
+                    <th className="text-right">Cost</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {useGameStore((state) => state.buildableStructures).map((structure) => (
+                    <tr
+                      key={structure.id}
+                      className="hover:bg-gray-200 cursor-pointer"
+                      onClick={() => {
+                        purchaseStructureAction(slot.id, structure.id);
+                        setIsOpen(false);
+                      }}
+                    >
+                      <td>{structure.name}</td>
+                      <td>{structure.description}</td>
+                      <td className="text-right">{structure.cost}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Description>
+          </DialogPanel>
+        </div>
+      </Dialog>
+      {
+        slot.structure ?
+        <StructureDisplay structure={slot.structure} openStructureSelectModal={() => setIsOpen(true)} /> :
+        <EmptyStructureSlotDisplay openStructureSelectModal={() => setIsOpen(true)}/>
+      }
+    </>
+  )
+}
+
+const StructureDisplay = (
+  { structure, openStructureSelectModal }:
+  { structure: Structure, openStructureSelectModal: () => void }
+) => {
+  const [isShowingPopover, setIsShowingPopover] = useState(false);
+
+  // If the slot already has a structure, render it
+  return (
+    <>
+      <Popover
+        isOpen={isShowingPopover}
+        positions={['top', 'bottom', 'left', 'right']} // preferred positions by priority
+        padding={10}
+        content={
+          <div
+            className="
+              bg-med-purple p-5 z-10
+              border-gray-300 border-solid border-2 rounded-xl"
+          >
+            <h1 className="uppercase">{structure.name}</h1>
+            <p>{structure.description}</p>
+          </div>
+        }
+      >
+        <li
+          onMouseEnter={() => setIsShowingPopover(true)}
+          onMouseLeave={() => setIsShowingPopover(false)}
+          onClick={openStructureSelectModal}
+          className="
+            bg-med-purple h-32 w-32
+            border-gray-300 border-solid border-2 rounded-xl
+            hover:brightness-125 hover:-translate-y-1
+            active:brightness-125 active:-translate-y-0.5
+            cursor-pointer transition-all duration-75
+            flex items-center justify-center"
+        >
+          <i className={`fa-solid fa-${structure.icon} fa-5x`}/>
+        </li>
+      </Popover>
+    </>
+  );
+}
+
+const EmptyStructureSlotDisplay = (
+  {openStructureSelectModal}: { openStructureSelectModal: () => void }
+) => {
+  return (
+    <li className="
+      bg-med-purple h-32 w-32
+      border-gray-300 border-solid border-2 rounded-xl
+      hover:brightness-125 hover:-translate-y-1
+      active:brightness-125 active:-translate-y-0.5
+      cursor-pointer transition-all duration-75"
+      onClick={openStructureSelectModal}
+    ></li>
+  )
+}
 
 export default PlanetContent;

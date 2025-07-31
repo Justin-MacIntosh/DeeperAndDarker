@@ -23,7 +23,7 @@ export const loadGameState = (): GameState | null => {
 
   // Parse the JSON and calculate offline data
   const parsedState = JSON.parse(decodedState) as GameState;
-  const timeElapsed = Date.now() - parsedState.timeSaved;
+  const timeElapsed = Date.now() - parsedState.lastTimeSaved;
   const moneyEarned = parsedState.resourcesPerSecond * (timeElapsed / 1000);
   parsedState.currentResources += moneyEarned;
   parsedState.timeOfflineData = {

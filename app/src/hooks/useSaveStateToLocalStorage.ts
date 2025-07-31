@@ -15,7 +15,7 @@ export const useSaveStateToLocalStorage = () => {
     )
     const timeSaved = Date.now();
     updateTimeSavedAction(timeSaved);
-    saveGameState({ ...onlyState, timeSaved: timeSaved } as GameState);
+    saveGameState({ ...onlyState, lastTimeSaved: timeSaved } as GameState);
   }
 
   // Effects to save game state periodically
