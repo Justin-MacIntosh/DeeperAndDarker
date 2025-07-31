@@ -19,6 +19,7 @@ interface Planet {
 }
 export interface StructureSlot {
   id: number;
+  costMultiplier: number;
   structure?: Structure;
 }
 export interface Structure {
@@ -76,11 +77,11 @@ const INITIAL_GAME_STATE: GameState = {
     name: "Baj",
     biome: "Swamp",
     structureSlots: [
-      { id: 1 },
-      { id: 2 },
-      { id: 3 },
-      { id: 4 },
-      { id: 5 },
+      { id: 1, costMultiplier: 1.0 },
+      { id: 2, costMultiplier: 10.0 },
+      { id: 3, costMultiplier: 100.0 },
+      { id: 4, costMultiplier: 1000.0 },
+      { id: 5, costMultiplier: 10000.0 },
     ],
     difficultyCoefficient: 1.0,
   },
@@ -259,7 +260,8 @@ export const useGameStore = create<GameState & {
     const structureSlot = planet.structureSlots[structureSlotIndex];
 
     // Check if there are enough resources to purchase the structure
-    if (currentResources < structureToBuild.cost) {
+    const totalCost = structureToBuild.cost * structureSlot.costMultiplier;
+    if (currentResources < totalCost) {
       console.error(`Not enough money to buy structure with ID ${structureId}.`);
       return;
     }
@@ -281,7 +283,7 @@ export const useGameStore = create<GameState & {
     set({
       robots: updatedRobots,
       resourcesPerSecond: updatedRobots.reduce((total, robot) => total + robot.resourcesPerSecond, 0),
-      currentResources: currentResources - structureToBuild.cost,
+      currentResources: currentResources - totalCost,
       planet: { ...planet, structureSlots: updatedSlots },
     });
   },

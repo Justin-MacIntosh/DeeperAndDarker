@@ -3,6 +3,7 @@ import { memo, useState } from 'react';
 import { Popover } from 'react-tiny-popover'
 import { Structure, StructureSlot, useGameStore } from '../game_state/GameStore';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
+import { formatNumber } from '../helpers/formatNumber';
 
 const PlanetContent = memo(() => {
   // console.log("PlanetContent render");
@@ -74,33 +75,35 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
         <div className="fixed inset-0 flex w-screen items-center justify-center p-4">
           <DialogPanel
             className="
-              max-w-lg p-12
+              max-w-full p-10
               bg-dark-purple
               border-gray-300 border-solid border-2 rounded-xl"
           >
-            <DialogTitle className="text-2xl mb-3">Build structure</DialogTitle>
+            <DialogTitle className="text-2xl mb-5">Build structure</DialogTitle>
             <Description>
-              <table>
-                <thead>
+              <table className="text-left rtl:text-right border-gray-300 border-solid border-2 ">
+                <thead className="bg-med-purple uppercase rounded-xl">
                   <tr>
-                    <th className="text-left">Name</th>
-                    <th className="text-left">Description</th>
-                    <th className="text-right">Cost</th>
+                    <th scope="col" className="px-6 py-3 font-normal">Name</th>
+                    <th scope="col" className="px-6 py-3 font-normal">Description</th>
+                    <th scope="col" className="px-6 py-3 font-normal">Cost</th>
                   </tr>
                 </thead>
                 <tbody>
                   {useGameStore((state) => state.buildableStructures).map((structure) => (
                     <tr
                       key={structure.id}
-                      className="hover:bg-gray-200 cursor-pointer"
+                      className="bg-light-purple border-gray-300 border-solid border-t-2 border-b-2 hover:brightness-125 cursor-pointer"
                       onClick={() => {
                         purchaseStructureAction(slot.id, structure.id);
                         setIsOpen(false);
                       }}
                     >
-                      <td>{structure.name}</td>
-                      <td>{structure.description}</td>
-                      <td className="text-right">{structure.cost}</td>
+                      <td className="px-6 py-4">{structure.name}</td>
+                      <td className="px-6 py-4">{structure.description}</td>
+                      <td className="px-6 py-4">
+                        {formatNumber(structure.cost * slot.costMultiplier)}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
