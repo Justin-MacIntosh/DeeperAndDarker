@@ -1,4 +1,4 @@
-import { GameState } from "./GameStateZustand";
+import { GameState } from "./GameStore";
 
 const GAME_STATE_KEY = 'planet_cracker_game_state';
 
@@ -20,7 +20,6 @@ export const loadGameState = (): GameState | null => {
     moneyEarned: moneyEarned,
     timeElapsed: timeElapsed
   };
-  console.log(parsedState)
 
   return { ...parsedState };
 }

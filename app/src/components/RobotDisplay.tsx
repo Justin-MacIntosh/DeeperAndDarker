@@ -1,19 +1,23 @@
 import Card from './Card';
 import { formatNumber } from '../helpers/formatNumber';
-import { Robot, useGameStore } from '../game_state/GameStateZustand';
+import { Robot, useGameStore } from '../game_state/GameStore';
+
 
 const RobotsList = () => {
   const { robots } = useGameStore();
   return (
     <div className="flex flex-col">
-      {robots.map((robot) => (
-        robot.isBeingShown && <RobotDisplay key={robot.id} robot={robot} />
-      ))}
+      {robots.map(
+        (robot) => (
+          robot.isBeingShown &&
+          <SingleRobotDisplay key={robot.id} robot={robot} />
+        )
+      )}
     </div>
   );
 };
 
-const RobotDisplay = (props: { robot: Robot; }) => {
+const SingleRobotDisplay = (props: { robot: Robot; }) => {
   const robot = props.robot;
   const { currentMoney } = useGameStore();
   const purchaseRobotAction = useGameStore((state) => state.purchaseRobot)

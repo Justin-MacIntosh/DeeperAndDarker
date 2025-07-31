@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 
-import { useGameStore } from './game_state/GameStateZustand';
-import { resetGameState } from './game_state/gameStateStorage';
-import { useSaveGameStateToLocalStorage } from './hooks/useGameStateLocalStorage';
+import { useGameStore } from './game_state/GameStore';
+import { resetGameState } from './game_state/stateStorageHelpers';
+import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 
 import RobotsList from './components/RobotDisplay';
-import OfflineDataDialog from './components/OfflineDataDialog';
+import OfflineEarningsDialog from './components/OfflineEarningsDialog';
 import PlanetContent from './components/PlanetContent';
 import Header from './components/Header';
 
@@ -13,7 +13,7 @@ const App = () => {
   const resetAction = useGameStore((state) => state.resetGame);
   const tickAction = useGameStore((state) => state.tick);
   const timeSaved = useGameStore((state) => state.timeSaved);
-  const { saveCurrentGameData } = useSaveGameStateToLocalStorage();
+  const { saveCurrentGameData } = useSaveStateToLocalStorage();
 
   console.log("App render");
 
@@ -33,8 +33,8 @@ const App = () => {
   const lastDateTimeSaved = new Date(timeSaved).toLocaleString();
   return (
     <div className="bg-dark-purple">
-      <OfflineDataDialog />
-      <Header />
+      <OfflineEarningsDialog/>
+      <Header/>
       <div
         id="main"
         className="
@@ -43,7 +43,7 @@ const App = () => {
           flex flex-row gap-6"
       >
         <PlanetContent />
-        <div className="flex-1 min-w-[400px]">
+        <div id="sidebar" className="flex-1 min-w-[400px]">
           <h1 className="text-2xl font-bold">AUTOMATONS</h1>
           <RobotsList/>
         </div>

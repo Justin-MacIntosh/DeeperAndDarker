@@ -1,6 +1,6 @@
 import { memo } from 'react';
 
-import { useGameStore } from '../game_state/GameStateZustand';
+import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 
 const CurrentMoneyDisplay = () => {

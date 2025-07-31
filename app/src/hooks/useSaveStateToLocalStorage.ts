@@ -1,12 +1,12 @@
 import { useEffect } from 'react';
-import { GameState, useGameStore } from '../game_state/GameStateZustand';
-import { saveGameState } from '../game_state/gameStateStorage';
+import { GameState, useGameStore } from '../game_state/GameStore';
+import { saveGameState } from '../game_state/stateStorageHelpers';
 
 /**
  * Custom hook to save game state to local storage periodically.
  * It also provides a function to save the current game data immediately.
  */
-export const useSaveGameStateToLocalStorage = () => {
+export const useSaveStateToLocalStorage = () => {
   const updateTimeSavedAction = useGameStore((state) => state.updateTimeSaved);
 
   const saveCurrentGameData = () => {
