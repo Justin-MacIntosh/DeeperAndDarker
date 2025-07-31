@@ -1,7 +1,8 @@
 import Card from './Card';
 
 import { memo } from 'react';
-import { Robot, useGameStore } from '../game_state/GameStore';
+import { Robot } from '../game_state/GameStateTypes';
+import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 import GemIcon from '../icons/GemIcon';
 

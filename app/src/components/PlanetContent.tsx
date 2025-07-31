@@ -1,7 +1,8 @@
 import { memo, useState } from 'react';
 
 import { Popover } from 'react-tiny-popover'
-import { Structure, StructureSlot, useGameStore } from '../game_state/GameStore';
+import { useGameStore } from '../game_state/GameStore';
+import { Structure, StructureSlot } from '../game_state/GameStateTypes';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { formatNumber } from '../helpers/formatNumber';
 

@@ -1,193 +1,14 @@
 import { create } from 'zustand';
+
 import { loadGameState } from './stateStorageHelpers';
-
-/* Types and Interfaces */
-export interface GameState {
-  planet: Planet;
-  robots: Robot[];
-  currentResources: number;
-  resourcesPerSecond: number;
-  lastTimeSaved: number;
-  buildableStructures: Structure[];
-  timeOfflineData?: OfflineData;
-}
-interface Planet {
-  name: string;
-  biome: string;
-  structureSlots: StructureSlot[];
-  difficultyCoefficient: number;
-}
-export interface StructureSlot {
-  id: number;
-  costMultiplier: number;
-  structure?: Structure;
-}
-export interface Structure {
-  id: number;
-  name: string;
-  icon: string;
-  description: string;
-  cost: number;
-  effect: ProductionMultiplier | CostReducer;
-}
-interface ProductionMultiplier {
-  type: 'production';
-  robotTiersEffected: number[];
-  multiplier: number;
-}
-interface CostReducer {
-  type: 'cost_reducer';
-  robotTiersEffected: number[];
-  multiplier: number;
-}
-
-export interface Robot {
-  // Identification
-  id: number;
-  name: string;
-  description: string;
-  
-  // Resource production values
-  resourcesPerSecond: number;
-  baseProduction: number;
-
-  // Cost and count values
-  count: number;
-  currentCost: number;
-  baseCost: number;
-  baseRate: number;
-
-  // Display values
-  color: 'blue' | 'red' | 'green';
-  minMoneyToShow: number;
-  isBeingShown: boolean;
-  animateAppearance: boolean;
-}
-export interface OfflineData {
-  moneyEarned: number;
-  timeElapsed: number;
-}
-
-/* Initial Game State */
-const INITIAL_GAME_STATE: GameState = {
-  currentResources: 100,
-  resourcesPerSecond: 0,
-  lastTimeSaved: 0,
-  planet: {
-    name: "Baj",
-    biome: "Swamp",
-    structureSlots: [
-      { id: 1, costMultiplier: 1.0 },
-      { id: 2, costMultiplier: 10.0 },
-      { id: 3, costMultiplier: 100.0 },
-      { id: 4, costMultiplier: 1000.0 },
-      { id: 5, costMultiplier: 10000.0 },
-    ],
-    difficultyCoefficient: 1.0,
-  },
-  buildableStructures: [
-    {
-      id: 1,
-      name: "MNR-N1 Control Center",
-      icon: "satellite-dish",
-      description: "Increases MNR-N1 resource production by 30%",
-      cost: 1000,
-      effect: {
-        type: 'production',
-        robotTiersEffected: [1],
-        multiplier: 1.2,
-      } as ProductionMultiplier,
-    },
-    {
-      id: 2,
-      name: "Automaton Factory",
-      icon: "industry",
-      description: "Reduces all Automaton costs by 50%",
-      cost: 2000,
-      effect: {
-        type: 'cost_reducer',
-        robotTiersEffected: [1, 2],
-        multiplier: 0.5,
-      } as CostReducer,
-    },
-  ],
-  robots: [
-    {
-      id: 1,
-      name: "MNR-N1",
-      description: "Basic mining robot",
-
-      resourcesPerSecond: 0,
-      baseProduction: 150,
-
-      count: 0,
-      currentCost: 100,
-      baseCost: 100,
-      baseRate: 1.15,
-
-      color: "blue",
-      minMoneyToShow: 0,
-      isBeingShown: true,
-      animateAppearance: false,
-    },
-    {
-      id: 2,
-      name: "MNR-X1",
-      description: "Supercharged mining robot",
-
-      resourcesPerSecond: 0,
-      baseProduction: 2500,
-
-      count: 0,
-      currentCost: 5000,
-      baseCost: 5000,
-      baseRate: 1.15,
-
-      color: "red",
-      minMoneyToShow: 10000,
-      isBeingShown: false,
-      animateAppearance: true,
-    },
-  ],
-};
-
-const refreshRobotState = (robot: Robot, structureSlots: StructureSlot[]): Robot => {
-  const costMultiplier = structureSlots.reduce((acc, slot) => {
-    if (
-      slot.structure &&
-      slot.structure.effect.type === "cost_reducer" &&
-      slot.structure.effect.robotTiersEffected.includes(robot.id)
-    ) {
-      return acc * slot.structure.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-
-  let updatedCost = robot.baseCost * (robot.baseRate ** robot.count);
-  updatedCost *= costMultiplier;
-  updatedCost = Math.round(updatedCost);
-
-  const productionMultiplier = structureSlots.reduce((acc, slot) => {
-    if (
-      slot.structure &&
-      slot.structure.effect.type === "production" &&
-      slot.structure.effect.robotTiersEffected.includes(robot.id)
-    ) {
-      return acc * slot.structure.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-  const robotProduction = robot.count * robot.baseProduction * productionMultiplier;
-  
-  return {
-    ...robot,
-    currentCost: updatedCost,
-    resourcesPerSecond: robotProduction,
-  };
-};
+import { GameState, StructureSlot, Robot, INITIAL_GAME_STATE } from './GameStateTypes';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
+/**
+ * Game Store using Zustand for state management.
+ * This store holds the game state and provides methods to manipulate it.
+ */
 export const useGameStore = create<GameState & {
   tick: (milliseconds: number) => void;
   purchaseRobot: (robotId: number) => void;
@@ -197,6 +18,7 @@ export const useGameStore = create<GameState & {
 }>((set, get) => ({
   ...LOADED_GAME_STATE,
 
+  // Tick function to update resources based on time elapsed
   tick: (milliseconds: number) => {
     const { currentResources, resourcesPerSecond, robots } = get();
     const tickRate = milliseconds / 1000;
@@ -213,6 +35,7 @@ export const useGameStore = create<GameState & {
     set({ currentResources: updatedMoney, robots: updatedRobots });
   },
 
+  // Purchase a single robot by its ID
   purchaseRobot: (robotId: number) => {
     const { robots, currentResources, planet } = get();
     const robotIndex = robots.findIndex(r => r.id === robotId);
@@ -241,6 +64,7 @@ export const useGameStore = create<GameState & {
     });
   },
 
+  // Purchase a structure to be built in a specific slot
   purchaseStructure: (structureSlotId: number, structureId: number) => {
     const { buildableStructures, planet, currentResources, robots } = get();
 
@@ -288,11 +112,52 @@ export const useGameStore = create<GameState & {
     });
   },
 
+  // Update the last time the game state was saved
   updateTimeSaved: (lastTimeSaved: number) => {
     set({ lastTimeSaved: lastTimeSaved });
   },
 
+  // Reset the game state to the initial state
   resetGame: () => {
     set({ ...INITIAL_GAME_STATE });
   },
 }));
+
+/**
+ * Refreshes the robot state based on the current structure slots.
+ * This function recalculates the cost and production values of the robot.
+ */
+const refreshRobotState = (robot: Robot, structureSlots: StructureSlot[]): Robot => {
+  const costMultiplier = structureSlots.reduce((acc, slot) => {
+    if (
+      slot.structure &&
+      slot.structure.effect.type === "cost_reducer" &&
+      slot.structure.effect.robotTiersEffected.includes(robot.id)
+    ) {
+      return acc * slot.structure.effect.multiplier;
+    }
+    return acc;
+  }, 1);
+
+  let updatedCost = robot.baseCost * (robot.baseRate ** robot.count);
+  updatedCost *= costMultiplier;
+  updatedCost = Math.round(updatedCost);
+
+  const productionMultiplier = structureSlots.reduce((acc, slot) => {
+    if (
+      slot.structure &&
+      slot.structure.effect.type === "production" &&
+      slot.structure.effect.robotTiersEffected.includes(robot.id)
+    ) {
+      return acc * slot.structure.effect.multiplier;
+    }
+    return acc;
+  }, 1);
+  const robotProduction = robot.count * robot.baseProduction * productionMultiplier;
+  
+  return {
+    ...robot,
+    currentCost: updatedCost,
+    resourcesPerSecond: robotProduction,
+  };
+};

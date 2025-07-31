@@ -1,5 +1,7 @@
 import { useEffect } from 'react';
-import { GameState, useGameStore } from '../game_state/GameStore';
+
+import { useGameStore } from '../game_state/GameStore';
+import { GameState } from '../game_state/GameStateTypes';
 import { saveGameState } from '../game_state/stateStorageHelpers';
 
 /**
