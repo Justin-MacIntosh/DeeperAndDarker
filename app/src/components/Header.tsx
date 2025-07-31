@@ -1,27 +1,10 @@
 import { memo } from 'react';
 
+import GemIcon from '../icons/GemIcon';
 import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 
-const CurrentMoneyDisplay = () => {
-  console.log("CurrentMoneyDisplay render");
-  const currentMoney = useGameStore((state) => state.currentMoney);
-  return (
-    <h1 className="text-3xl font-bold">
-      {formatNumber(currentMoney)}<i className="fa-regular fa-gem fa-xs"/>
-    </h1>
-  );
-};
-const MoneyPerSecondDisplay = () => {
-  console.log("MoneyPerSecondDisplay render");
-  const moneyPerSecond = useGameStore((state) => state.moneyPerSecond);
-  return (
-    <h3 className="text-lg">
-      {formatNumber(moneyPerSecond)}<i className="fa-regular fa-gem fa-xs"/>/sec
-    </h3>
-  );
-};
-
+/* Header component displays the planet title and current production statistics. */
 const Header = memo(() => {
   console.log("Header render");
   return (
@@ -32,19 +15,52 @@ const Header = memo(() => {
         border-gray-300 border-solid border-2 border-l-0 border-r-0
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >
-      <div
-        id="planet-title"
-        className="min-w-[400px]"
-      >
-        <h1 className='text-3xl font-bold'>PLANET BAJ</h1>
-        <h3 className="text-lg">SWAMP BIOME</h3>
+      <div id="planet-title" className="min-w-[400px]">
+        <PlanetTitle />
       </div>
       <div className="flex-grow"/>
       <div id="production-stats" className="min-w-[400px] text-right">
-        <CurrentMoneyDisplay />
-        <MoneyPerSecondDisplay />
+        <CurrentResourcesDisplay />
+        <ResourcesPerSecondDisplay />
       </div>
     </header>
   )
 });
+
+/* PlanetTitle component displays the planet name and biome. */
+const PlanetTitle = () => {
+  console.log("PlanetTitle render");
+  const planet = useGameStore((state) => state.planet);
+  return (
+    <>
+      <h1 className='uppercase text-3xl font-bold'>Planet {planet.name}</h1>
+      <h3 className="uppercase text-lg">{planet.biome} Biome</h3>
+    </>
+  );
+}
+
+/*
+ * CurrentResourcesDisplay and ResourcesPerSecondDisplay components display the
+ * current resources and resources per second respectively.
+ */
+const CurrentResourcesDisplay = () => {
+  console.log("CurrentResourcesDisplay render");
+  const currentResources = useGameStore((state) => state.currentResources);
+  return (
+    <h1 className="text-3xl font-bold">
+      {formatNumber(currentResources)}<GemIcon/>
+    </h1>
+  );
+};
+const ResourcesPerSecondDisplay = () => {
+  console.log("ResourcesPerSecondDisplay render");
+  const resourcesPerSecond = useGameStore((state) => state.resourcesPerSecond);
+  return (
+    <h3 className="text-lg">
+      {formatNumber(resourcesPerSecond)}<GemIcon/>/sec
+    </h3>
+  );
+};
+
+// Export the Header component
 export default Header;

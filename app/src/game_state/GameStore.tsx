@@ -1,19 +1,28 @@
 import { create } from 'zustand';
 import { loadGameState } from './stateStorageHelpers';
 
+/* Types and Interfaces */
 export interface GameState {
+  planet: Planet;
   robots: Robot[];
-  currentMoney: number;
-  moneyPerSecond: number;
+  currentResources: number;
+  resourcesPerSecond: number;
   timeSaved: number;
   timeOfflineData?: OfflineData;
 }
-
-export interface OfflineData {
-  moneyEarned: number;
-  timeElapsed: number;
+interface Planet {
+  name: string;
+  biome: string;
+  structureSlots: StructureSlot[];
+  difficultyCoefficient: number;
 }
-
+export interface StructureSlot {
+  id: number;
+  structure?: Structure;
+}
+interface Structure {
+  type: string;
+}
 export interface Robot {
   id: number;
   name: string;
@@ -28,10 +37,27 @@ export interface Robot {
   isBeingShown: boolean;
   animateAppearance: boolean;
 }
+export interface OfflineData {
+  moneyEarned: number;
+  timeElapsed: number;
+}
 
+/* Initial Game State */
 const INITIAL_GAME_STATE: GameState = {
-  currentMoney: 100,
-  moneyPerSecond: 0,
+  planet: {
+    name: "Baj",
+    biome: "Swamp",
+    structureSlots: [
+      { id: 1 },
+      { id: 2 },
+      { id: 3 },
+      { id: 4 },
+      { id: 5 },
+    ],
+    difficultyCoefficient: 1.0,
+  },
+  currentResources: 100,
+  resourcesPerSecond: 0,
   timeSaved: 0,
   robots: [
     {
@@ -87,9 +113,9 @@ export const useGameStore = create<GameState & {
   ...LOADED_GAME_STATE,
 
   tick: (milliseconds: number) => {
-    const { currentMoney, moneyPerSecond, robots } = get();
+    const { currentResources, resourcesPerSecond, robots } = get();
     const tickRate = milliseconds / 1000;
-    const updatedMoney = currentMoney + moneyPerSecond * tickRate;
+    const updatedMoney = currentResources + resourcesPerSecond * tickRate;
 
     const updatedRobots = robots.map(robot => {
       if (!robot.isBeingShown && updatedMoney > robot.minMoneyToShow) {
@@ -98,11 +124,11 @@ export const useGameStore = create<GameState & {
       return robot;
     });
 
-    set({ currentMoney: updatedMoney, robots: updatedRobots });
+    set({ currentResources: updatedMoney, robots: updatedRobots });
   },
 
   purchaseRobot: (robotId: number) => {
-    const { robots, currentMoney, moneyPerSecond } = get();
+    const { robots, currentResources, resourcesPerSecond } = get();
     const robotIndex = robots.findIndex(r => r.id === robotId);
     if (robotIndex === -1) {
       console.error(`Robot with ID ${robotId} not found.`);
@@ -110,7 +136,7 @@ export const useGameStore = create<GameState & {
     }
 
     const robot = robots[robotIndex];
-    if (currentMoney < robot.currentCost) {
+    if (currentResources < robot.currentCost) {
       console.error(`Not enough money to buy robot with ID ${robotId}.`);
       return;
     }
@@ -120,8 +146,8 @@ export const useGameStore = create<GameState & {
     updatedRobots[robotIndex] = updatedRobot;
 
     set({
-      currentMoney: currentMoney - robot.currentCost,
-      moneyPerSecond: moneyPerSecond + robot.baseProduction,
+      currentResources: currentResources - robot.currentCost,
+      resourcesPerSecond: resourcesPerSecond + robot.baseProduction,
       robots: updatedRobots,
     });
   },

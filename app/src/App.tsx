@@ -1,21 +1,20 @@
 import { useEffect } from 'react';
 
 import { useGameStore } from './game_state/GameStore';
-import { resetGameState } from './game_state/stateStorageHelpers';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 
-import RobotsList from './components/RobotDisplay';
+import Footer from './components/Footer';
+import Header from './components/Header';
 import OfflineEarningsDialog from './components/OfflineEarningsDialog';
 import PlanetContent from './components/PlanetContent';
-import Header from './components/Header';
+import RobotsList from './components/RobotDisplay';
 
+/* Main App component that renders the game interface */
 const App = () => {
-  const resetAction = useGameStore((state) => state.resetGame);
-  const tickAction = useGameStore((state) => state.tick);
-  const timeSaved = useGameStore((state) => state.timeSaved);
-  const { saveCurrentGameData } = useSaveStateToLocalStorage();
-
   console.log("App render");
+
+  const tickAction = useGameStore((state) => state.tick);
+  const { saveCurrentGameData } = useSaveStateToLocalStorage();
 
   // Effect to handle game ticks
   useEffect(() => {
@@ -25,12 +24,6 @@ const App = () => {
     return () => clearInterval(tickIntervalId);
   }, []);
 
-  const resetGame = () => {
-    resetGameState();
-    resetAction();
-  }
-
-  const lastDateTimeSaved = new Date(timeSaved).toLocaleString();
   return (
     <div className="bg-dark-purple">
       <OfflineEarningsDialog/>
@@ -44,37 +37,10 @@ const App = () => {
       >
         <PlanetContent />
         <div id="sidebar" className="flex-1 min-w-[400px]">
-          <h1 className="text-2xl font-bold">AUTOMATONS</h1>
           <RobotsList/>
         </div>
       </div>
-      <footer className="h-full py-3 mx-7 flex content-center">
-        <div className="flex-1"></div>
-        <div className="min-w-[400px] text-right">
-          {
-            lastDateTimeSaved &&
-            <span className="mr-3">Last saved {lastDateTimeSaved}</span>
-          }
-          <button
-            className="
-              bg-med-purple mr-3 px-4 py-2 rounded-lg shadow-md
-              hover:brightness-125
-              active:brightness-110 active:scale-95"
-            onClick={saveCurrentGameData}
-          >
-            Save
-          </button>
-          <button
-            className="
-              bg-med-purple px-4 py-2 rounded-lg shadow-md
-              hover:brightness-125
-              active:brightness-110 active:scale-95"
-            onClick={resetGame}
-          >
-            Reset
-          </button>
-        </div>
-      </footer>
+      <Footer saveCurrentGameData={saveCurrentGameData}/>
     </div>
   );
 }

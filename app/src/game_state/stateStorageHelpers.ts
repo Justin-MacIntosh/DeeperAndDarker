@@ -3,7 +3,8 @@ import { GameState } from "./GameStore";
 const GAME_STATE_KEY = 'planet_cracker_game_state';
 
 export const saveGameState = (state: GameState) => {
-  localStorage.setItem(GAME_STATE_KEY, JSON.stringify(state));
+  const b64State = btoa(JSON.stringify(state));
+  localStorage.setItem(GAME_STATE_KEY, b64State);
 }
 
 export const loadGameState = (): GameState | null => {
@@ -12,10 +13,19 @@ export const loadGameState = (): GameState | null => {
     return null;
   }
 
-  const parsedState = JSON.parse(savedState) as GameState;
+  // Decode base64 string and handle potential errors
+  let decodedState: string;
+  try {
+    decodedState = atob(savedState);
+  } catch (e) {
+    return null;
+  }
+
+  // Parse the JSON and calculate offline data
+  const parsedState = JSON.parse(decodedState) as GameState;
   const timeElapsed = Date.now() - parsedState.timeSaved;
-  const moneyEarned = parsedState.moneyPerSecond * (timeElapsed / 1000);
-  parsedState.currentMoney += moneyEarned;
+  const moneyEarned = parsedState.resourcesPerSecond * (timeElapsed / 1000);
+  parsedState.currentResources += moneyEarned;
   parsedState.timeOfflineData = {
     moneyEarned: moneyEarned,
     timeElapsed: timeElapsed
