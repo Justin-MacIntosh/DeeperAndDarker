@@ -1,5 +1,28 @@
 import { Robot, StructureSlot } from "./GameStateTypes";
 
+export const calculateMaxPossiblePurchase = (
+  robot: Robot, currentResources: number, structureSlots: StructureSlot[]
+): { cost: number; maxPossiblePurchase: number } => {
+  let numToPurchase = 1;
+  while (true) {
+    const costForPurchase = calculatePriceForMultiplePurchases(
+      robot, numToPurchase + 1, structureSlots
+    );
+    if (currentResources < costForPurchase) {
+      break;
+    }
+    numToPurchase++;
+  }
+
+  const totalCost = calculatePriceForMultiplePurchases(
+    robot, numToPurchase, structureSlots
+  );
+  return {
+    cost: totalCost,
+    maxPossiblePurchase: numToPurchase,
+  };
+} 
+
 
 /** Calculates the price for purchasing a robot multiple times. */
 export const calculatePriceForMultiplePurchases = (

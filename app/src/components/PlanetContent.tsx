@@ -1,4 +1,5 @@
 import { memo, useState } from 'react';
+import { clsx } from 'clsx';
 
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
@@ -81,7 +82,7 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
             <DialogTitle className="text-2xl mb-5">Build structure</DialogTitle>
             <Description>
               <table className="text-left rtl:text-right border-gray-300 border-solid border-2">
-                <thead className="bg-med-purple uppercase rounded-xl">
+                <thead className="bg-med-purple uppercase">
                   <tr>
                     <th scope="col" className="px-6 py-3 font-normal">Name</th>
                     <th scope="col" className="px-6 py-3 font-normal">Description</th>
@@ -94,7 +95,7 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
                       key={structure.id}
                       className="
                         bg-light-purple border-gray-300 border-solid border-t-2 border-b-2
-                        hover:brightness-125 cursor-pointer"
+                        brightness-110 hover:brightness-100 cursor-pointer"
                       onClick={() => {
                         purchaseStructureAction(slot.id, structure.id);
                         setIsOpen(false);
@@ -150,15 +151,9 @@ const StructureDisplay = (
           onMouseEnter={() => setIsShowingPopover(true)}
           onMouseLeave={() => setIsShowingPopover(false)}
           onClick={openStructureSelectModal}
-          className="
-            bg-med-purple h-32 w-32
-            border-gray-300 border-solid border-2 rounded-xl
-            hover:brightness-125 hover:-translate-y-1
-            active:brightness-125 active:-translate-y-0.5
-            cursor-pointer transition-all duration-75
-            flex items-center justify-center"
+          className="structure-display-box"
         >
-          <i className={`fa-solid fa-${structure.icon} fa-5x`}/>
+          <i className={clsx("fa-solid fa-5x", structure.icon)}/>
         </li>
       </Popover>
     </>
@@ -168,16 +163,7 @@ const StructureDisplay = (
 const EmptyStructureSlotDisplay = (
   {openStructureSelectModal}: { openStructureSelectModal: () => void }
 ) => {
-  return (
-    <li className="
-      bg-med-purple h-32 w-32
-      border-gray-300 border-solid border-2 rounded-xl
-      hover:brightness-125 hover:-translate-y-1
-      active:brightness-125 active:-translate-y-0.5
-      cursor-pointer transition-all duration-75"
-      onClick={openStructureSelectModal}
-    ></li>
-  )
+  return <li className="structure-display-box" onClick={openStructureSelectModal}/>;
 }
 
 export default PlanetContent;

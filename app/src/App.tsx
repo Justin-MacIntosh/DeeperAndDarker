@@ -35,7 +35,7 @@ const App = () => {
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >
-        <PlanetContent />
+        <PlanetContent/>
         <div id="sidebar" className="flex-1 min-w-[400px]">
           <RobotsList/>
         </div>

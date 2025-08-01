@@ -84,7 +84,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 1,
       name: "MNR Control Center",
-      icon: "satellite-dish",
+      icon: "fa-satellite-dish",
       description: "Increases all Automaton resource production by 60%",
       cost: 1000,
       effect: {
@@ -96,7 +96,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 2,
       name: "Automaton Factory",
-      icon: "industry",
+      icon: "fa-industry",
       description: "Reduces all Automaton costs by 50%",
       cost: 2000,
       effect: {
