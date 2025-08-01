@@ -3,7 +3,7 @@ import { clsx } from 'clsx';
 
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
-import { Structure, StructureSlot } from '../game_state/GameStateTypes';
+import { Structure, StructureSlot } from '../types';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { formatNumber } from '../helpers/formatNumber';
 
@@ -65,6 +65,7 @@ const PlanetContent = memo(() => {
 const StructureCell = ({ slot }: { slot: StructureSlot }) => {
   // console.log("StructureCell render");
 
+  const currentResources = useGameStore((state) => state.currentResources);
   const purchaseStructureAction = useGameStore((state) => state.purchaseStructure);
 
   const [isOpen, setIsOpen] = useState(false);
@@ -90,24 +91,34 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {useGameStore((state) => state.buildableStructures).map((structure) => (
-                    <tr
-                      key={structure.id}
-                      className="
-                        bg-light-purple border-gray-300 border-solid border-t-2 border-b-2
-                        brightness-110 hover:brightness-100 cursor-pointer"
-                      onClick={() => {
-                        purchaseStructureAction(slot.id, structure.id);
-                        setIsOpen(false);
-                      }}
-                    >
-                      <td className="px-6 py-4">{structure.name}</td>
-                      <td className="px-6 py-4">{structure.description}</td>
-                      <td className="px-6 py-4">
-                        {formatNumber(structure.cost * slot.costMultiplier)}
-                      </td>
-                    </tr>
-                  ))}
+                  {useGameStore((state) => state.buildableStructures).map((structure) => {
+                    const isOptionDisabled = (structure.cost * slot.costMultiplier) > currentResources;
+                    const optionActiveClass = (
+                      isOptionDisabled ?
+                      "opacity-50 cursor-not-allowed" :
+                      "hover:brightness-100 cursor-pointer"
+                    );
+                    return (
+                      <tr
+                        key={structure.id}
+                        className= {clsx(
+                          "bg-light-purple border-gray-300 border-solid",
+                          "border-t-2 border-b-2 brightness-110",
+                          optionActiveClass
+                        )} 
+                        onClick={() => {
+                          purchaseStructureAction(slot.id, structure.id);
+                          setIsOpen(false);
+                        }}
+                      >
+                        <td className="px-6 py-4">{structure.name}</td>
+                        <td className="px-6 py-4">{structure.description}</td>
+                        <td className="px-6 py-4">
+                          {formatNumber(structure.cost * slot.costMultiplier)}
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </Description>

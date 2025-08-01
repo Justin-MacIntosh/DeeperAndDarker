@@ -1,8 +1,9 @@
 import { create } from 'zustand';
 
 import { loadGameState } from './stateStorageHelpers';
-import { GameState, StructureSlot, Robot, INITIAL_GAME_STATE } from './GameStateTypes';
-import { refreshRobotProduction, calculatePriceForMultiplePurchases } from './robotStateHelpers';
+import { INITIAL_GAME_STATE } from './InitialGameState';
+import { refreshRobotProduction, calculatePriceForMultiplePurchases } from '../helpers/robotStateHelpers';
+import { GameState, Robot } from '../types';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 

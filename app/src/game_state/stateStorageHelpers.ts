@@ -1,4 +1,4 @@
-import { GameState } from './GameStateTypes';
+import { GameState } from '../types';
 
 const GAME_STATE_KEY = 'planet_cracker_game_state';
 

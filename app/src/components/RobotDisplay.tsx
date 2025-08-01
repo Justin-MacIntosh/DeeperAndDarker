@@ -6,19 +6,19 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import GemIcon from '../icons/GemIcon';
 import Card from './Card';
 
-import { Robot } from '../game_state/GameStateTypes';
+import { Robot } from '../types';
 import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
   calculateMaxPossiblePurchase
-} from '../game_state/robotStateHelpers';
+} from '../helpers/robotStateHelpers';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
 const RobotsList = () => {
   // console.log("RobotsList render");
-  const [numToPurchase, setNumToPurchase] = useState<PurchaseAmount>(1);
+  const [numToPurchaseOption, setNumToPurchaseOption] = useState<PurchaseAmount>(1);
 
   const robots = useGameStore((state) => state.robots);
   return (
@@ -26,13 +26,17 @@ const RobotsList = () => {
       <div className="flex flex-row justify-between items-center mb-3">
         <h1 className="uppercase text-2xl font-bold">Automatons</h1>
         <div className="text-right">
-          <Listbox value={numToPurchase} onChange={setNumToPurchase}>
+          <Listbox value={numToPurchaseOption} onChange={setNumToPurchaseOption}>
             <ListboxButton
               className="
                 btn-default w-20 rounded-lg text-xl text-center
                 border-solid border-gray-300 border-2"
             >
-                { numToPurchase === "Max" ? numToPurchase : `x${numToPurchase}` }
+                {
+                  numToPurchaseOption === "Max" ?
+                  numToPurchaseOption :
+                  `x${numToPurchaseOption}`
+                }
             </ListboxButton>
             <ListboxOptions
               anchor="bottom"
@@ -58,7 +62,7 @@ const RobotsList = () => {
               <SingleRobotDisplay
                 key={robot.id.toString()}
                 robot={robot}
-                numToPurchase={numToPurchase}
+                numToPurchaseOption={numToPurchaseOption}
               />
             )
           }
@@ -69,43 +73,54 @@ const RobotsList = () => {
 };
 
 const SingleRobotDisplay = memo(
-  (props: { robot: Robot; numToPurchase: PurchaseAmount; }) => {
-    // console.log("SingleRobotDisplay render");
-    const currentResources = useGameStore((state) => state.currentResources);
-    const planet = useGameStore((state) => state.planet);
-    const purchaseRobotAction = useGameStore((state) => state.purchaseRobot)
-
-    let currentCost = 0;
-    let numToPurchase = 0;
+  (props: { robot: Robot; numToPurchaseOption: PurchaseAmount; }) => {
+    console.log("SingleRobotDisplay render");
     const robot = props.robot;
-    if (props.numToPurchase === 'Max') {
-      const { cost, maxPossiblePurchase } = calculateMaxPossiblePurchase(
-        robot, currentResources, planet.structureSlots
-      );
-      currentCost = cost;
-      numToPurchase = maxPossiblePurchase;
+
+    // Actions and state from the game store
+    const purchaseRobotAction = useGameStore((state) => state.purchaseRobot)
+    const currentResources: number = useGameStore((state) => state.currentResources);
+    const planet = useGameStore((state) => state.planet);
+
+    // Calculate the cost and number of robots to purchase
+    let currentCost: number = 0;
+    let numToPurchase: number = 0;
+    if (props.numToPurchaseOption === 'Max') {
+      ({ cost: currentCost, maxPossiblePurchase: numToPurchase } = (
+        calculateMaxPossiblePurchase(props.robot, currentResources, planet.structureSlots)
+      ));
     } else {
-      currentCost = calculatePriceForMultiplePurchases(robot, props.numToPurchase, planet.structureSlots);
-      numToPurchase = props.numToPurchase;
+      currentCost = (
+        calculatePriceForMultiplePurchases(
+          props.robot, props.numToPurchaseOption, planet.structureSlots
+        )
+      );
+      numToPurchase = props.numToPurchaseOption;
     }
 
-    const animateClass = robot.animateAppearance ? "fade-in" : "";
+    let amountToPurchaseDisplay = numToPurchase.toString();
+    if (props.numToPurchaseOption === 'Max' && currentCost > currentResources) {
+      amountToPurchaseDisplay = "0";
+    }
     return (
-      <div className={clsx("mb-5", animateClass)}>
+      <div className={clsx(
+        "mb-5", robot.animateAppearance && "fade-in"
+      )}>
         <div className="text-lg flex flex-row mb-2">
-          <h2 className="uppercase flex-1">{robot.name}: {robot.count}</h2>
+          <h2 className="uppercase flex-1">{robot.name}: {robot.count} (+{amountToPurchaseDisplay})</h2>
           <h2 className="flex-1 text-right">{formatNumber(robot.resourcesPerSecond)}<GemIcon/>/sec</h2>
         </div>
         <Card
-          color={robot.color}
+          color={props.robot.color}
           iconName="fa-robot"
-          contentElement={<>{robot.description}</>}
+          contentElement={<>{props.robot.description}</>}
           suffixElement={<>{formatNumber(currentCost)}<GemIcon/></>}
-          onClick={() => {purchaseRobotAction(robot.id, numToPurchase)}}
+          onClick={() => {purchaseRobotAction(props.robot.id, numToPurchase)}}
           isClickDisabled={currentCost > currentResources}
         />
       </div>
     );
   }
 );
+
 export default RobotsList;
