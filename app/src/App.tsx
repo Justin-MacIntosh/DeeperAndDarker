@@ -11,7 +11,7 @@ import RobotsList from './components/RobotDisplay';
 
 /* Main App component that renders the game interface */
 const App = () => {
-  console.log("App render");
+  // console.log("App render");
 
   const tickAction = useGameStore((state) => state.tick);
   const { saveCurrentGameData } = useSaveStateToLocalStorage();

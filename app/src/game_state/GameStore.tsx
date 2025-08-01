@@ -2,6 +2,7 @@ import { create } from 'zustand';
 
 import { loadGameState } from './stateStorageHelpers';
 import { GameState, StructureSlot, Robot, INITIAL_GAME_STATE } from './GameStateTypes';
+import { refreshRobotProduction, calculatePriceForMultiplePurchases } from './robotStateHelpers';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
@@ -11,7 +12,7 @@ const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
  */
 export const useGameStore = create<GameState & {
   tick: (milliseconds: number) => void;
-  purchaseRobot: (robotId: number) => void;
+  purchaseRobot: (robotId: number, numToPurchase: number) => void;
   purchaseStructure: (structureSlotId: number, structureId: number) => void;
   updateTimeSaved: (timeSaved: number) => void;
   resetGame: () => void;
@@ -36,7 +37,7 @@ export const useGameStore = create<GameState & {
   },
 
   // Purchase a single robot by its ID
-  purchaseRobot: (robotId: number) => {
+  purchaseRobot: (robotId: number, numToPurchase: number) => {
     const { robots, currentResources, planet } = get();
     const robotIndex = robots.findIndex(r => r.id === robotId);
     if (robotIndex === -1) {
@@ -45,15 +46,18 @@ export const useGameStore = create<GameState & {
     }
 
     const robot = robots[robotIndex];
-    const currentCost = robot.currentCost;
+
+    const currentCost = calculatePriceForMultiplePurchases(
+      robot, numToPurchase, planet.structureSlots
+    );
     if (currentResources < currentCost) {
       console.error(`Not enough money to buy robot with ID ${robotId}.`);
       return;
     }
 
     const updatedRobots = [...robots];
-    updatedRobots[robotIndex] =  refreshRobotState(
-      {...robot, count: robot.count + 1 },
+    updatedRobots[robotIndex] = refreshRobotProduction(
+      {...robot, count: robot.count + numToPurchase },
       planet.structureSlots
     );
 
@@ -100,7 +104,7 @@ export const useGameStore = create<GameState & {
     // Refresh robots based on the new structure state
     const updatedRobots: Robot[] = [];
     for (const robot of robots) {
-      updatedRobots.push(refreshRobotState(robot, updatedSlots));
+      updatedRobots.push(refreshRobotProduction(robot, updatedSlots));
     }
 
     // Update the game state
@@ -122,42 +126,3 @@ export const useGameStore = create<GameState & {
     set({ ...INITIAL_GAME_STATE });
   },
 }));
-
-/**
- * Refreshes the robot state based on the current structure slots.
- * This function recalculates the cost and production values of the robot.
- */
-const refreshRobotState = (robot: Robot, structureSlots: StructureSlot[]): Robot => {
-  const costMultiplier = structureSlots.reduce((acc, slot) => {
-    if (
-      slot.structure &&
-      slot.structure.effect.type === "cost_reducer" &&
-      slot.structure.effect.robotTiersEffected.includes(robot.id)
-    ) {
-      return acc * slot.structure.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-
-  let updatedCost = robot.baseCost * (robot.baseRate ** robot.count);
-  updatedCost *= costMultiplier;
-  updatedCost = Math.round(updatedCost);
-
-  const productionMultiplier = structureSlots.reduce((acc, slot) => {
-    if (
-      slot.structure &&
-      slot.structure.effect.type === "production" &&
-      slot.structure.effect.robotTiersEffected.includes(robot.id)
-    ) {
-      return acc * slot.structure.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-  const robotProduction = robot.count * robot.baseProduction * productionMultiplier;
-  
-  return {
-    ...robot,
-    currentCost: updatedCost,
-    resourcesPerSecond: robotProduction,
-  };
-};

@@ -2,12 +2,22 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  padding: 0 !important;
+  overflow: visible !important;
+  scrollbar-gutter: stable
+}
+
 @layer components {
     .btn-default {
-        @apply h-12 bg-med-purple px-4 py-2 rounded-lg shadow-md
-          hover:brightness-125 hover:-translate-y-1
-          active:brightness-110 active:-translate-y-0.5
-          transition-all duration-75;
+      @apply h-12 bg-med-purple px-4 py-2 rounded-lg shadow-md
+        hover:brightness-125 hover:-translate-y-1
+        active:brightness-110 active:-translate-y-0.5
+        transition-all duration-75;
+    }
+    .list-box-option {
+      @apply text-center cursor-pointer bg-med-purple rounded-lg
+        px-3 py-1.5 select-none brightness-125 hover:brightness-150
     }
 }
 
@@ -65,4 +75,10 @@ body {
 .save-button:active {
   filter: brightness(110%);
   transform: scale(0.98);
+}
+
+
+.ocean-display{
+  display: flex;
+  width: 100px;
 }

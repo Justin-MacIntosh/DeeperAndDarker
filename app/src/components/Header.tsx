@@ -53,7 +53,8 @@ const CurrentResourcesDisplay = () => {
   );
 };
 const ResourcesPerSecondDisplay = () => {
-  // console.log("ResourcesPerSecondDisplay render");
+  // console.log("ResourcesPerSecondDisplay render");  
+
   const resourcesPerSecond = useGameStore((state) => state.resourcesPerSecond);
   return (
     <h3 className="text-lg">

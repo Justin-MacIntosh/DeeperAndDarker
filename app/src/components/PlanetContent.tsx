@@ -42,9 +42,7 @@ const PlanetContent = memo(() => {
       <div className="content-structures-row">
         <div
           id="structure-display"
-          className="
-            p-4 bg-light-purple
-            flex-1 rounded-xl"
+          className="p-4 bg-light-purple flex-1 rounded-xl"
         >
           <h3 className="uppercase text-xl mb-5">Structures</h3>
           <ul
@@ -82,7 +80,7 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
           >
             <DialogTitle className="text-2xl mb-5">Build structure</DialogTitle>
             <Description>
-              <table className="text-left rtl:text-right border-gray-300 border-solid border-2 ">
+              <table className="text-left rtl:text-right border-gray-300 border-solid border-2">
                 <thead className="bg-med-purple uppercase rounded-xl">
                   <tr>
                     <th scope="col" className="px-6 py-3 font-normal">Name</th>
@@ -94,7 +92,9 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
                   {useGameStore((state) => state.buildableStructures).map((structure) => (
                     <tr
                       key={structure.id}
-                      className="bg-light-purple border-gray-300 border-solid border-t-2 border-b-2 hover:brightness-125 cursor-pointer"
+                      className="
+                        bg-light-purple border-gray-300 border-solid border-t-2 border-b-2
+                        hover:brightness-125 cursor-pointer"
                       onClick={() => {
                         purchaseStructureAction(slot.id, structure.id);
                         setIsOpen(false);

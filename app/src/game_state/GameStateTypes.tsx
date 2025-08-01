@@ -42,14 +42,13 @@ export interface Robot {
   id: number;
   name: string;
   description: string;
-  
+
   // Resource production values
   resourcesPerSecond: number;
   baseProduction: number;
 
   // Cost and count values
   count: number;
-  currentCost: number;
   baseCost: number;
   baseRate: number;
 
@@ -90,7 +89,7 @@ export const INITIAL_GAME_STATE: GameState = {
       cost: 1000,
       effect: {
         type: 'production',
-        robotTiersEffected: [1, 2],
+        robotTiersEffected: [1, 2, 3],
         multiplier: 1.6,
       } as ProductionMultiplier,
     },
@@ -102,7 +101,7 @@ export const INITIAL_GAME_STATE: GameState = {
       cost: 2000,
       effect: {
         type: 'cost_reducer',
-        robotTiersEffected: [1, 2],
+        robotTiersEffected: [1, 2, 3],
         multiplier: 0.5,
       } as CostReducer,
     },
@@ -117,7 +116,6 @@ export const INITIAL_GAME_STATE: GameState = {
       baseProduction: 150,
 
       count: 0,
-      currentCost: 100,
       baseCost: 100,
       baseRate: 1.15,
 
@@ -135,11 +133,27 @@ export const INITIAL_GAME_STATE: GameState = {
       baseProduction: 2500,
 
       count: 0,
-      currentCost: 5000,
       baseCost: 5000,
       baseRate: 1.15,
 
       color: "red",
+      minMoneyToShow: 10000,
+      isBeingShown: false,
+      animateAppearance: true,
+    },
+    {
+      id: 3,
+      name: "MNR-XXXXX",
+      description: "Supersupercharged mining robot",
+
+      resourcesPerSecond: 0,
+      baseProduction: 10000,
+
+      count: 0,
+      baseCost: 5000,
+      baseRate: 1.15,
+
+      color: "green",
       minMoneyToShow: 10000,
       isBeingShown: false,
       animateAppearance: true,
