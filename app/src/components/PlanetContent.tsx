@@ -3,13 +3,13 @@ import { clsx } from 'clsx';
 
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
-import { Structure, StructureSlot } from '../types';
+import { Upgrade, UpgradeSlot } from '../types';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { formatNumber } from '../helpers/formatNumber';
 
 const PlanetContent = memo(() => {
   // console.log("PlanetContent render");
-  const planet = useGameStore((state) => state.planet);
+  const stage = useGameStore((state) => state.stage);
 
   return (
     <div
@@ -52,8 +52,8 @@ const PlanetContent = memo(() => {
               grid grid-cols-[repeat(auto-fit,_minmax(140px,_max-content))]
               gap-9 justify-items-center justify-center pr-4 py-3 mb-5"
           >
-            {planet.structureSlots.map((slot, index) => (
-              <StructureCell key={index} slot={slot} />
+            {stage.upgradeSlots.map((slot, index) => (
+              <UpgradeCell key={index} slot={slot} />
             ))}
           </ul>
         </div>
@@ -62,11 +62,11 @@ const PlanetContent = memo(() => {
   )
 });
 
-const StructureCell = ({ slot }: { slot: StructureSlot }) => {
-  // console.log("StructureCell render");
+const UpgradeCell = ({ slot }: { slot: UpgradeSlot }) => {
+  // console.log("UpgradeCell render");
 
   const currentResources = useGameStore((state) => state.currentResources);
-  const purchaseStructureAction = useGameStore((state) => state.purchaseStructure);
+  const purchaseUpgradeAction = useGameStore((state) => state.purchaseUpgrade);
 
   const [isOpen, setIsOpen] = useState(false);
   return (
@@ -91,8 +91,8 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {useGameStore((state) => state.buildableStructures).map((structure) => {
-                    const isOptionDisabled = (structure.cost * slot.costMultiplier) > currentResources;
+                  {useGameStore((state) => state.buildableUpgrades).map((upg) => {
+                    const isOptionDisabled = (upg.cost * slot.costMultiplier) > currentResources;
                     const optionActiveClass = (
                       isOptionDisabled ?
                       "opacity-50 cursor-not-allowed" :
@@ -100,21 +100,21 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
                     );
                     return (
                       <tr
-                        key={structure.id}
+                        key={upg.id}
                         className= {clsx(
                           "bg-light-purple border-gray-300 border-solid",
                           "border-t-2 border-b-2 brightness-110",
                           optionActiveClass
                         )} 
                         onClick={() => {
-                          purchaseStructureAction(slot.id, structure.id);
+                          purchaseUpgradeAction(slot.id, upg.id);
                           setIsOpen(false);
                         }}
                       >
-                        <td className="px-6 py-4">{structure.name}</td>
-                        <td className="px-6 py-4">{structure.description}</td>
+                        <td className="px-6 py-4">{upg.name}</td>
+                        <td className="px-6 py-4">{upg.description}</td>
                         <td className="px-6 py-4">
-                          {formatNumber(structure.cost * slot.costMultiplier)}
+                          {formatNumber(upg.cost * slot.costMultiplier)}
                         </td>
                       </tr>
                     );
@@ -126,21 +126,21 @@ const StructureCell = ({ slot }: { slot: StructureSlot }) => {
         </div>
       </Dialog>
       {
-        slot.structure ?
-        <StructureDisplay structure={slot.structure} openStructureSelectModal={() => setIsOpen(true)} /> :
-        <EmptyStructureSlotDisplay openStructureSelectModal={() => setIsOpen(true)}/>
+        slot.upgrade ?
+        <UpgradeDisplay upgrade={slot.upgrade} openUpgradeSelectModal={() => setIsOpen(true)} /> :
+        <EmptyUpgradeSlotDisplay openUpgradeSelectModal={() => setIsOpen(true)}/>
       }
     </>
   )
 }
 
-const StructureDisplay = (
-  { structure, openStructureSelectModal }:
-  { structure: Structure, openStructureSelectModal: () => void }
+const UpgradeDisplay = (
+  { upgrade, openUpgradeSelectModal }:
+  { upgrade: Upgrade, openUpgradeSelectModal: () => void }
 ) => {
   const [isShowingPopover, setIsShowingPopover] = useState(false);
 
-  // If the slot already has a structure, render it
+  // If the slot already has a upgrade, render it
   return (
     <>
       <Popover
@@ -153,28 +153,28 @@ const StructureDisplay = (
               bg-med-purple p-5 z-10
               border-gray-300 border-solid border-2 rounded-xl"
           >
-            <h1 className="uppercase">{structure.name}</h1>
-            <p>{structure.description}</p>
+            <h1 className="uppercase">{upgrade.name}</h1>
+            <p>{upgrade.description}</p>
           </div>
         }
       >
         <li
           onMouseEnter={() => setIsShowingPopover(true)}
           onMouseLeave={() => setIsShowingPopover(false)}
-          onClick={openStructureSelectModal}
+          onClick={openUpgradeSelectModal}
           className="structure-display-box"
         >
-          <i className={clsx("fa-solid fa-5x", structure.icon)}/>
+          <i className={clsx("fa-solid fa-5x", upgrade.icon)}/>
         </li>
       </Popover>
     </>
   );
 }
 
-const EmptyStructureSlotDisplay = (
-  {openStructureSelectModal}: { openStructureSelectModal: () => void }
+const EmptyUpgradeSlotDisplay = (
+  {openUpgradeSelectModal}: { openUpgradeSelectModal: () => void }
 ) => {
-  return <li className="structure-display-box" onClick={openStructureSelectModal}/>;
+  return <li className="structure-display-box" onClick={openUpgradeSelectModal}/>;
 }
 
 export default PlanetContent;

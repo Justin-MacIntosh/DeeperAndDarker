@@ -2,8 +2,8 @@ import { create } from 'zustand';
 
 import { loadGameState } from './stateStorageHelpers';
 import { INITIAL_GAME_STATE } from './InitialGameState';
-import { refreshRobotProduction, calculatePriceForMultiplePurchases } from '../helpers/robotStateHelpers';
-import { GameState, Robot } from '../types';
+import { refreshProducerProduction, calculatePriceForMultiplePurchases } from '../helpers/producerStateHelpers';
+import { GameState, Producer } from '../types';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
@@ -13,8 +13,8 @@ const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
  */
 export const useGameStore = create<GameState & {
   tick: (milliseconds: number) => void;
-  purchaseRobot: (robotId: number, numToPurchase: number) => void;
-  purchaseStructure: (structureSlotId: number, structureId: number) => void;
+  purchaseProducer: (producerId: number, numToPurchase: number) => void;
+  purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => void;
   updateTimeSaved: (timeSaved: number) => void;
   resetGame: () => void;
 }>((set, get) => ({
@@ -22,98 +22,105 @@ export const useGameStore = create<GameState & {
 
   // Tick function to update resources based on time elapsed
   tick: (milliseconds: number) => {
-    const { currentResources, resourcesPerSecond, robots } = get();
+    const { currentResources, resourcesPerSecond, producers } = get();
     const tickRate = milliseconds / 1000;
     const updatedMoney = currentResources + resourcesPerSecond * tickRate;
 
-    // Update robots to be shown if they meet the minimum money requirement
-    const updatedRobots = robots.map(robot => {
-      if (!robot.isBeingShown && updatedMoney > robot.minMoneyToShow) {
-        return { ...robot, isBeingShown: true };
+    // Update producers to be shown if they meet the minimum money requirement
+    const updatedProducers = producers.map(prod => {
+      if (!prod.isBeingShown && updatedMoney > prod.minMoneyToShow) {
+        return { ...prod, isBeingShown: true };
       }
-      return robot;
+      return prod;
     });
 
-    set({ currentResources: updatedMoney, robots: updatedRobots });
+    set({ currentResources: updatedMoney, producers: updatedProducers });
   },
 
-  // Purchase a single robot by its ID
-  purchaseRobot: (robotId: number, numToPurchase: number) => {
-    const { robots, currentResources, planet } = get();
-    const robotIndex = robots.findIndex(r => r.id === robotId);
-    if (robotIndex === -1) {
-      console.error(`Robot with ID ${robotId} not found.`);
+  // Purchase a single producer by its ID
+  purchaseProducer: (producerId: number, numToPurchase: number) => {
+    const { producers, currentResources, stage } = get();
+    const prodIndex = producers.findIndex(prod => prod.id === producerId);
+    if (prodIndex === -1) {
+      console.error(`Producer with ID ${producerId} not found.`);
       return;
     }
 
-    const robot = robots[robotIndex];
-
+    const producerToBuy = producers[prodIndex];
     const currentCost = calculatePriceForMultiplePurchases(
-      robot, numToPurchase, planet.structureSlots
+      producerToBuy, numToPurchase, stage.upgradeSlots
     );
     if (currentResources < currentCost) {
-      console.error(`Not enough money to buy robot with ID ${robotId}.`);
+      console.error(`Not enough money to buy producer with ID ${producerId}.`);
       return;
     }
 
-    const updatedRobots = [...robots];
-    updatedRobots[robotIndex] = refreshRobotProduction(
-      {...robot, count: robot.count + numToPurchase },
-      planet.structureSlots
+    const updatedProducers = [...producers];
+    updatedProducers[prodIndex] = refreshProducerProduction(
+      {...producerToBuy, count: producerToBuy.count + numToPurchase },
+      stage.upgradeSlots
     );
 
     set({
-      robots: updatedRobots,
-      resourcesPerSecond: updatedRobots.reduce((total, robot) => total + robot.resourcesPerSecond, 0),
+      producers: updatedProducers,
+      resourcesPerSecond: (
+        updatedProducers.reduce(
+          (total, prod) => total + prod.resourcesPerSecond, 0
+        )
+      ),
       currentResources: currentResources - currentCost,
     });
   },
 
-  // Purchase a structure to be built in a specific slot
-  purchaseStructure: (structureSlotId: number, structureId: number) => {
-    const { buildableStructures, planet, currentResources, robots } = get();
+  // Purchase an Upgrade to be built in a specific slot
+  purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => {
+    const { buildableUpgrades: buildableUpgrades, stage, currentResources, producers } = get();
 
-    // Get Structure to Build
-    const structureToBuild = buildableStructures.find(s => s.id === structureId);
-    if (!structureToBuild) {
-      console.error(`Structure with ID ${structureId} not found.`);
+    // Get Upgrade to purchase
+    const upgradeToPurchase = buildableUpgrades.find(upg => upg.id === upgradeId);
+    if (!upgradeToPurchase) {
+      console.error(`Upgrade with ID ${upgradeId} not found.`);
       return;
     }
 
-    // Get Structure Slot to build in and check if Slot is Available
-    const structureSlotIndex = planet.structureSlots.findIndex(slot => slot.id === structureSlotId);
-    if (structureSlotIndex === -1) {
-      console.error(`Structure slot with ID ${structureSlotId} not found.`);
+    // Get Upgrade Slot to build in and check if Slot is Available
+    const upgradeSlotIndex = stage.upgradeSlots.findIndex(slot => slot.id === upgradeSlotId);
+    if (upgradeSlotIndex === -1) {
+      console.error(`Upgrade slot with ID ${upgradeSlotId} not found.`);
       return;
     }
-    const structureSlot = planet.structureSlots[structureSlotIndex];
+    const upgradeSlot = stage.upgradeSlots[upgradeSlotIndex];
 
-    // Check if there are enough resources to purchase the structure
-    const totalCost = structureToBuild.cost * structureSlot.costMultiplier;
+    // Check if there are enough resources to purchase the Upgrade
+    const totalCost = upgradeToPurchase.cost * upgradeSlot.costMultiplier;
     if (currentResources < totalCost) {
-      console.error(`Not enough money to buy structure with ID ${structureId}.`);
+      console.error(`Not enough money to buy Upgrade with ID ${upgradeId}.`);
       return;
     }
 
-    // Update the structure slot
-    const updatedSlots = [...planet.structureSlots];
-    updatedSlots[structureSlotIndex] = {
-      ...structureSlot,
-      structure: { ...structureToBuild },
+    // Update the Upgrade Slot
+    const updatedSlots = [...stage.upgradeSlots];
+    updatedSlots[upgradeSlotIndex] = {
+      ...upgradeSlot,
+      upgrade: { ...upgradeToPurchase },
     }
 
-    // Refresh robots based on the new structure state
-    const updatedRobots: Robot[] = [];
-    for (const robot of robots) {
-      updatedRobots.push(refreshRobotProduction(robot, updatedSlots));
+    // Refresh Producers based on the new Upgrade state
+    const updatedProducers: Producer[] = [];
+    for (const prod of producers) {
+      updatedProducers.push(refreshProducerProduction(prod, updatedSlots));
     }
 
     // Update the game state
     set({
-      robots: updatedRobots,
-      resourcesPerSecond: updatedRobots.reduce((total, robot) => total + robot.resourcesPerSecond, 0),
+      producers: updatedProducers,
+      resourcesPerSecond: (
+        updatedProducers.reduce(
+          (total, prod) => total + prod.resourcesPerSecond, 0
+        )
+      ),
       currentResources: currentResources - totalCost,
-      planet: { ...planet, structureSlots: updatedSlots },
+      stage: { ...stage, upgradeSlots: updatedSlots },
     });
   },
 

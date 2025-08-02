@@ -21,8 +21,12 @@ export const loadGameState = (): GameState | null => {
     return null;
   }
 
+  console.log("Loaded game state from localStorage");
+
   // Parse the JSON and calculate offline data
   const parsedState = JSON.parse(decodedState) as GameState;
+  console.log("Parsed game state:", parsedState);
+
   const timeElapsed = Date.now() - parsedState.lastTimeSaved;
   const moneyEarned = parsedState.resourcesPerSecond * (timeElapsed / 1000);
   parsedState.currentResources += moneyEarned;

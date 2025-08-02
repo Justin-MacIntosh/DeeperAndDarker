@@ -30,11 +30,11 @@ const Header = memo(() => {
 /* PlanetTitle component displays the planet name and biome. */
 const PlanetTitle = () => {
   // console.log("PlanetTitle render");
-  const planet = useGameStore((state) => state.planet);
+  const stage = useGameStore((state) => state.stage);
   return (
     <>
-      <h1 className='uppercase text-3xl font-bold'>Planet {planet.name}</h1>
-      <h3 className="uppercase text-lg">{planet.biome} Biome</h3>
+      <h1 className='uppercase text-3xl font-bold'>{stage.name}</h1>
+      <h3 className="uppercase text-lg">{stage.description}</h3>
     </>
   );
 }

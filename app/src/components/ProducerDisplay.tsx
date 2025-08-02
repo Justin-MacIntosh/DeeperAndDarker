@@ -6,21 +6,21 @@ import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headless
 import GemIcon from '../icons/GemIcon';
 import Card from './Card';
 
-import { Robot } from '../types';
+import { Producer } from '../types';
 import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
   calculateMaxPossiblePurchase
-} from '../helpers/robotStateHelpers';
+} from '../helpers/producerStateHelpers';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
-const RobotsList = () => {
-  // console.log("RobotsList render");
+const ProducerList = () => {
+  // console.log("ProducerList render");
   const [numToPurchaseOption, setNumToPurchaseOption] = useState<PurchaseAmount>(1);
 
-  const robots = useGameStore((state) => state.robots);
+  const producers = useGameStore((state) => state.producers);
   return (
     <>
       <div className="flex flex-row justify-between items-center mb-3">
@@ -53,15 +53,15 @@ const RobotsList = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        {robots.map(
-          (robot) => {
-            if (!robot.isBeingShown) {
+        {producers.map(
+          (prod) => {
+            if (!prod.isBeingShown) {
               return null;
             }
             return (
-              <SingleRobotDisplay
-                key={robot.id.toString()}
-                robot={robot}
+              <SingleProducerDisplay
+                key={prod.id.toString()}
+                producer={prod}
                 numToPurchaseOption={numToPurchaseOption}
               />
             )
@@ -72,27 +72,27 @@ const RobotsList = () => {
   );
 };
 
-const SingleRobotDisplay = memo(
-  (props: { robot: Robot; numToPurchaseOption: PurchaseAmount; }) => {
-    console.log("SingleRobotDisplay render");
-    const robot = props.robot;
+const SingleProducerDisplay = memo(
+  (props: { producer: Producer; numToPurchaseOption: PurchaseAmount; }) => {
+    console.log("SingleProducerDisplay render");
+    const producer = props.producer;
 
     // Actions and state from the game store
-    const purchaseRobotAction = useGameStore((state) => state.purchaseRobot)
+    const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
     const currentResources: number = useGameStore((state) => state.currentResources);
-    const planet = useGameStore((state) => state.planet);
+    const stage = useGameStore((state) => state.stage);
 
-    // Calculate the cost and number of robots to purchase
+    // Calculate the cost and number of producers to purchase
     let currentCost: number = 0;
     let numToPurchase: number = 0;
     if (props.numToPurchaseOption === 'Max') {
       ({ cost: currentCost, maxPossiblePurchase: numToPurchase } = (
-        calculateMaxPossiblePurchase(props.robot, currentResources, planet.structureSlots)
+        calculateMaxPossiblePurchase(props.producer, currentResources, stage.upgradeSlots)
       ));
     } else {
       currentCost = (
         calculatePriceForMultiplePurchases(
-          props.robot, props.numToPurchaseOption, planet.structureSlots
+          props.producer, props.numToPurchaseOption, stage.upgradeSlots
         )
       );
       numToPurchase = props.numToPurchaseOption;
@@ -104,18 +104,18 @@ const SingleRobotDisplay = memo(
     }
     return (
       <div className={clsx(
-        "mb-5", robot.animateAppearance && "fade-in"
+        "mb-5", producer.animateAppearance && "fade-in"
       )}>
         <div className="text-lg flex flex-row mb-2">
-          <h2 className="uppercase flex-1">{robot.name}: {robot.count} (+{amountToPurchaseDisplay})</h2>
-          <h2 className="flex-1 text-right">{formatNumber(robot.resourcesPerSecond)}<GemIcon/>/sec</h2>
+          <h2 className="uppercase flex-1">{producer.name}: {producer.count} (+{amountToPurchaseDisplay})</h2>
+          <h2 className="flex-1 text-right">{formatNumber(producer.resourcesPerSecond)}<GemIcon/>/sec</h2>
         </div>
         <Card
-          color={props.robot.color}
-          iconName="fa-robot"
-          contentElement={<>{props.robot.description}</>}
+          color={props.producer.color}
+          iconName={props.producer.iconName}
+          contentElement={<>{props.producer.description}</>}
           suffixElement={<>{formatNumber(currentCost)}<GemIcon/></>}
-          onClick={() => {purchaseRobotAction(props.robot.id, numToPurchase)}}
+          onClick={() => {purchaseProducerAction(props.producer.id, numToPurchase)}}
           isClickDisabled={currentCost > currentResources}
         />
       </div>
@@ -123,4 +123,4 @@ const SingleRobotDisplay = memo(
   }
 );
 
-export default RobotsList;
+export default ProducerList;

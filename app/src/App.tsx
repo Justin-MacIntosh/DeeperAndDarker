@@ -7,7 +7,7 @@ import Footer from './components/Footer';
 import Header from './components/Header';
 import OfflineEarningsDialog from './components/OfflineEarningsDialog';
 import PlanetContent from './components/PlanetContent';
-import RobotsList from './components/RobotDisplay';
+import ProducerList from './components/ProducerDisplay';
 
 /* Main App component that renders the game interface */
 const App = () => {
@@ -37,7 +37,7 @@ const App = () => {
       >
         <PlanetContent/>
         <div id="sidebar" className="flex-1 min-w-[400px]">
-          <RobotsList/>
+          <ProducerList/>
         </div>
       </div>
       <Footer saveCurrentGameData={saveCurrentGameData}/>

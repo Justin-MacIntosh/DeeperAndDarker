@@ -1,25 +1,25 @@
 /* Types and Interfaces */
 export interface GameState {
-  planet: Planet;
-  robots: Robot[];
+  stage: Stage;
+  producers: Producer[];
   currentResources: number;
   resourcesPerSecond: number;
   lastTimeSaved: number;
-  buildableStructures: Structure[];
+  buildableUpgrades: Upgrade[];
   timeOfflineData?: OfflineData;
 }
-interface Planet {
+interface Stage {
   name: string;
-  biome: string;
-  structureSlots: StructureSlot[];
+  description: string;
+  upgradeSlots: UpgradeSlot[];
   difficultyCoefficient: number;
 }
-export interface StructureSlot {
+export interface UpgradeSlot {
   id: number;
   costMultiplier: number;
-  structure?: Structure;
+  upgrade?: Upgrade;
 }
-export interface Structure {
+export interface Upgrade {
   id: number;
   name: string;
   icon: string;
@@ -29,19 +29,20 @@ export interface Structure {
 }
 export interface ProductionMultiplier {
   type: 'production';
-  robotTiersEffected: number[];
+  producerIdsEffected: number[];
   multiplier: number;
 }
 export interface CostReducer {
   type: 'cost_reducer';
-  robotTiersEffected: number[];
+  producerIdsEffected: number[];
   multiplier: number;
 }
-export interface Robot {
+export interface Producer {
   // Identification
   id: number;
   name: string;
   description: string;
+  iconName: string;
 
   // Resource production values
   resourcesPerSecond: number;
