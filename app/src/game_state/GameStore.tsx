@@ -11,13 +11,15 @@ const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
  * Game Store using Zustand for state management.
  * This store holds the game state and provides methods to manipulate it.
  */
-export const useGameStore = create<GameState & {
-  tick: (milliseconds: number) => void;
-  purchaseProducer: (producerId: number, numToPurchase: number) => void;
-  purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => void;
-  updateTimeSaved: (timeSaved: number) => void;
-  resetGame: () => void;
-}>((set, get) => ({
+export const useGameStore = create<
+  GameState & {
+    tick: (milliseconds: number) => void;
+    purchaseProducer: (producerId: number, numToPurchase: number) => void;
+    purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => void;
+    updateTimeSaved: (timeSaved: number) => void;
+    resetGame: () => void;
+  }
+>((set, get) => ({
   ...LOADED_GAME_STATE,
 
   // Tick function to update resources based on time elapsed
@@ -27,12 +29,14 @@ export const useGameStore = create<GameState & {
     const updatedMoney = currentResources + resourcesPerSecond * tickRate;
 
     // Update producers to be shown if they meet the minimum money requirement
-    const updatedProducers = producers.map(prod => {
-      if (!prod.isBeingShown && updatedMoney > prod.minMoneyToShow) {
-        return { ...prod, isBeingShown: true };
+    const updatedProducers = producers.map(
+      prod => {
+        if (!prod.isBeingShown && updatedMoney > prod.minMoneyToShow) {
+          return { ...prod, isBeingShown: true };
+        }
+        return { ...prod };
       }
-      return prod;
-    });
+    );
 
     set({ currentResources: updatedMoney, producers: updatedProducers });
   },

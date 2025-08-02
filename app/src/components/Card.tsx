@@ -43,7 +43,7 @@ const Card = (props: CardProps) => {
         "[clip-path:polygon(0_0,90px_0,75px_100%,0_100%)]",
         colorClass
       )}>
-        <span className={clsx("fa-solid fa-3x leading-[55px]", props.iconName)}/>
+        <span className={clsx("fa-solid fa-3x", props.iconName, "leading-[55px]")}/>
       </div>
       <div className="flex flex-1 items-center">
         {props.contentElement}

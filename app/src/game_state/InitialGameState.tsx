@@ -13,6 +13,7 @@ export const INITIAL_GAME_STATE: GameState = {
       { id: 3, costMultiplier: 50 ** 2 },
       { id: 4, costMultiplier: 50 ** 3 },
       { id: 5, costMultiplier: 50 ** 4 },
+      { id: 5, costMultiplier: 50 ** 5 },
     ],
     difficultyCoefficient: 1.0,
   },
@@ -25,7 +26,7 @@ export const INITIAL_GAME_STATE: GameState = {
       cost: 1500,
       effect: {
         type: 'production',
-        producerIdsEffected: [1, 2],
+        producerIdsEffected: [1, 2, 3],
         multiplier: 1.6,
       } as ProductionMultiplier,
     },
@@ -37,8 +38,20 @@ export const INITIAL_GAME_STATE: GameState = {
       cost: 2000,
       effect: {
         type: 'cost_reducer',
-        producerIdsEffected: [1, 2],
+        producerIdsEffected: [1, 2, 3],
         multiplier: 0.5,
+      } as CostReducer,
+    },
+    {
+      id: 3,
+      name: "MNR-N1 Ultra Factory",
+      icon: "fa-gears",
+      description: "Reduces MNR-N1 costs by 95%",
+      cost: 800,
+      effect: {
+        type: 'cost_reducer',
+        producerIdsEffected: [1],
+        multiplier: 0.05,
       } as CostReducer,
     },
   ],
@@ -75,7 +88,25 @@ export const INITIAL_GAME_STATE: GameState = {
       baseRate: 1.15,
 
       color: "red",
-      minMoneyToShow: 10000,
+      minMoneyToShow: 4000,
+      isBeingShown: false,
+      animateAppearance: true,
+    },
+    {
+      id: 3,
+      name: "MNR-G1",
+      description: "Green robot",
+      iconName: "fa-robot",
+
+      resourcesPerSecond: 0,
+      baseProduction: 10000,
+
+      count: 0,
+      baseCost: 20000,
+      baseRate: 1.16,
+
+      color: "green",
+      minMoneyToShow: 17500,
       isBeingShown: false,
       animateAppearance: true,
     },
