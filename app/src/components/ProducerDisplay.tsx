@@ -112,7 +112,7 @@ const SingleProducerDisplay = memo(
         </div>
         <Card
           color={props.producer.color}
-          iconName={props.producer.iconName}
+          icon={<props.producer.icon size={55}/>}
           contentElement={<>{props.producer.description}</>}
           suffixElement={<>{formatNumber(currentCost)}<GemIcon/></>}
           onClick={() => {purchaseProducerAction(props.producer.id, numToPurchase)}}

@@ -164,7 +164,7 @@ const UpgradeDisplay = (
           onClick={openUpgradeSelectModal}
           className="structure-display-box"
         >
-          <i className={clsx("fa-solid fa-5x", upgrade.icon)}/>
+          { <upgrade.icon size={75} /> }
         </li>
       </Popover>
     </>

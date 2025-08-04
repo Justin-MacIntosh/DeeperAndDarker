@@ -25,13 +25,13 @@ const App = () => {
   }, []);
 
   return (
-    <div className="bg-dark-purple">
+    <div className="bg-dark-purple min-w-[1100px]">
       <OfflineEarningsDialog/>
       <Header/>
       <div
         id="main"
         className="
-          min-w-[1100px] p-5 mx-7 bg-med-purple
+          p-5 mx-7 bg-med-purple
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >

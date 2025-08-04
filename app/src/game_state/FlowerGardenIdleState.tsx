@@ -1,3 +1,4 @@
+import { IconFlowerFilled, IconPaperBag } from '@tabler/icons-react';
 import { GameState, ProductionMultiplier, CostReducer } from '../types';
 
 export const INITIAL_GAME_STATE: GameState = {
@@ -18,7 +19,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 1,
       name: "Fertilizer",
-      icon: "fa-poo-storm",
+      icon: IconPaperBag,
       description: "Increases all Flower production by 50%",
       cost: 1000,
       effect: {
@@ -33,7 +34,7 @@ export const INITIAL_GAME_STATE: GameState = {
       id: 1,
       name: "Daisy",
       description: "Basic Daisy",
-      iconName: "fa-seedling",
+      icon: IconFlowerFilled,
 
       resourcesPerSecond: 0,
       baseProduction: 50,

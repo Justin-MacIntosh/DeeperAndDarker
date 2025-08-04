@@ -1,5 +1,7 @@
 import { GameState, ProductionMultiplier, CostReducer } from '../types';
 
+import { IconBuildingBroadcastTower, IconBuildingFactory, IconRobot } from '@tabler/icons-react';
+
 export const INITIAL_GAME_STATE: GameState = {
   currentResources: 100,
   resourcesPerSecond: 0,
@@ -21,7 +23,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 1,
       name: "MNR Control Center",
-      icon: "fa-satellite-dish",
+      icon: IconBuildingBroadcastTower,
       description: "Increases all Automaton resource production by 60%",
       cost: 1500,
       effect: {
@@ -33,7 +35,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 2,
       name: "Automaton Factory",
-      icon: "fa-industry",
+      icon: IconBuildingFactory,
       description: "Reduces all Automaton costs by 50%",
       cost: 2000,
       effect: {
@@ -42,25 +44,13 @@ export const INITIAL_GAME_STATE: GameState = {
         multiplier: 0.5,
       } as CostReducer,
     },
-    {
-      id: 3,
-      name: "MNR-N1 Ultra Factory",
-      icon: "fa-gears",
-      description: "Reduces MNR-N1 costs by 95%",
-      cost: 800,
-      effect: {
-        type: 'cost_reducer',
-        producerIdsEffected: [1],
-        multiplier: 0.05,
-      } as CostReducer,
-    },
   ],
   producers: [
     {
       id: 1,
       name: "MNR-N1",
       description: "Basic mining robot",
-      iconName: "fa-robot",
+      icon: IconRobot,
 
       resourcesPerSecond: 0,
       baseProduction: 50,
@@ -78,7 +68,7 @@ export const INITIAL_GAME_STATE: GameState = {
       id: 2,
       name: "MNR-X1",
       description: "Supercharged mining robot",
-      iconName: "fa-robot",
+      icon: IconRobot,
 
       resourcesPerSecond: 0,
       baseProduction: 2500,
@@ -89,24 +79,6 @@ export const INITIAL_GAME_STATE: GameState = {
 
       color: "red",
       minMoneyToShow: 4000,
-      isBeingShown: false,
-      animateAppearance: true,
-    },
-    {
-      id: 3,
-      name: "MNR-G1",
-      description: "Green robot",
-      iconName: "fa-robot",
-
-      resourcesPerSecond: 0,
-      baseProduction: 10000,
-
-      count: 0,
-      baseCost: 20000,
-      baseRate: 1.16,
-
-      color: "green",
-      minMoneyToShow: 17500,
       isBeingShown: false,
       animateAppearance: true,
     },

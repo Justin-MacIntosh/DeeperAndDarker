@@ -1,3 +1,7 @@
+import { Icon, IconProps } from "@tabler/icons-react";
+
+type iconType = React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>
+
 /* Types and Interfaces */
 export interface GameState {
   stage: Stage;
@@ -22,7 +26,7 @@ export interface UpgradeSlot {
 export interface Upgrade {
   id: number;
   name: string;
-  icon: string;
+  icon: iconType;
   description: string;
   cost: number;
   effect: ProductionMultiplier | CostReducer;
@@ -42,7 +46,7 @@ export interface Producer {
   id: number;
   name: string;
   description: string;
-  iconName: string;
+  icon: iconType;
 
   // Resource production values
   resourcesPerSecond: number;

@@ -1,7 +1,9 @@
 import { clsx } from "clsx"
 
+import { IconRobot } from "@tabler/icons-react";
+
 interface CardProps {
-  iconName: String;
+  icon: React.ReactNode;
   contentElement: React.ReactNode;
   suffixElement: React.ReactNode;
   color: 'blue' | 'red' | 'green';
@@ -43,7 +45,7 @@ const Card = (props: CardProps) => {
         "[clip-path:polygon(0_0,90px_0,75px_100%,0_100%)]",
         colorClass
       )}>
-        <span className={clsx("fa-solid fa-3x", props.iconName, "leading-[55px]")}/>
+        { props.icon }
       </div>
       <div className="flex flex-1 items-center">
         {props.contentElement}

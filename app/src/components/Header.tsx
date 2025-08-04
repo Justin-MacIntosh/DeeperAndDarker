@@ -11,7 +11,7 @@ const Header = memo(() => {
     <header
       id="header"
       className="
-        min-w-[1100px] sticky top-0 z-10 p-5 mb-7 bg-med-purple
+        sticky top-0 z-10 p-5 mb-7 bg-med-purple
         border-gray-300 border-solid border-2 border-l-0 border-r-0
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >
