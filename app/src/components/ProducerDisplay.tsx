@@ -80,11 +80,11 @@ const SingleProducerDisplay = memo(
 
     // Actions and state from the game store
     const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
-    const currentResources: BigInt = useGameStore((state) => state.currentResources);
+    const currentResources: bigint = useGameStore((state) => state.currentResources);
     const stage = useGameStore((state) => state.stage);
 
     // Calculate the cost and number of producers to purchase
-    let currentCost: BigInt = 0;
+    let currentCost: bigint = BigInt(0);
     let numToPurchase: number = 0;
     if (props.numToPurchaseOption === 'Max') {
       ({ cost: currentCost, maxPossiblePurchase: numToPurchase } = (

@@ -1,8 +1,8 @@
 import { GameState, ProductionMultiplier, CostReducer } from '../types';
 
 export const INITIAL_GAME_STATE: GameState = {
-  currentResources: 100,
-  resourcesPerSecond: 0,
+  currentResources: BigInt(100),
+  resourcesPerSecond: BigInt(0),
   lastTimeSaved: 0,
   stage: {
     name: "Braxios Solar System",
@@ -23,7 +23,7 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "MNR Control Center Supercharge",
       icon: "IconBuildingBroadcastTower",
       description: "Increases MNR-N1 resource production by 300% for 30 seconds",
-      cost: 1500,
+      cost: BigInt(1500),
       effect: {
         type: 'production',
         producerIdsEffected: [1, 2, 3],
@@ -35,7 +35,7 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "Automaton Factory",
       icon: "IconBuildingFactory",
       description: "Reduces all Automaton costs by 50%",
-      cost: 2000,
+      cost: BigInt(2000),
       effect: {
         type: 'cost_reducer',
         producerIdsEffected: [1, 2, 3],
@@ -50,7 +50,7 @@ export const INITIAL_GAME_STATE: GameState = {
       description: "Basic mining robot",
       icon: "IconRobot",
 
-      resourcesPerSecond: 0,
+      resourcesPerSecond: BigInt(0),
       baseProduction: 50,
 
       count: 0,
@@ -68,7 +68,7 @@ export const INITIAL_GAME_STATE: GameState = {
       description: "Supercharged mining robot",
       icon: "IconRobot",
 
-      resourcesPerSecond: 0,
+      resourcesPerSecond: BigInt(0),
       baseProduction: 2500,
 
       count: 0,

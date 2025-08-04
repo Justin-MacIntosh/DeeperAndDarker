@@ -5,6 +5,8 @@ import { INITIAL_GAME_STATE } from './InitialGameState';
 import { refreshProducerProduction, calculatePriceForMultiplePurchases } from '../helpers/producerStateHelpers';
 import { GameState, Producer } from '../types';
 
+var Fraction = require('fractional').Fraction;
+
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
 /**
@@ -26,7 +28,7 @@ export const useGameStore = create<
   tick: (milliseconds: number) => {
     const { currentResources, resourcesPerSecond, producers } = get();
     const tickRate = milliseconds / 1000;
-    const updatedMoney = currentResources + resourcesPerSecond * tickRate;
+    const updatedMoney = currentResources + ((resourcesPerSecond * BigInt(milliseconds)) / BigInt(1000));
 
     // Update producers to be shown if they meet the minimum money requirement
     const updatedProducers = producers.map(
@@ -69,7 +71,7 @@ export const useGameStore = create<
       producers: updatedProducers,
       resourcesPerSecond: (
         updatedProducers.reduce(
-          (total, prod) => total + prod.resourcesPerSecond, 0
+          (total, prod) => total + prod.resourcesPerSecond, BigInt(0)
         )
       ),
       currentResources: currentResources - currentCost,
@@ -96,7 +98,9 @@ export const useGameStore = create<
     const upgradeSlot = stage.upgradeSlots[upgradeSlotIndex];
 
     // Check if there are enough resources to purchase the Upgrade
-    const totalCost = upgradeToPurchase.cost * upgradeSlot.costMultiplier;
+
+    const multiplierFraction = new Fraction(upgradeSlot.costMultiplier);
+    const totalCost = (upgradeToPurchase.cost * BigInt(multiplierFraction.numerator)) / BigInt(multiplierFraction.denominator);
     if (currentResources < totalCost) {
       console.error(`Not enough money to buy Upgrade with ID ${upgradeId}.`);
       return;
@@ -120,7 +124,7 @@ export const useGameStore = create<
       producers: updatedProducers,
       resourcesPerSecond: (
         updatedProducers.reduce(
-          (total, prod) => total + prod.resourcesPerSecond, 0
+          (total, prod) => total + prod.resourcesPerSecond, BigInt(0)
         )
       ),
       currentResources: currentResources - totalCost,

@@ -4,8 +4,8 @@ import { IconOption } from './icons/types';
 export interface GameState {
   stage: Stage;
   producers: Producer[];
-  currentResources: BigInt;
-  resourcesPerSecond: BigInt;
+  currentResources: bigint;
+  resourcesPerSecond: bigint;
   lastTimeSaved: number;
   buildableUpgrades: Upgrade[];
   timeOfflineData?: OfflineData;
@@ -26,7 +26,7 @@ export interface Upgrade {
   name: string;
   icon: IconOption;
   description: string;
-  cost: number;
+  cost: bigint;
   effect: ProductionMultiplier | CostReducer;
 }
 export interface ProductionMultiplier {
@@ -47,7 +47,7 @@ export interface Producer {
   icon: IconOption;
 
   // Resource production values
-  resourcesPerSecond: BigInt;
+  resourcesPerSecond: bigint;
   baseProduction: number;
 
   // Cost and count values
@@ -62,6 +62,6 @@ export interface Producer {
   animateAppearance: boolean;
 }
 export interface OfflineData {
-  moneyEarned: number;
+  moneyEarned: bigint;
   timeElapsed: number;
 }

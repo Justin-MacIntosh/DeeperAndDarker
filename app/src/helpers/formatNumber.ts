@@ -1,7 +1,8 @@
-export function formatNumber(num: number): string {
-  const numStr = Math.floor(num).toString();
-  if (numStr.length > 5) {
-    return num.toExponential(2);
+export function formatNumber(num: bigint): string {
+  if (num > BigInt(99999)) {
+    return num.toLocaleString(
+      'en-US', { notation: "scientific", maximumFractionDigits: 2 }
+    );
   }
-  return numStr;
+  return num.toString();
 }

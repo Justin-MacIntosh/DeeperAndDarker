@@ -93,7 +93,7 @@ const UpgradeCell = ({ slot }: { slot: UpgradeSlot }) => {
                 </thead>
                 <tbody>
                   {useGameStore((state) => state.buildableUpgrades).map((upg) => {
-                    const isOptionDisabled = (upg.cost * slot.costMultiplier) > currentResources;
+                    const isOptionDisabled = (upg.cost * BigInt(slot.costMultiplier)) > currentResources;
                     const optionActiveClass = (
                       isOptionDisabled ?
                       "opacity-50 cursor-not-allowed" :
@@ -115,7 +115,7 @@ const UpgradeCell = ({ slot }: { slot: UpgradeSlot }) => {
                         <td className="px-6 py-4">{upg.name}</td>
                         <td className="px-6 py-4">{upg.description}</td>
                         <td className="px-6 py-4">
-                          {formatNumber(upg.cost * slot.costMultiplier)}
+                          {formatNumber(upg.cost * BigInt(slot.costMultiplier))}
                         </td>
                       </tr>
                     );
