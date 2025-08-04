@@ -1,6 +1,4 @@
-import { Icon, IconProps } from "@tabler/icons-react";
-
-type iconType = React.ForwardRefExoticComponent<IconProps & React.RefAttributes<Icon>>
+import { IconOption } from './icons/types';
 
 /* Types and Interfaces */
 export interface GameState {
@@ -26,18 +24,18 @@ export interface UpgradeSlot {
 export interface Upgrade {
   id: number;
   name: string;
-  icon: iconType;
+  icon: IconOption;
   description: string;
   cost: number;
   effect: ProductionMultiplier | CostReducer;
 }
 export interface ProductionMultiplier {
-  type: 'production';
+  type: "production";
   producerIdsEffected: number[];
   multiplier: number;
 }
 export interface CostReducer {
-  type: 'cost_reducer';
+  type: "cost_reducer";
   producerIdsEffected: number[];
   multiplier: number;
 }
@@ -46,7 +44,7 @@ export interface Producer {
   id: number;
   name: string;
   description: string;
-  icon: iconType;
+  icon: IconOption;
 
   // Resource production values
   resourcesPerSecond: number;
@@ -58,7 +56,7 @@ export interface Producer {
   baseRate: number;
 
   // Display values
-  color: 'blue' | 'red' | 'green';
+  color: "blue" | "red" | "green";
   minMoneyToShow: number;
   isBeingShown: boolean;
   animateAppearance: boolean;

@@ -19,7 +19,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 1,
       name: "Fertilizer",
-      icon: IconPaperBag,
+      icon: "IconPaperBag",
       description: "Increases all Flower production by 50%",
       cost: 1000,
       effect: {
@@ -34,7 +34,7 @@ export const INITIAL_GAME_STATE: GameState = {
       id: 1,
       name: "Daisy",
       description: "Basic Daisy",
-      icon: IconFlowerFilled,
+      icon: "IconFlowerFilled",
 
       resourcesPerSecond: 0,
       baseProduction: 50,

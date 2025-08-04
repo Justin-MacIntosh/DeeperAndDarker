@@ -6,6 +6,7 @@ import { useGameStore } from '../game_state/GameStore';
 import { Upgrade, UpgradeSlot } from '../types';
 import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@headlessui/react'
 import { formatNumber } from '../helpers/formatNumber';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 const PlanetContent = memo(() => {
   // console.log("PlanetContent render");
@@ -145,7 +146,7 @@ const UpgradeDisplay = (
     <>
       <Popover
         isOpen={isShowingPopover}
-        positions={['top', 'bottom', 'left', 'right']} // preferred positions by priority
+        positions={["top", "bottom", "left", "right"]} // preferred positions by priority
         padding={10}
         content={
           <div
@@ -164,7 +165,7 @@ const UpgradeDisplay = (
           onClick={openUpgradeSelectModal}
           className="structure-display-box"
         >
-          { <upgrade.icon size={75} /> }
+          <TablerIconDisplay icon={upgrade.icon} size={75} />
         </li>
       </Popover>
     </>

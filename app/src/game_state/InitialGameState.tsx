@@ -1,7 +1,5 @@
 import { GameState, ProductionMultiplier, CostReducer } from '../types';
 
-import { IconBuildingBroadcastTower, IconBuildingFactory, IconRobot } from '@tabler/icons-react';
-
 export const INITIAL_GAME_STATE: GameState = {
   currentResources: 100,
   resourcesPerSecond: 0,
@@ -23,7 +21,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 1,
       name: "MNR Control Center",
-      icon: IconBuildingBroadcastTower,
+      icon: "IconBuildingBroadcastTower",
       description: "Increases all Automaton resource production by 60%",
       cost: 1500,
       effect: {
@@ -35,7 +33,7 @@ export const INITIAL_GAME_STATE: GameState = {
     {
       id: 2,
       name: "Automaton Factory",
-      icon: IconBuildingFactory,
+      icon: "IconBuildingFactory",
       description: "Reduces all Automaton costs by 50%",
       cost: 2000,
       effect: {
@@ -50,7 +48,7 @@ export const INITIAL_GAME_STATE: GameState = {
       id: 1,
       name: "MNR-N1",
       description: "Basic mining robot",
-      icon: IconRobot,
+      icon: "IconRobot",
 
       resourcesPerSecond: 0,
       baseProduction: 50,
@@ -68,7 +66,7 @@ export const INITIAL_GAME_STATE: GameState = {
       id: 2,
       name: "MNR-X1",
       description: "Supercharged mining robot",
-      icon: IconRobot,
+      icon: "IconRobot",
 
       resourcesPerSecond: 0,
       baseProduction: 2500,

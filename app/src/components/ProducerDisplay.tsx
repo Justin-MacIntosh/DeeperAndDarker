@@ -13,6 +13,7 @@ import {
   calculatePriceForMultiplePurchases,
   calculateMaxPossiblePurchase
 } from '../helpers/producerStateHelpers';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
@@ -112,7 +113,7 @@ const SingleProducerDisplay = memo(
         </div>
         <Card
           color={props.producer.color}
-          icon={<props.producer.icon size={55}/>}
+          icon={<TablerIconDisplay icon={props.producer.icon} size={55}/>}
           contentElement={<>{props.producer.description}</>}
           suffixElement={<>{formatNumber(currentCost)}<GemIcon/></>}
           onClick={() => {purchaseProducerAction(props.producer.id, numToPurchase)}}
