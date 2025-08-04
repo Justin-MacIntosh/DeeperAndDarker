@@ -39,8 +39,8 @@ const calculateProductionMultiplier = (upgradeSlots: UpgradeSlot[], producerId: 
  * This function iteratively checks how many producers can be bought until the resources run out.
  */
 export const calculateMaxPossiblePurchase = (
-  producer: Producer, currentResources: number, upgradeSlots: UpgradeSlot[]
-): { cost: number; maxPossiblePurchase: number } => {
+  producer: Producer, currentResources: BigInt, upgradeSlots: UpgradeSlot[]
+): { cost: BigInt; maxPossiblePurchase: number } => {
   let numToPurchase = 1;
   while (true) {
     const costForPurchase = calculatePriceForMultiplePurchases(
@@ -64,7 +64,7 @@ export const calculateMaxPossiblePurchase = (
 /** Calculates the price for purchasing a producer multiple times. */
 export const calculatePriceForMultiplePurchases = (
   producer: Producer, numPurchases: number, upgradeSlots: UpgradeSlot[]
-): number => {
+): BigInt => {
   const costMultiplier = calculateCostMultiplier(upgradeSlots, producer.id);
 
   // Calculate the total cost using the formula for geometric series
@@ -75,7 +75,7 @@ export const calculatePriceForMultiplePurchases = (
 
   // The total cost is the base cost multiplied by the total rate and the
   // cost multiplier and rounded to the nearest integer
-  return Math.round(producer.baseCost * rateExponentialTotal * costMultiplier);
+  return BigInt(Math.round(producer.baseCost * rateExponentialTotal * costMultiplier));
 };
 
 /**
@@ -87,7 +87,7 @@ export const refreshProducerProduction = (
   upgradeSlots: UpgradeSlot[]
 ): Producer => {
   const productionMultiplier = calculateProductionMultiplier(upgradeSlots, producer.id);
-  const producerProduction = producer.count * producer.baseProduction * productionMultiplier;
+  const producerProduction = BigInt(producer.count * producer.baseProduction * productionMultiplier);
 
   return {
     ...producer,

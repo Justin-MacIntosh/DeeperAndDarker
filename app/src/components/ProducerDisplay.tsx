@@ -4,7 +4,7 @@ import { clsx } from 'clsx';
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
 import GemIcon from '../icons/GemIcon';
-import Card from './Card';
+import SidebarCard from './SidebarCard';
 
 import { Producer } from '../types';
 import { useGameStore } from '../game_state/GameStore';
@@ -80,11 +80,11 @@ const SingleProducerDisplay = memo(
 
     // Actions and state from the game store
     const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
-    const currentResources: number = useGameStore((state) => state.currentResources);
+    const currentResources: BigInt = useGameStore((state) => state.currentResources);
     const stage = useGameStore((state) => state.stage);
 
     // Calculate the cost and number of producers to purchase
-    let currentCost: number = 0;
+    let currentCost: BigInt = 0;
     let numToPurchase: number = 0;
     if (props.numToPurchaseOption === 'Max') {
       ({ cost: currentCost, maxPossiblePurchase: numToPurchase } = (
@@ -109,13 +109,13 @@ const SingleProducerDisplay = memo(
       )}>
         <div className="text-lg flex flex-row mb-2">
           <h2 className="uppercase flex-1">{producer.name}: {producer.count} (+{amountToPurchaseDisplay})</h2>
-          <h2 className="flex-1 text-right">{formatNumber(producer.resourcesPerSecond)}<GemIcon/>/sec</h2>
+          <h2 className="flex-1 text-right">{formatNumber(producer.resourcesPerSecond)}<GemIcon size={18}/>/sec</h2>
         </div>
-        <Card
+        <SidebarCard
           color={props.producer.color}
           icon={<TablerIconDisplay icon={props.producer.icon} size={55}/>}
           contentElement={<>{props.producer.description}</>}
-          suffixElement={<>{formatNumber(currentCost)}<GemIcon/></>}
+          suffixElement={<>{formatNumber(currentCost)}<GemIcon size={18}/></>}
           onClick={() => {purchaseProducerAction(props.producer.id, numToPurchase)}}
           isClickDisabled={currentCost > currentResources}
         />

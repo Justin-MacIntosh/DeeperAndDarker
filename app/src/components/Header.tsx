@@ -48,7 +48,7 @@ const CurrentResourcesDisplay = () => {
   const currentResources = useGameStore((state) => state.currentResources);
   return (
     <h1 className="text-3xl font-bold">
-      {formatNumber(currentResources)}<GemIcon/>
+      {formatNumber(currentResources)}<GemIcon size={30}/>
     </h1>
   );
 };
@@ -58,7 +58,7 @@ const ResourcesPerSecondDisplay = () => {
   const resourcesPerSecond = useGameStore((state) => state.resourcesPerSecond);
   return (
     <h3 className="text-lg">
-      {formatNumber(resourcesPerSecond)}<GemIcon/>/sec
+      {formatNumber(resourcesPerSecond)}<GemIcon size={18}/>/sec
     </h3>
   );
 };

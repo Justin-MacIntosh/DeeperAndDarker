@@ -5,8 +5,8 @@ export const INITIAL_GAME_STATE: GameState = {
   resourcesPerSecond: 0,
   lastTimeSaved: 0,
   stage: {
-    name: "Planet Baj",
-    description: "Swamp Biome",
+    name: "Braxios Solar System",
+    description: "Deep space",
     upgradeSlots: [
       { id: 1, costMultiplier: 50 ** 0 },
       { id: 2, costMultiplier: 50 ** 1 },
@@ -20,9 +20,9 @@ export const INITIAL_GAME_STATE: GameState = {
   buildableUpgrades: [
     {
       id: 1,
-      name: "MNR Control Center",
+      name: "MNR Control Center Supercharge",
       icon: "IconBuildingBroadcastTower",
-      description: "Increases all Automaton resource production by 60%",
+      description: "Increases MNR-N1 resource production by 300% for 30 seconds",
       cost: 1500,
       effect: {
         type: 'production',

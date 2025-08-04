@@ -4,8 +4,8 @@ import { IconOption } from './icons/types';
 export interface GameState {
   stage: Stage;
   producers: Producer[];
-  currentResources: number;
-  resourcesPerSecond: number;
+  currentResources: BigInt;
+  resourcesPerSecond: BigInt;
   lastTimeSaved: number;
   buildableUpgrades: Upgrade[];
   timeOfflineData?: OfflineData;
@@ -47,7 +47,7 @@ export interface Producer {
   icon: IconOption;
 
   // Resource production values
-  resourcesPerSecond: number;
+  resourcesPerSecond: BigInt;
   baseProduction: number;
 
   // Cost and count values

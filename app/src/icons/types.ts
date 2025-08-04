@@ -6,12 +6,16 @@ import {
   IconBuildingBroadcastTower,
   IconBuildingFactory,
   IconRobot,
+  IconHome,
+  IconBuilding,
 } from "@tabler/icons-react";
 
 export type IconOption =
   | "IconRobot"
   | "IconBuildingBroadcastTower"
   | "IconBuildingFactory"
+  | "IconHome"
+  | "IconBuilding"
   | "IconFlowerFilled"
   | "IconPaperBag";
 
@@ -23,6 +27,9 @@ export const ICON_MAPPING: { [Key in IconOption]: iconType } = {
   IconRobot: IconRobot,
   IconBuildingBroadcastTower: IconBuildingBroadcastTower,
   IconBuildingFactory: IconBuildingFactory,
+
+  IconHome: IconHome,
+  IconBuilding: IconBuilding,
 
   // Planet icons
   IconFlowerFilled: IconFlowerFilled,

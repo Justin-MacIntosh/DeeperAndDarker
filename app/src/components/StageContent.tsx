@@ -8,7 +8,7 @@ import { Description, Dialog, DialogBackdrop, DialogPanel, DialogTitle } from '@
 import { formatNumber } from '../helpers/formatNumber';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
 
-const PlanetContent = memo(() => {
+const StageContent = memo(() => {
   // console.log("PlanetContent render");
   const stage = useGameStore((state) => state.stage);
 
@@ -21,24 +21,24 @@ const PlanetContent = memo(() => {
         flex flex-col gap-3"
     >
       <div
-        id="content-planetary-row"
+        id="content-upgrade-row"
         className="flex flex-col 2xl:flex-row rounded-xl gap-3"
       >
         <div
-          id="planet-display"
+          id="graphic-display"
           className="
             min-h-[400px] bg-black
             w-full rounded-xl
             2xl:w-[500px] 2xl:rounded-l-xl 2xl:rounded-r-none"
         ></div>
         <div
-          id="planetary-data-display"
+          id="upgrade-data-display"
           className="
             p-4 min-h-[400px] bg-light-purple
             flex-1 rounded-xl
             2xl:rounded-l-none 2xl:rounded-r-xl"
         >
-          <h3 className="uppercase text-xl">Planetary Data</h3>
+          <h3 className="uppercase text-xl">Upgrade data</h3>
         </div>
       </div>
       <div className="content-structures-row">
@@ -46,7 +46,7 @@ const PlanetContent = memo(() => {
           id="structure-display"
           className="p-4 bg-light-purple flex-1 rounded-xl"
         >
-          <h3 className="uppercase text-xl mb-5">Structures</h3>
+          <h3 className="uppercase text-xl mb-5">Effects</h3>
           <ul
             id="structures-container"
             className="
@@ -128,14 +128,14 @@ const UpgradeCell = ({ slot }: { slot: UpgradeSlot }) => {
       </Dialog>
       {
         slot.upgrade ?
-        <UpgradeDisplay upgrade={slot.upgrade} openUpgradeSelectModal={() => setIsOpen(true)} /> :
+        <EffectDisplay upgrade={slot.upgrade} openUpgradeSelectModal={() => setIsOpen(true)} /> :
         <EmptyUpgradeSlotDisplay openUpgradeSelectModal={() => setIsOpen(true)}/>
       }
     </>
   )
 }
 
-const UpgradeDisplay = (
+const EffectDisplay = (
   { upgrade, openUpgradeSelectModal }:
   { upgrade: Upgrade, openUpgradeSelectModal: () => void }
 ) => {
@@ -165,7 +165,7 @@ const UpgradeDisplay = (
           onClick={openUpgradeSelectModal}
           className="structure-display-box"
         >
-          <TablerIconDisplay icon={upgrade.icon} size={75} />
+          <TablerIconDisplay icon={upgrade.icon} size={70} />
         </li>
       </Popover>
     </>
@@ -178,4 +178,4 @@ const EmptyUpgradeSlotDisplay = (
   return <li className="structure-display-box" onClick={openUpgradeSelectModal}/>;
 }
 
-export default PlanetContent;
+export default StageContent;

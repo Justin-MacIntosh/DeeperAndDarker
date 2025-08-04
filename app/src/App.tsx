@@ -6,8 +6,12 @@ import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 import Footer from './components/Footer';
 import Header from './components/Header';
 import OfflineEarningsDialog from './components/OfflineEarningsDialog';
-import PlanetContent from './components/PlanetContent';
+import StageContent from './components/StageContent';
 import ProducerList from './components/ProducerDisplay';
+import SidebarCard from './components/SidebarCard';
+import { IconHome } from '@tabler/icons-react';
+import TablerIconDisplay from './icons/TablerIconDisplay';
+import GemIcon from './icons/GemIcon';
 
 /* Main App component that renders the game interface */
 const App = () => {
@@ -35,9 +39,25 @@ const App = () => {
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >
-        <PlanetContent/>
+        <StageContent/>
         <div id="sidebar" className="flex-1 min-w-[400px]">
           <ProducerList/>
+          <div className="flex flex-row justify-between items-center mb-3">
+            <h1 className="uppercase text-2xl font-bold">Spacecraft</h1>
+          </div>
+          <div className="flex flex-col">
+            <div className="text-lg flex flex-row mb-2">
+              <h2 className="uppercase flex-1">Settlement ship</h2>
+            </div>
+            <SidebarCard
+              color={"green"}
+              icon={<TablerIconDisplay icon={"IconBuilding"} size={55}/>}
+              contentElement={<>Settle Planet Baj</>}
+              suffixElement={<>1000<GemIcon size={18}/></>}
+              onClick={() => {}}
+              isClickDisabled={false}
+            />
+          </div>
         </div>
       </div>
       <Footer saveCurrentGameData={saveCurrentGameData}/>

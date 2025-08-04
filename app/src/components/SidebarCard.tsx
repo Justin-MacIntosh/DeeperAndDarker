@@ -1,7 +1,5 @@
 import { clsx } from "clsx"
 
-import { IconRobot } from "@tabler/icons-react";
-
 interface CardProps {
   icon: React.ReactNode;
   contentElement: React.ReactNode;
@@ -11,7 +9,7 @@ interface CardProps {
   isClickDisabled: boolean;
 }
 
-const Card = (props: CardProps) => {
+const SidebarCard = (props: CardProps) => {
   const colorClassMapping: Record<string, string> = {
     blue: 'bg-crd-blue',
     red: 'bg-crd-red',
@@ -62,4 +60,4 @@ const Card = (props: CardProps) => {
     </div>
   )
 }
-export default Card;
+export default SidebarCard;
