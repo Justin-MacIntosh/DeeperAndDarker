@@ -1,27 +1,32 @@
 import { memo, useState } from 'react';
 import { clsx } from 'clsx';
+import { useShallow } from 'zustand/react/shallow'
 
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
 import GemIcon from '../icons/GemIcon';
 import SidebarCard from './SidebarCard';
 
-import { Producer } from '../types';
-import { useGameStore } from '../game_state/GameStore';
+import { Producer } from '../game_state/types';
+import { useGameStore } from '../game_state/GameStore2';
 import { formatNumber } from '../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
+  calculateProducerProduction,
   calculateMaxPossiblePurchase
 } from '../helpers/producerStateHelpers';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
-const ProducerList = () => {
+const ProducerList = memo(({ stageId }: { stageId: string }) => {
+  const producerIds = useGameStore(
+    useShallow((state) => Object.keys(state.stages[stageId].producers))
+  );
+
   // console.log("ProducerList render");
   const [numToPurchaseOption, setNumToPurchaseOption] = useState<PurchaseAmount>(1);
 
-  const producers = useGameStore((state) => state.producers);
   return (
     <>
       <div className="flex flex-row justify-between items-center mb-3">
@@ -33,11 +38,11 @@ const ProducerList = () => {
                 btn-default w-20 rounded-lg text-xl text-center
                 border-solid border-gray-300 border-2"
             >
-                {
-                  numToPurchaseOption === "Max" ?
-                  numToPurchaseOption :
-                  `x${numToPurchaseOption}`
-                }
+              {
+                numToPurchaseOption === "Max" ?
+                numToPurchaseOption :
+                `x${numToPurchaseOption}`
+              }
             </ListboxButton>
             <ListboxOptions
               anchor="bottom"
@@ -54,15 +59,13 @@ const ProducerList = () => {
         </div>
       </div>
       <div className="flex flex-col">
-        {producers.map(
-          (prod) => {
-            if (!prod.isBeingShown) {
-              return null;
-            }
+        {producerIds.map(
+          (prodId) => {
             return (
               <SingleProducerDisplay
-                key={prod.id.toString()}
-                producer={prod}
+                key={prodId}
+                producerId={prodId}
+                stageId={stageId}
                 numToPurchaseOption={numToPurchaseOption}
               />
             )
@@ -71,53 +74,70 @@ const ProducerList = () => {
       </div>
     </>
   );
-};
+});
 
 const SingleProducerDisplay = memo(
-  (props: { producer: Producer; numToPurchaseOption: PurchaseAmount; }) => {
+  (props: { producerId: string; stageId: string; numToPurchaseOption: PurchaseAmount; }) => {
     console.log("SingleProducerDisplay render");
-    const producer = props.producer;
+
+    const producer: Producer = useGameStore(
+      (state) => state.stages[props.stageId].producers[props.producerId]
+    );
+    const relevantResource = producer.static.resourceToPurchase;
+    const currentRelevantResources: bigint = useGameStore(
+      (state) => state.resources[relevantResource].currentAmount
+    );
+    const resourcesPerSecond = calculateProducerProduction(producer);
 
     // Actions and state from the game store
-    const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
-    const currentResources: bigint = useGameStore((state) => state.currentResources);
-    const stage = useGameStore((state) => state.stage);
+    // const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
+    // const currentResources: bigint = useGameStore((state) => state.currentResources);
 
     // Calculate the cost and number of producers to purchase
     let currentCost: bigint = BigInt(0);
     let numToPurchase: number = 0;
     if (props.numToPurchaseOption === 'Max') {
       ({ cost: currentCost, maxPossiblePurchase: numToPurchase } = (
-        calculateMaxPossiblePurchase(props.producer, currentResources, stage.upgradeSlots)
+        calculateMaxPossiblePurchase(producer, currentRelevantResources)
       ));
     } else {
       currentCost = (
         calculatePriceForMultiplePurchases(
-          props.producer, props.numToPurchaseOption, stage.upgradeSlots
+          producer, props.numToPurchaseOption
         )
       );
       numToPurchase = props.numToPurchaseOption;
     }
 
     let amountToPurchaseDisplay = numToPurchase.toString();
-    if (props.numToPurchaseOption === 'Max' && currentCost > currentResources) {
+    if (props.numToPurchaseOption === 'Max' && currentCost > currentRelevantResources) {
       amountToPurchaseDisplay = "0";
     }
     return (
-      <div className={clsx(
-        "mb-5", producer.animateAppearance && "fade-in"
-      )}>
+      <div
+        className={clsx("mb-5", producer.static.animateAppearance && "fade-in")}
+      >
         <div className="text-lg flex flex-row mb-2">
-          <h2 className="uppercase flex-1">{producer.name}: {producer.count} (+{amountToPurchaseDisplay})</h2>
-          <h2 className="flex-1 text-right">{formatNumber(producer.resourcesPerSecond)}<GemIcon size={18}/>/sec</h2>
+          <h2 className="uppercase flex-1">
+            {producer.static.name}: {producer.dynamic.count} (+{amountToPurchaseDisplay})
+          </h2>
+          <h2 className="flex-1 text-right">
+            {formatNumber(resourcesPerSecond)}<GemIcon size={18} />/sec
+          </h2>
         </div>
         <SidebarCard
-          color={props.producer.color}
-          icon={<TablerIconDisplay icon={props.producer.icon} size={55}/>}
-          contentElement={<>{props.producer.description}</>}
-          suffixElement={<>{formatNumber(currentCost)}<GemIcon size={18}/></>}
-          onClick={() => {purchaseProducerAction(props.producer.id, numToPurchase)}}
-          isClickDisabled={currentCost > currentResources}
+          color={producer.static.color as any} // TODO: Fix later
+          icon={
+            <TablerIconDisplay icon={producer.static.iconOption} size={55} />
+          }
+          contentElement={<>{producer.static.description}</>}
+          suffixElement={
+            <>{formatNumber(currentCost)}<GemIcon size={18} /></>
+          }
+          onClick={() => {
+            /*purchaseProducerAction(props.producer.id, numToPurchase)*/
+          }}
+          isClickDisabled={currentCost > currentRelevantResources}
         />
       </div>
     );

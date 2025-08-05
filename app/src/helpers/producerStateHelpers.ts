@@ -1,52 +1,18 @@
-import { Producer, UpgradeSlot } from "../types";
+import { Producer } from "../game_state/types";
 
 var Fraction = require('fractional').Fraction;
-
-/**
- * Calculates the cost multiplier based on the upgrade slots and the producer ID.
- * This function checks for upgrades that reduce costs for specific producer tiers.
- */
-const calculateCostMultiplier = (upgradeSlots: UpgradeSlot[], producerId: number): number => {
-  return upgradeSlots.reduce((acc, upgSlot) => {
-    if (
-      upgSlot.upgrade &&
-      upgSlot.upgrade.effect.type === "cost_reducer" &&
-      upgSlot.upgrade.effect.producerIdsEffected.includes(producerId)
-    ) {
-      return acc * upgSlot.upgrade.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-}
-
-/**
- * Calculates the production multiplier based on the upgrade slots and the producer ID.
- * This function checks for upgrades that enhance production for specific producer tiers.
- */
-const calculateProductionMultiplier = (upgradeSlots: UpgradeSlot[], producerId: number): number => {
-  return upgradeSlots.reduce((acc, upgSlot) => {
-    if (
-      upgSlot.upgrade &&
-      upgSlot.upgrade.effect.type === "production" &&
-      upgSlot.upgrade.effect.producerIdsEffected.includes(producerId)
-    ) {
-      return acc * upgSlot.upgrade.effect.multiplier;
-    }
-    return acc;
-  }, 1);
-}
 
 /**
  * Calculates the maximum number of producers that can be purchased with the current resources.
  * This function iteratively checks how many producers can be bought until the resources run out.
  */
 export const calculateMaxPossiblePurchase = (
-  producer: Producer, currentResources: bigint, upgradeSlots: UpgradeSlot[]
+  producer: Producer, currentResources: bigint
 ): { cost: bigint; maxPossiblePurchase: number } => {
   let numToPurchase = 1;
   while (true) {
     const costForPurchase = calculatePriceForMultiplePurchases(
-      producer, numToPurchase + 1, upgradeSlots
+      producer, numToPurchase + 1
     );
     if (currentResources < costForPurchase) {
       break;
@@ -55,7 +21,7 @@ export const calculateMaxPossiblePurchase = (
   }
 
   const totalCost = calculatePriceForMultiplePurchases(
-    producer, numToPurchase, upgradeSlots
+    producer, numToPurchase
   );
   return {
     cost: totalCost,
@@ -65,34 +31,42 @@ export const calculateMaxPossiblePurchase = (
 
 /** Calculates the price for purchasing a producer multiple times. */
 export const calculatePriceForMultiplePurchases = (
-  producer: Producer, numPurchases: number, upgradeSlots: UpgradeSlot[]
+  producer: Producer, numPurchases: number
 ): bigint => {
-  const costMultiplier = calculateCostMultiplier(upgradeSlots, producer.id);
+  const costMultiplier = producer.dynamic.costReductionMultiplier;
 
   // Calculate the total cost using the formula for geometric series
   let rateExponentialTotal = 0;
   for (let purchaseIdx = 0; purchaseIdx < numPurchases; purchaseIdx++) {
-    rateExponentialTotal += producer.baseRate ** (producer.count + purchaseIdx);
+    rateExponentialTotal += producer.static.baseRateOfCostIncrease ** (producer.dynamic.count + purchaseIdx);
   }
 
-  // The total cost is the base cost multiplied by the total rate and the
-  // cost multiplier and rounded to the nearest integer
-  return BigInt(Math.round(producer.baseCost * rateExponentialTotal * costMultiplier));
+  const totalIncreaseInPrice = rateExponentialTotal * costMultiplier;
+
+  const totalIncreaseFraction = new Fraction(totalIncreaseInPrice);
+  const totalCost = (
+    producer.static.baseCost *
+    BigInt(totalIncreaseFraction.numerator)
+  ) / BigInt(totalIncreaseFraction.denominator);
+
+  return totalCost;
 };
 
 /**
  * Refreshes the producer state based on the current upgrade slots.
  * This function recalculates the cost and production values of the producer.
  */
-export const refreshProducerProduction = (
+export const calculateProducerProduction = (
   producer: Producer,
-  upgradeSlots: UpgradeSlot[]
-): Producer => {
-  const productionMultiplier = calculateProductionMultiplier(upgradeSlots, producer.id);
-  const producerProduction = BigInt(Math.round(producer.count * producer.baseProduction * productionMultiplier));
+): bigint => {
+  const productionMultiplier = producer.dynamic.productionMultiplier;
 
-  return {
-    ...producer,
-    resourcesPerSecond: producerProduction,
-  };
+  const increaseInProductionNum = producer.dynamic.count * productionMultiplier;
+  const increaseInProductionFraction = new Fraction(increaseInProductionNum);
+  const totalProduction = (
+    producer.static.baseProduction *
+    BigInt(increaseInProductionFraction.numerator)
+  ) / BigInt(increaseInProductionFraction.denominator);
+
+  return totalProduction;
 };

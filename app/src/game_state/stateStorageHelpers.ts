@@ -1,4 +1,4 @@
-import { GameState } from '../types';
+import { GameState } from './types';
 
 const GAME_STATE_KEY = 'planet_cracker_game_state';
 
@@ -26,7 +26,7 @@ export const loadGameState = (): GameState | null => {
     return null;
   }
 
-  // // Decode base64 string and handle potential errors
+  // Decode base64 string and handle potential errors
   // let decodedState: string;
   // try {
   //   decodedState = atob(savedState);
@@ -37,18 +37,23 @@ export const loadGameState = (): GameState | null => {
   console.log("Loaded game state from localStorage");
 
   // Parse the JSON and calculate offline data
-  // const parsedState = JSON.parse(decodedState) as GameState;
   const parsedState = JSON.parse(savedState, bigIntReviver) as GameState;
   console.log("Parsed game state:", parsedState);
 
   const timeElapsed = Date.now() - parsedState.lastTimeSaved;
-  const moneyEarned = (parsedState.resourcesPerSecond * BigInt(timeElapsed)) / BigInt(1000);
-  parsedState.currentResources += moneyEarned;
-  parsedState.timeOfflineData = {
-    moneyEarned: moneyEarned,
+
+  const offlineData = {
+    resourcesEarned: {} as Record<string, bigint>,
     timeElapsed: timeElapsed
   };
+  for (const resourceKey in parsedState.resources) {
+    const resource = parsedState.resources[resourceKey];
+    const moneyEarned = (resource.amountPerSecond * BigInt(timeElapsed)) / BigInt(1000);
+    resource.currentAmount += moneyEarned;
+    offlineData.resourcesEarned[resourceKey] = moneyEarned;
+  }
 
+  parsedState.offlineData = offlineData
   return { ...parsedState };
 }
 

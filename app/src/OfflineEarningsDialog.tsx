@@ -5,11 +5,11 @@ import {
   DialogPanel, DialogTitle
 } from '@headlessui/react'
 
-import { useGameStore } from '../game_state/GameStore';
-import { formatNumber } from '../helpers/formatNumber';
+import { useGameStore } from './game_state/GameStore2';
+import { formatNumber } from './helpers/formatNumber';
 
 const OfflineEarningsDialog = memo(() => {
-  const timeOfflineData = useGameStore((state) => state.timeOfflineData);
+  const timeOfflineData = useGameStore((state) => state.offlineData);
 
   let [isOpen, setIsOpen] = useState(timeOfflineData !== undefined);
   if (timeOfflineData === undefined) {
@@ -29,8 +29,10 @@ const OfflineEarningsDialog = memo(() => {
         >
           <DialogTitle className="text-2xl mb-3">Offline earnings</DialogTitle>
           <Description>
-            You were offline for {Math.round(timeOfflineData.timeElapsed / 1000)} second(s) and
-            earned {formatNumber(timeOfflineData.moneyEarned)} resources!
+            You were offline for {(timeOfflineData.timeElapsed / 1000).toFixed(2)} second(s) and
+            earned:
+            <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['copper'])} copper</li>
+            <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['silver'])} silver</li>
           </Description>
         </DialogPanel>
       </div>

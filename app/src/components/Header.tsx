@@ -1,11 +1,11 @@
 import { memo } from 'react';
 
 import GemIcon from '../icons/GemIcon';
-import { useGameStore } from '../game_state/GameStore';
+import { useGameStore } from '../game_state/GameStore2';
 import { formatNumber } from '../helpers/formatNumber';
 
 /* Header component displays the planet title and current production statistics. */
-const Header = memo(() => {
+const Header = memo(({ stageId }: { stageId: string }) => {
   // console.log("Header render");
   return (
     <header
@@ -16,7 +16,7 @@ const Header = memo(() => {
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >
       <div id="planet-title" className="min-w-[400px]">
-        <PlanetTitle />
+        <PlanetTitle stageId={stageId} />
       </div>
       <div className="flex-grow"/>
       <div id="production-stats" className="min-w-[400px] text-right">
@@ -28,13 +28,14 @@ const Header = memo(() => {
 });
 
 /* PlanetTitle component displays the planet name and biome. */
-const PlanetTitle = () => {
+const PlanetTitle = ({ stageId }: { stageId: string }) => {
   // console.log("PlanetTitle render");
-  const stage = useGameStore((state) => state.stage);
+  const stageName = useGameStore((state) => state.stages[stageId].name);
+  const stageDesc = useGameStore((state) => state.stages[stageId].name);
   return (
     <>
-      <h1 className='uppercase text-3xl font-bold'>{stage.name}</h1>
-      <h3 className="uppercase text-lg">{stage.description}</h3>
+      <h1 className='uppercase text-3xl font-bold'>{stageName}</h1>
+      <h3 className="uppercase text-lg">{stageDesc}</h3>
     </>
   );
 }
@@ -45,7 +46,7 @@ const PlanetTitle = () => {
  */
 const CurrentResourcesDisplay = () => {
   // console.log("CurrentResourcesDisplay render");
-  const currentResources = useGameStore((state) => state.currentResources);
+  const currentResources = useGameStore((state) => state.resources.copper.currentAmount);
   return (
     <h1 className="text-3xl font-bold">
       {formatNumber(currentResources)}<GemIcon size={30}/>
@@ -55,7 +56,7 @@ const CurrentResourcesDisplay = () => {
 const ResourcesPerSecondDisplay = () => {
   // console.log("ResourcesPerSecondDisplay render");  
 
-  const resourcesPerSecond = useGameStore((state) => state.resourcesPerSecond);
+  const resourcesPerSecond = useGameStore((state) => state.resources.copper.currentAmount);
   return (
     <h3 className="text-lg">
       {formatNumber(resourcesPerSecond)}<GemIcon size={18}/>/sec
