@@ -1,5 +1,7 @@
 import { Producer, UpgradeSlot } from "../types";
 
+var Fraction = require('fractional').Fraction;
+
 /**
  * Calculates the cost multiplier based on the upgrade slots and the producer ID.
  * This function checks for upgrades that reduce costs for specific producer tiers.
@@ -87,7 +89,7 @@ export const refreshProducerProduction = (
   upgradeSlots: UpgradeSlot[]
 ): Producer => {
   const productionMultiplier = calculateProductionMultiplier(upgradeSlots, producer.id);
-  const producerProduction = BigInt(producer.count * producer.baseProduction * productionMultiplier);
+  const producerProduction = BigInt(Math.round(producer.count * producer.baseProduction * productionMultiplier));
 
   return {
     ...producer,

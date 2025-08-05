@@ -98,7 +98,6 @@ export const useGameStore = create<
     const upgradeSlot = stage.upgradeSlots[upgradeSlotIndex];
 
     // Check if there are enough resources to purchase the Upgrade
-
     const multiplierFraction = new Fraction(upgradeSlot.costMultiplier);
     const totalCost = (upgradeToPurchase.cost * BigInt(multiplierFraction.numerator)) / BigInt(multiplierFraction.denominator);
     if (currentResources < totalCost) {
@@ -119,12 +118,17 @@ export const useGameStore = create<
       updatedProducers.push(refreshProducerProduction(prod, updatedSlots));
     }
 
+    console.log("STUFF");
+    console.log(currentResources);
+    console.log(totalCost);
+    console.log("STUFF2");
+
     // Update the game state
     set({
       producers: updatedProducers,
       resourcesPerSecond: (
         updatedProducers.reduce(
-          (total, prod) => total + prod.resourcesPerSecond, BigInt(0)
+          (total, prod) => { console.log(prod.resourcesPerSecond); return total + prod.resourcesPerSecond }, BigInt(0)
         )
       ),
       currentResources: currentResources - totalCost,
