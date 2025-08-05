@@ -15,7 +15,7 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
   }
 
   return (
-    <footer className="h-full py-5 mx-8 flex content-center">
+    <footer className="py-5 mx-8 flex content-center">
       <div className="flex-1"></div>
       <div className="min-w-[400px] text-right">
         <LastDateTimeSavedDisplay />

@@ -15,9 +15,7 @@ const Header = memo(({ stageId }: { stageId: string }) => {
         border-gray-300 border-solid border-2 border-l-0 border-r-0
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >
-      <div id="planet-title" className="min-w-[400px]">
-        <PlanetTitle stageId={stageId} />
-      </div>
+      <StageTitle stageId={stageId} />
       <div className="flex-grow"/>
       <div id="production-stats" className="min-w-[400px] text-right">
         <CurrentResourcesDisplay />
@@ -28,15 +26,15 @@ const Header = memo(({ stageId }: { stageId: string }) => {
 });
 
 /* PlanetTitle component displays the planet name and biome. */
-const PlanetTitle = ({ stageId }: { stageId: string }) => {
+const StageTitle = ({ stageId }: { stageId: string }) => {
   // console.log("PlanetTitle render");
   const stageName = useGameStore((state) => state.stages[stageId].name);
-  const stageDesc = useGameStore((state) => state.stages[stageId].name);
+  const stageDesc = useGameStore((state) => state.stages[stageId].description);
   return (
-    <>
+    <div id="stage-title" className="min-w-[400px]">
       <h1 className='uppercase text-3xl font-bold'>{stageName}</h1>
       <h3 className="uppercase text-lg">{stageDesc}</h3>
-    </>
+    </div>
   );
 }
 
