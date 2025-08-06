@@ -6,7 +6,7 @@ export const INITIAL_GAME_STATE: GameState = {
   resources: {
     copper: {
       currentAmount: BigInt(100),
-      amountPerSecond: BigInt(10),
+      amountPerSecond: BigInt(0),
     },
     silver: {
       currentAmount: BigInt(0),
@@ -159,6 +159,30 @@ export const INITIAL_GAME_STATE: GameState = {
             isActive: true,
           }
         },
+        mnr_s2_fabricator: {
+          static: {
+            effect: {
+              type: "costReduction",
+              multiplierAmount: .8,
+              producersEffected: [
+                {
+                  stageId: "stage_1",
+                  producerId: "mnr_n1",
+                }
+              ],
+            },
+            name: "MNR-S1 Fabricator",
+            description: "Reduces cost of MNR-S1 by 20%",
+            iconOption: "IconBuildingFactory",
+            purchaseResource: "silver",
+            baseCost: BigInt(1500),
+            baseRateOfCostIncrease: 1.3,
+          },
+          dynamic: {
+            count: 0,
+            isActive: true,
+          }
+        },
       },
       buffs: {
         mnr_n1_supercharge: {
@@ -189,7 +213,7 @@ export const INITIAL_GAME_STATE: GameState = {
       unlocks: {
         silver_production: {
           static: {
-            name: "MNR-S1 Fabricator",
+            name: "Research MNR-S1 Fabrication",
             description: "Allows the creation of MNR-S1: Silver-Mining Robots",
             iconOption: "IconRobot",
             resourceToPurchase: "copper",

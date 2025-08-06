@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
-import GemIcon from '../icons/GemIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
 
 import { Producer } from '../game_state/types';
@@ -24,7 +24,7 @@ const ProducerList = memo(({ stageId }: { stageId: string }) => {
     useShallow((state) => Object.keys(state.stages[stageId].producers))
   );
 
-  // console.log("ProducerList render");
+  console.log("ProducerList render");
   const [numToPurchaseOption, setNumToPurchaseOption] = useState<PurchaseAmount>(1);
 
   return (
@@ -91,6 +91,10 @@ const SingleProducerDisplay = memo(
     const currentRelevantResources: bigint = useGameStore(
       (state) => state.resources[relevantResource].currentAmount
     );
+
+    if (!producer.dynamic.isActive) {
+      return null; // If the producer is not active, do not render anything
+    }
   
     const resourcesPerSecond = calculateProducerProduction(producer);
 
@@ -123,7 +127,7 @@ const SingleProducerDisplay = memo(
             {producer.static.name}: {producer.dynamic.count} (+{amountToPurchaseDisplay})
           </h2>
           <h2 className="flex-1 text-right">
-            {formatNumber(resourcesPerSecond)}<GemIcon size={18} />/sec
+            {formatNumber(resourcesPerSecond)}<ResourceIcon resource={producer.static.producedResource} size={18} />/sec
           </h2>
         </div>
         <SidebarCard
@@ -133,7 +137,7 @@ const SingleProducerDisplay = memo(
           }
           contentElement={<>{producer.static.description}</>}
           suffixElement={
-            <>{formatNumber(currentCost)}<GemIcon size={18} /></>
+            <>{formatNumber(currentCost)}<ResourceIcon resource={producer.static.purchaseResource} size={18} /></>
           }
           onClick={() => {
             purchaseProducerAction(props.stageId, props.producerId, numToPurchase)

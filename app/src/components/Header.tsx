@@ -1,12 +1,12 @@
 import { memo } from 'react';
 
-import GemIcon from '../icons/GemIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 
 /* Header component displays the planet title and current production statistics. */
 const Header = memo(({ stageId }: { stageId: string }) => {
-  // console.log("Header render");
+  console.log("Header render");
   return (
     <header
       id="header"
@@ -17,9 +17,13 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     >
       <StageTitle stageId={stageId} />
       <div className="flex-grow"/>
-      <div id="production-stats" className="min-w-[400px] text-right">
-        <CurrentResourcesDisplay />
-        <ResourcesPerSecondDisplay />
+      <div id="production-stats" className="min-w-[200px] text-right">
+        <CurrentResourcesDisplay resource='silver' />
+        <ResourcesPerSecondDisplay resource='silver' />
+      </div>
+      <div id="production-stats" className="min-w-[200px] text-right">
+        <CurrentResourcesDisplay resource='copper' />
+        <ResourcesPerSecondDisplay resource='copper' />
       </div>
     </header>
   )
@@ -27,7 +31,7 @@ const Header = memo(({ stageId }: { stageId: string }) => {
 
 /* PlanetTitle component displays the planet name and biome. */
 const StageTitle = ({ stageId }: { stageId: string }) => {
-  // console.log("PlanetTitle render");
+  console.log("PlanetTitle render");
   const stageName = useGameStore((state) => state.stages[stageId].name);
   const stageDesc = useGameStore((state) => state.stages[stageId].description);
   return (
@@ -42,22 +46,22 @@ const StageTitle = ({ stageId }: { stageId: string }) => {
  * CurrentResourcesDisplay and ResourcesPerSecondDisplay components display the
  * current resources and resources per second respectively.
  */
-const CurrentResourcesDisplay = () => {
+const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
   // console.log("CurrentResourcesDisplay render");
-  const currentResources = useGameStore((state) => state.resources.copper.currentAmount);
+  const currentResources = useGameStore((state) => state.resources[resource].currentAmount);
   return (
-    <h1 className="text-3xl font-bold">
-      {formatNumber(currentResources)}<GemIcon size={30}/>
+    <h1 className="lowercase text-3xl font-bold">
+      {formatNumber(currentResources)}<ResourceIcon resource={resource} size={30}/>
     </h1>
   );
 };
-const ResourcesPerSecondDisplay = () => {
+const ResourcesPerSecondDisplay = ({ resource }: { resource: string }) => {
   // console.log("ResourcesPerSecondDisplay render");  
 
-  const resourcesPerSecond = useGameStore((state) => state.resources.copper.amountPerSecond);
+  const resourcesPerSecond = useGameStore((state) => state.resources[resource].amountPerSecond);
   return (
-    <h3 className="text-lg">
-      {formatNumber(resourcesPerSecond)}<GemIcon size={18}/>/sec
+    <h3 className="lowercase text-lg">
+      {formatNumber(resourcesPerSecond)}<ResourceIcon resource={resource} size={18}/>/sec
     </h3>
   );
 };

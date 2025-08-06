@@ -4,6 +4,7 @@ import { useShallow } from 'zustand/react/shallow'
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
+import ResourceIcon from '../icons/ResourceIcon';
 
 var Fraction = require('fractional').Fraction;
 
@@ -99,7 +100,7 @@ const SingleUpgrade = (
         <p>{upgrade.static.description}</p>
       </td>
       <td className="p-5 rounded-r-xl">
-        {currentCost} {upgrade.static.purchaseResource}
+        {currentCost}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
       </td>
     </tr>
   );

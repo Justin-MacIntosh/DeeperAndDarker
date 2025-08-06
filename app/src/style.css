@@ -7,7 +7,7 @@
       @apply h-12 px-4 py-2 rounded-lg shadow-md
         hover:brightness-125 hover:-translate-y-1
         active:brightness-110 active:-translate-y-0.5
-        transition-all duration-75;
+        select-none transition-all duration-75;
     }
     .list-box-option {
       @apply text-center cursor-pointer bg-med-purple rounded-lg

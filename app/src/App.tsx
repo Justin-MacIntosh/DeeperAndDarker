@@ -40,7 +40,7 @@ const App = () => {
         zIndex={1000}
         size={'200px'}
         duration={300}
-        className="border-right border-gray-400 border-r-solid border-r-4"
+        className="border-right border-gray-300 border-r-solid border-r-[3px]"
       >
         <div className="h-full bg-gray-800 text-gray-300 flex flex-col p-5">
           <button className="btn-default bg-gray-600 mb-5">Deep space</button>
