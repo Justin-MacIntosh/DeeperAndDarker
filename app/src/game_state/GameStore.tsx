@@ -1,150 +1,182 @@
-// import { create } from 'zustand';
+import { create } from 'zustand';
 
-// import { loadGameState } from './stateStorageHelpers';
-// import { INITIAL_GAME_STATE } from './InitialGameState';
-// import { refreshProducerProduction, calculatePriceForMultiplePurchases } from '../helpers/producerStateHelpers';
-// import { GameState, Producer } from '../types';
+import { loadGameState } from './stateStorageHelpers';
+import { INITIAL_GAME_STATE } from './InitialGameState';
+import { GameState } from './types';
+import {
+  calculatePriceForMultiplePurchases,
+  recalculateResourceProduction
+} from '../helpers/producerStateHelpers';
 
-// var Fraction = require('fractional').Fraction;
+var Fraction = require('fractional').Fraction;
 
-// const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
+const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
-// /**
-//  * Game Store using Zustand for state management.
-//  * This store holds the game state and provides methods to manipulate it.
-//  */
-// export const useGameStore = create<
-//   GameState & {
-//     tick: (milliseconds: number) => void;
-//     purchaseProducer: (producerId: number, numToPurchase: number) => void;
-//     purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => void;
-//     updateTimeSaved: (timeSaved: number) => void;
-//     resetGame: () => void;
-//   }
-// >((set, get) => ({
-//   ...LOADED_GAME_STATE,
+/**
+ * Game Store using Zustand for state management.
+ * This store holds the game state and provides methods to manipulate it.
+ */
+export const useGameStore = create<
+  GameState & {
+    tick: (milliseconds: number) => void;
+    purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => void;
+    updateTimeSaved: (timeSaved: number) => void;
+    resetGame: () => void;
+  }
+>((set, get) => ({
+  ...LOADED_GAME_STATE,
 
-//   // Tick function to update resources based on time elapsed
-//   tick: (milliseconds: number) => {
-//     const { currentResources, resourcesPerSecond, producers } = get();
-//     const tickRate = milliseconds / 1000;
-//     const updatedMoney = currentResources + ((resourcesPerSecond * BigInt(milliseconds)) / BigInt(1000));
+  // Tick function to update resources based on time elapsed
+  tick: (milliseconds: number) => {
+    const { resources } = get();
 
-//     // Update producers to be shown if they meet the minimum money requirement
-//     const updatedProducers = producers.map(
-//       prod => {
-//         if (!prod.isBeingShown && updatedMoney > prod.minMoneyToShow) {
-//           return { ...prod, isBeingShown: true };
-//         }
-//         return { ...prod };
-//       }
-//     );
+    const updatedResources: {
+      [key: string]: { currentAmount: bigint; amountPerSecond: bigint }
+    } = {};
 
-//     set({ currentResources: updatedMoney, producers: updatedProducers });
-//   },
+    for (const resourceKey in resources) {
+      const resource = resources[resourceKey];
+      const updatedAmount = resource.currentAmount + (
+        (resource.amountPerSecond * BigInt(milliseconds)) / BigInt(1000)
+      );
+      updatedResources[resourceKey] = { ...resource, currentAmount: updatedAmount };
+    }
 
-//   // Purchase a single producer by its ID
-//   purchaseProducer: (producerId: number, numToPurchase: number) => {
-//     const { producers, currentResources, stage } = get();
-//     const prodIndex = producers.findIndex(prod => prod.id === producerId);
-//     if (prodIndex === -1) {
-//       console.error(`Producer with ID ${producerId} not found.`);
-//       return;
-//     }
+    set({ resources: updatedResources });
+  },
 
-//     const producerToBuy = producers[prodIndex];
-//     const currentCost = calculatePriceForMultiplePurchases(
-//       producerToBuy, numToPurchase, stage.upgradeSlots
-//     );
-//     if (currentResources < currentCost) {
-//       console.error(`Not enough money to buy producer with ID ${producerId}.`);
-//       return;
-//     }
+  // Purchase a producer by its ID and quantity
+  purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => {
+    if (numToPurchase <= 0) {
+      console.error("Number to purchase must be greater than zero.");
+      return;
+    }
 
-//     const updatedProducers = [...producers];
-//     updatedProducers[prodIndex] = refreshProducerProduction(
-//       {...producerToBuy, count: producerToBuy.count + numToPurchase },
-//       stage.upgradeSlots
-//     );
+    const { resources, stages } = get();
+    const stage = stages[stageId];
+    if (!stage) {
+      console.error(`Stage with ID ${stageId} not found.`);
+      return;
+    }
+    const producerToBuy = stage.producers[producerId];
+    if (!producerToBuy) {
+      console.error(`Producer with ID ${producerId} not found in stage ${stageId}.`);
+      return;
+    }
 
-//     set({
-//       producers: updatedProducers,
-//       resourcesPerSecond: (
-//         updatedProducers.reduce(
-//           (total, prod) => total + prod.resourcesPerSecond, BigInt(0)
-//         )
-//       ),
-//       currentResources: currentResources - currentCost,
-//     });
-//   },
+    const purchaseResource = producerToBuy.static.purchaseResource;
+    const producedResource = producerToBuy.static.producedResource;
+    const currentCost = calculatePriceForMultiplePurchases(producerToBuy, numToPurchase);
 
-//   // Purchase an Upgrade to be built in a specific slot
-//   purchaseUpgrade: (upgradeSlotId: number, upgradeId: number) => {
-//     const { buildableUpgrades: buildableUpgrades, stage, currentResources, producers } = get();
+    if (resources[purchaseResource].currentAmount < currentCost) {
+      console.error(`Not enough ${purchaseResource} to buy producer with ID ${producerId}.`);
+      return;
+    }
 
-//     // Get Upgrade to purchase
-//     const upgradeToPurchase = buildableUpgrades.find(upg => upg.id === upgradeId);
-//     if (!upgradeToPurchase) {
-//       console.error(`Upgrade with ID ${upgradeId} not found.`);
-//       return;
-//     }
+    // Update the producer count in the stage
+    const updatedStages = {
+      ...stages,
+      [stageId]: {
+        ...stage,
+        producers: {
+          ...stage.producers,
+          [producerId]: {
+            ...producerToBuy,
+            dynamic: {
+              ...producerToBuy.dynamic,
+              count: producerToBuy.dynamic.count + numToPurchase,
+            }
+          },
+        },
+      },
+    };
 
-//     // Get Upgrade Slot to build in and check if Slot is Available
-//     const upgradeSlotIndex = stage.upgradeSlots.findIndex(slot => slot.id === upgradeSlotId);
-//     if (upgradeSlotIndex === -1) {
-//       console.error(`Upgrade slot with ID ${upgradeSlotId} not found.`);
-//       return;
-//     }
-//     const upgradeSlot = stage.upgradeSlots[upgradeSlotIndex];
+    // Update resource counts and production rates
+    const updatedResources = { ...resources };
+    updatedResources[purchaseResource] = {
+      ...updatedResources[purchaseResource],
+      currentAmount: updatedResources[purchaseResource].currentAmount - currentCost,
+    };
+    updatedResources[producedResource] = {
+      ...updatedResources[producedResource],
+      amountPerSecond: recalculateResourceProduction(updatedStages, producedResource),
+    };
 
-//     // Check if there are enough resources to purchase the Upgrade
-//     const multiplierFraction = new Fraction(upgradeSlot.costMultiplier);
-//     const totalCost = (upgradeToPurchase.cost * BigInt(multiplierFraction.numerator)) / BigInt(multiplierFraction.denominator);
-//     if (currentResources < totalCost) {
-//       console.error(`Not enough money to buy Upgrade with ID ${upgradeId}.`);
-//       return;
-//     }
+    set({
+      resources: updatedResources,
+      stages: updatedStages,
+    });
+  },
 
-//     // Update the Upgrade Slot
-//     const updatedSlots = [...stage.upgradeSlots];
-//     updatedSlots[upgradeSlotIndex] = {
-//       ...upgradeSlot,
-//       upgrade: { ...upgradeToPurchase },
-//     }
+  // Purchase a producer by its ID and quantity
+  purchaseUpgrade: (stageId: string, upgradeId: string) => {
+    const { resources, stages } = get();
+    const stage = stages[stageId];
+    if (!stage) {
+      console.error(`Stage with ID ${stageId} not found.`);
+      return;
+    }
+    const upgradeToBuy = stage.upgrades[upgradeId];
+    if (!upgradeToBuy) {
+      console.error(`Upgrade with ID ${upgradeId} not found in stage ${stageId}.`);
+      return;
+    }
+    const purchaseResource = upgradeToBuy.static.purchaseResource;
 
-//     // Refresh Producers based on the new Upgrade state
-//     const updatedProducers: Producer[] = [];
-//     for (const prod of producers) {
-//       updatedProducers.push(refreshProducerProduction(prod, updatedSlots));
-//     }
+    const costIncreaseFraction = new Fraction(upgradeToBuy.static.baseRateOfCostIncrease ** (upgradeToBuy.dynamic.count + 1));
+    const currentCost = (
+      upgradeToBuy.static.baseCost *
+      BigInt(costIncreaseFraction.numerator)
+    ) / BigInt(costIncreaseFraction.denominator);
 
-//     console.log("STUFF");
-//     console.log(currentResources);
-//     console.log(totalCost);
-//     console.log("STUFF2");
+    if (resources[purchaseResource].currentAmount < currentCost) {
+      console.error(`Not enough ${purchaseResource} to buy upgrade with ID ${upgradeId}.`);
+      return;
+    }
 
-//     // Update the game state
-//     set({
-//       producers: updatedProducers,
-//       resourcesPerSecond: (
-//         updatedProducers.reduce(
-//           (total, prod) => { console.log(prod.resourcesPerSecond); return total + prod.resourcesPerSecond }, BigInt(0)
-//         )
-//       ),
-//       currentResources: currentResources - totalCost,
-//       stage: { ...stage, upgradeSlots: updatedSlots },
-//     });
-//   },
+    const updatedStages = {
+      ...stages,
+      [stageId]: {
+        ...stage,
+        upgrades: {
+          ...stage.upgrades,
+          [upgradeId]: {
+            ...upgradeToBuy,
+            dynamic: {
+              ...upgradeToBuy.dynamic,
+              count: upgradeToBuy.dynamic.count + 1,
+            }
+          },
+        },
+      },
+    };
+    const updatedResources = { ...resources };
 
-//   // Update the last time the game state was saved
-//   updateTimeSaved: (lastTimeSaved: number) => {
-//     set({ lastTimeSaved: lastTimeSaved });
-//   },
+    // Calculate effect on producers
+    const effect = upgradeToBuy.static.effect;
+    for (const { stageId, producerId } of effect.producersEffected) {
+      const producer = updatedStages[stageId].producers[producerId];
+      if (effect.type === "productionMultiplier") {
+        producer.dynamic.productionMultiplier *= effect.multiplierAmount;
+        updatedResources[producer.static.producedResource] = {
+          ...updatedResources[producer.static.producedResource],
+          amountPerSecond: recalculateResourceProduction(updatedStages, producer.static.producedResource),
+        };
+      } else if (effect.type === "costReduction") {
+        producer.dynamic.costReductionMultiplier *= effect.multiplierAmount;
+      }
+    }
 
-//   // Reset the game state to the initial state
-//   resetGame: () => {
-//     set({ ...INITIAL_GAME_STATE });
-//   },
-// }));
+    set({ resources: updatedResources, stages: updatedStages });
+  },
 
-export {}
+  // Update the last time the game state was saved
+  updateTimeSaved: (lastTimeSaved: number) => {
+    set({ lastTimeSaved: lastTimeSaved });
+  },
+
+  // Reset the game state to the initial state
+  resetGame: () => {
+    set({ ...INITIAL_GAME_STATE });
+  },
+}));

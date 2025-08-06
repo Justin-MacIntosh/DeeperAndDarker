@@ -24,10 +24,10 @@ export const INITIAL_GAME_STATE: GameState = {
             name: "MNR-N1",
             description: "Basic bot",
             iconOption: "IconRobot",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
             baseCost: BigInt(100),
             baseRateOfCostIncrease: 1.15,
-            resourceProduced: "copper",
+            producedResource: "copper",
             baseProduction: BigInt(50),
             color: "blue",
             animateAppearance: false,
@@ -44,10 +44,10 @@ export const INITIAL_GAME_STATE: GameState = {
             name: "MNR-S1",
             description: "Delicate silver extractor",
             iconOption: "IconRobot",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
             baseCost: BigInt(20000),
             baseRateOfCostIncrease: 1.15,
-            resourceProduced: "silver",
+            producedResource: "silver",
             baseProduction: BigInt(100),
             color: "red",
             animateAppearance: true,
@@ -68,17 +68,17 @@ export const INITIAL_GAME_STATE: GameState = {
               multiplierAmount: 1.5,
               producersEffected: [
                 {
-                  stage: "stage_1",
-                  producer: "mnr_n1",
+                  stageId: "stage_1",
+                  producerId: "mnr_n1",
                 }
               ],
             },
             name: "MNR-N1 Control Center",
             description: "Increases MNR-N1 Production by 50%",
             iconOption: "IconBuildingBroadcastTower",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
             baseCost: BigInt(15000),
-            costIncreaseRate: 1.5,
+            baseRateOfCostIncrease: 1.5,
             maximumPurchasable: 4,
           },
           dynamic: {
@@ -93,17 +93,17 @@ export const INITIAL_GAME_STATE: GameState = {
               multiplierAmount: .8,
               producersEffected: [
                 {
-                  stage: "stage_1",
-                  producer: "mnr_n1",
+                  stageId: "stage_1",
+                  producerId: "mnr_n1",
                 }
               ],
             },
             name: "MNR-N1 Fabricator",
             description: "Reduces cost of MNR-N1 by 20%",
             iconOption: "IconBuildingFactory",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
             baseCost: BigInt(10000),
-            costIncreaseRate: 1.3,
+            baseRateOfCostIncrease: 1.3,
           },
           dynamic: {
             count: 0,
@@ -117,17 +117,17 @@ export const INITIAL_GAME_STATE: GameState = {
               multiplierAmount: 1.5,
               producersEffected: [
                 {
-                  stage: "stage_1",
-                  producer: "mnr_s1",
+                  stageId: "stage_1",
+                  producerId: "mnr_s1",
                 }
               ],
             },
             name: "MNR-S1 Control Center",
             description: "Increases MNR-S1 Production by 50%",
             iconOption: "IconBuildingBroadcastTower",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
             baseCost: BigInt(30000),
-            costIncreaseRate: 1.5,
+            baseRateOfCostIncrease: 1.5,
             maximumPurchasable: 4,
           },
           dynamic: {
@@ -142,17 +142,17 @@ export const INITIAL_GAME_STATE: GameState = {
               multiplierAmount: .8,
               producersEffected: [
                 {
-                  stage: "stage_1",
-                  producer: "mnr_n1",
+                  stageId: "stage_1",
+                  producerId: "mnr_n1",
                 }
               ],
             },
             name: "MNR-S1 Fabricator",
             description: "Reduces cost of MNR-S1 by 20%",
             iconOption: "IconBuildingFactory",
-            resourceToPurchase: "silver",
+            purchaseResource: "silver",
             baseCost: BigInt(1500),
-            costIncreaseRate: 1.3,
+            baseRateOfCostIncrease: 1.3,
           },
           dynamic: {
             count: 0,
@@ -168,8 +168,8 @@ export const INITIAL_GAME_STATE: GameState = {
               multiplierAmount: 5,
               producersEffected: [
                 {
-                  stage: "stage_1",
-                  producer: "mnr_n1",
+                  stageId: "stage_1",
+                  producerId: "mnr_n1",
                 }
               ],
             },

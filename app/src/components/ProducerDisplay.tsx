@@ -8,7 +8,7 @@ import GemIcon from '../icons/GemIcon';
 import SidebarCard from './SidebarCard';
 
 import { Producer } from '../game_state/types';
-import { useGameStore } from '../game_state/GameStore2';
+import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
@@ -80,18 +80,19 @@ const SingleProducerDisplay = memo(
   (props: { producerId: string; stageId: string; numToPurchaseOption: PurchaseAmount; }) => {
     console.log("SingleProducerDisplay render");
 
+    // Actions and state from the game store
     const producer: Producer = useGameStore(
       (state) => state.stages[props.stageId].producers[props.producerId]
     );
-    const relevantResource = producer.static.resourceToPurchase;
+    const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
+
+    // Get the current amount of the resource required to purchase this producer
+    const relevantResource = producer.static.purchaseResource;
     const currentRelevantResources: bigint = useGameStore(
       (state) => state.resources[relevantResource].currentAmount
     );
+  
     const resourcesPerSecond = calculateProducerProduction(producer);
-
-    // Actions and state from the game store
-    // const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
-    // const currentResources: bigint = useGameStore((state) => state.currentResources);
 
     // Calculate the cost and number of producers to purchase
     let currentCost: bigint = BigInt(0);
@@ -135,7 +136,7 @@ const SingleProducerDisplay = memo(
             <>{formatNumber(currentCost)}<GemIcon size={18} /></>
           }
           onClick={() => {
-            /*purchaseProducerAction(props.producer.id, numToPurchase)*/
+            purchaseProducerAction(props.stageId, props.producerId, numToPurchase)
           }}
           isClickDisabled={currentCost > currentRelevantResources}
         />

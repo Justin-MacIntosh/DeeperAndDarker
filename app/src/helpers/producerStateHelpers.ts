@@ -1,4 +1,4 @@
-import { Producer } from "../game_state/types";
+import { Producer, Stage } from "../game_state/types";
 
 var Fraction = require('fractional').Fraction;
 
@@ -70,3 +70,21 @@ export const calculateProducerProduction = (
 
   return totalProduction;
 };
+
+// Recalculates the total production for a specific resource type across all stages
+export const recalculateResourceProduction = (
+  stages: { [key: string]: Stage }, resourceType: string
+): bigint => {
+  let totalProduction = BigInt(0);
+  for (const stageId in stages) {
+    const stage = stages[stageId];
+    for (const producerId in stage.producers) {
+      const producer = stage.producers[producerId];
+      if (producer.static.producedResource === resourceType) {
+        const producerProduction = calculateProducerProduction(producer);
+        totalProduction += producerProduction;
+      }
+    }
+  }
+  return totalProduction;
+}

@@ -23,7 +23,7 @@ interface OfflineData {
 }
 
 /* Stage typing */
-interface Stage {
+export interface Stage {
   name: string;
   description: string;
   isActive: boolean; // Whether the stage is currently active
@@ -47,10 +47,10 @@ export interface Producer {
     name: string;
     description: string;
     iconOption: IconOption; // Optional icon for UI representation
-    resourceToPurchase: string; // Resource required to purchase the upgrade
+    purchaseResource: string; // Resource required to purchase the upgrade
     baseCost: bigint; // Base cost of the producer
     baseRateOfCostIncrease: number; // Rate of cost increase
-    resourceProduced: string; // Resource name produced by this producer
+    producedResource: string; // Resource name produced by this producer
     baseProduction: bigint; // Base production amount per second
     animateAppearance: boolean;
     color: string; // Optional color for UI representation
@@ -70,9 +70,9 @@ export interface Upgrade {
     description: string;
     iconOption: IconOption; // Optional icon for UI representation
     effect: ProductionMultiplier | CostReducer;
-    resourceToPurchase: string; // Resource required to purchase the upgrade
+    purchaseResource: string; // Resource required to purchase the upgrade
     baseCost: bigint;
-    costIncreaseRate?: number; // Optional, used for upgrades that increase in cost
+    baseRateOfCostIncrease: number; // Optional, used for upgrades that increase in cost
     maximumPurchasable?: number; // Optional, used for upgrades that have a limit
   },
   dynamic: {
@@ -99,16 +99,16 @@ interface ProductionMultiplier {
   type: "productionMultiplier";
   multiplierAmount: number;
   producersEffected: Array<{
-    stage: string;
-    producer: string;
+    stageId: string;
+    producerId: string;
   }>,
 }
 interface CostReducer {
   type: "costReduction";
   multiplierAmount: number;
   producersEffected: Array<{
-    stage: string;
-    producer: string;
+    stageId: string;
+    producerId: string;
   }>,
 }
 

@@ -1,7 +1,7 @@
 import { memo } from 'react';
 
 import GemIcon from '../icons/GemIcon';
-import { useGameStore } from '../game_state/GameStore2';
+import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 
 /* Header component displays the planet title and current production statistics. */
@@ -54,7 +54,7 @@ const CurrentResourcesDisplay = () => {
 const ResourcesPerSecondDisplay = () => {
   // console.log("ResourcesPerSecondDisplay render");  
 
-  const resourcesPerSecond = useGameStore((state) => state.resources.copper.currentAmount);
+  const resourcesPerSecond = useGameStore((state) => state.resources.copper.amountPerSecond);
   return (
     <h3 className="text-lg">
       {formatNumber(resourcesPerSecond)}<GemIcon size={18}/>/sec

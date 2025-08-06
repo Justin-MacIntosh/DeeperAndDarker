@@ -5,7 +5,7 @@ import {
   DialogPanel, DialogTitle
 } from '@headlessui/react'
 
-import { useGameStore } from './game_state/GameStore2';
+import { useGameStore } from './game_state/GameStore';
 import { formatNumber } from './helpers/formatNumber';
 
 const OfflineEarningsDialog = memo(() => {

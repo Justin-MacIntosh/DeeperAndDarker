@@ -2,7 +2,7 @@ import { memo, useState } from 'react';
 
 import { useShallow } from 'zustand/react/shallow'
 import { Popover } from 'react-tiny-popover'
-import { useGameStore } from '../game_state/GameStore2';
+import { useGameStore } from '../game_state/GameStore';
 import { formatNumber } from '../helpers/formatNumber';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
 

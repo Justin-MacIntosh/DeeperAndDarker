@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { useGameStore } from './game_state/GameStore2';
+import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 
 import Drawer from 'react-modern-drawer'

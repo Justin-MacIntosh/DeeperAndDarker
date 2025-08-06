@@ -1,5 +1,5 @@
 import { resetGameState } from '../game_state/stateStorageHelpers';
-import { useGameStore } from '../game_state/GameStore2';
+import { useGameStore } from '../game_state/GameStore';
 
 /* 
  * Footer component displays the footer with save and reset buttons,
