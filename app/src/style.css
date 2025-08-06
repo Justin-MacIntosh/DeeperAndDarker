@@ -4,7 +4,7 @@
 
 @layer components {
     .btn-default {
-      @apply h-12 bg-med-purple px-4 py-2 rounded-lg shadow-md
+      @apply h-12 px-4 py-2 rounded-lg shadow-md
         hover:brightness-125 hover:-translate-y-1
         active:brightness-110 active:-translate-y-0.5
         transition-all duration-75;

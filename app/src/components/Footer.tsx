@@ -8,10 +8,10 @@ import { useGameStore } from '../game_state/GameStore';
 const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => {
   console.log("Footer render");
 
-  // const resetAction = useGameStore((state) => state.resetGame);
+  const resetAction = useGameStore((state) => state.resetGame);
   const resetGame = () => {
-    // resetGameState();
-    // resetAction();
+    resetGameState();
+    resetAction();
   }
 
   return (
@@ -19,8 +19,8 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
       <div className="flex-1"></div>
       <div className="min-w-[400px] text-right">
         <LastDateTimeSavedDisplay />
-        <button className="btn-default mr-3" onClick={saveCurrentGameData}>Save</button>
-        <button className="btn-default" onClick={resetGame}>Reset</button>
+        <button className="btn-default bg-med-purple mr-3" onClick={saveCurrentGameData}>Save</button>
+        <button className="btn-default bg-med-purple" onClick={resetGame}>Reset</button>
       </div>
     </footer>
   );

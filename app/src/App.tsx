@@ -40,15 +40,21 @@ const App = () => {
         zIndex={1000}
         size={'200px'}
         duration={300}
-        className="border-right border-gray-400 border-r-solid border-r-2 rounded-r-lg"
+        className="border-right border-gray-400 border-r-solid border-r-4"
       >
-        <div className="h-full bg-dark-purple text-gray-300 flex flex-col p-5 rounded-r-lg">
-          <button className="btn-default mb-5">Deep Space</button>
-          <button className="btn-default">Planet Yan</button>
+        <div className="h-full bg-gray-800 text-gray-300 flex flex-col p-5">
+          <button className="btn-default bg-gray-600 mb-5">Deep space</button>
+          <button className="btn-default bg-gray-600">Planet Yan</button>
         </div>
+        <button
+          className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
+        />
       </Drawer>
       <main className="bg-dark-purple min-w-[1100px]">
-        <button className="fixed top-[120px] z-20 w-3 bg-gray-300 h-10 rounded-r-xl hover:w-5 transition-all" onClick={toggleDrawer}/>
+        <button
+          className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
+          onMouseOver={toggleDrawer}
+        />
         <OfflineEarningsDialog/>
         <Header stageId="stage_1"/>
         <div

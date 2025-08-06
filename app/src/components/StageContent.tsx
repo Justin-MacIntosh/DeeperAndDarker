@@ -3,8 +3,9 @@ import { memo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow'
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
-import { formatNumber } from '../helpers/formatNumber';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
+
+var Fraction = require('fractional').Fraction;
 
 const StageContent = memo(({ stageId }: { stageId: string }) => {
   // console.log("PlanetContent render");
@@ -22,15 +23,16 @@ const StageContent = memo(({ stageId }: { stageId: string }) => {
           id="graphic-display"
           className="
             min-h-[400px] bg-black
-            w-full rounded-xl 2xl:w-[500px] 2xl:rounded-l-xl 2xl:rounded-r-none"
+            w-full rounded-xl 2xl:w-[500px]"
         ></div>
         <div
           id="upgrade-data-display"
           className="
             p-4 min-h-[400px] bg-light-purple flex-1
-            rounded-xl 2xl:rounded-l-none 2xl:rounded-r-xl"
+            rounded-xl"
         >
-          <h3 className="uppercase text-xl">Upgrade data</h3>
+          <h3 className="uppercase text-xl">Upgrades</h3>
+          <UpgradeDisplay stageId={stageId} />
         </div>
       </div>
       <div id="content-effects-row">
@@ -39,6 +41,69 @@ const StageContent = memo(({ stageId }: { stageId: string }) => {
     </div>
   );
 });
+
+const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
+  const ugradeIds = useGameStore(
+    useShallow((state) => Object.keys(state.stages[stageId].upgrades))
+  );
+  return (
+    <div
+      id="upgrade-display"
+      className="p-4 bg-light-purple flex-1 rounded-xl"
+    >
+      <table
+        id="upgrade-container" className="w-full border-separate [border-spacing:0px_10px]"
+      >
+        {ugradeIds.map((upgradeId) => {
+          return (
+            <SingleUpgrade
+              key={upgradeId}
+              stageId={stageId}
+              upgradeId={upgradeId}
+            />
+          );
+        })}
+      </table>
+    </div>
+  );
+});
+
+const SingleUpgrade = (
+  { stageId, upgradeId }:
+  { stageId: string, upgradeId: string }
+) => {
+  const upgrade = useGameStore(
+    (state) => state.stages[stageId].upgrades[upgradeId]
+  );
+
+  const rateOfIncrease = upgrade.static.baseRateOfCostIncrease ** (upgrade.dynamic.count);
+  const rateOfncreaseFraction = new Fraction(rateOfIncrease);
+  const currentCost = (
+    upgrade.static.baseCost *
+    BigInt(rateOfncreaseFraction.numerator)
+  ) / BigInt(rateOfncreaseFraction.denominator);
+
+  return (
+    <tr
+      key={upgradeId}
+      className="
+        cursor-pointer select-none bg-med-purple p-3 rounded-xl transition-all
+        hover:brightness-[108%] hover:-translate-y-1
+        active:brightness-[105%] active:-translate-y-0.5"
+    >
+      <td className="p-5 rounded-l-xl">
+        <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
+      </td>
+      <td className="p-5">
+        <p className="text-xl underline">{upgrade.static.name}</p>
+        <p>{upgrade.static.description}</p>
+      </td>
+      <td className="p-5 rounded-r-xl">
+        {currentCost} {upgrade.static.purchaseResource}
+      </td>
+    </tr>
+  );
+}
 
 const BuffsDisplay = memo(({ stageId }: { stageId: string }) => {
   const buffIds = useGameStore(
