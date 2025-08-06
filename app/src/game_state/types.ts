@@ -52,8 +52,8 @@ export interface Producer {
     baseRateOfCostIncrease: number; // Rate of cost increase
     producedResource: string; // Resource name produced by this producer
     baseProduction: bigint; // Base production amount per second
-    animateAppearance: boolean;
-    color: string; // Optional color for UI representation
+    animateAppearance?: boolean;
+    color: string;
   },
   dynamic: {
     count: number; // Number of producers owned
@@ -74,6 +74,7 @@ export interface Upgrade {
     baseCost: bigint;
     baseRateOfCostIncrease: number; // Optional, used for upgrades that increase in cost
     maximumPurchasable?: number; // Optional, used for upgrades that have a limit
+    animateAppearance?: boolean;
   },
   dynamic: {
     count: number;
@@ -118,31 +119,37 @@ export interface Unlockable {
     name: string;
     description: string;
     iconOption: IconOption; // Optional icon for UI representation
-    resourceToPurchase: string; // Resource required to unlock
+    purchaseResource: string; // Resource required to unlock
     cost: bigint;
-    unlock: StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock
+    unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock | UnlockUnlock>;
+    animateAppearance?: boolean; // Optional, used for UI animations
+    color: string; // Optional color for UI representation
   },
   dynamic: {
     isActive: boolean;
-    hasBeenPurchased: boolean;
   }
 } 
 interface StageUnlock {
   type: "stage";
-  stage: string;
+  stageId: string;
 }
 interface ProducerUnlock {
   type: "producer";
-  stage: string;
-  producer: string;
+  stageId: string;
+  producerId: string;
 }
 interface UpgradeUnlock {
   type: "upgrade";
-  stage: string;
-  upgrade: string;
+  stageId: string;
+  upgradeId: string;
 }
 interface BuffUnlock {
   type: "buff";
-  stage: string;
-  buff: string;
+  stageId: string;
+  buffId: string;
+}
+interface UnlockUnlock {
+  type: "unlock";
+  stageId: string;
+  unlockId: string;
 }

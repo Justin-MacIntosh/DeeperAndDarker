@@ -78,11 +78,12 @@ const ProducerList = memo(({ stageId }: { stageId: string }) => {
 
 const SingleProducerDisplay = memo(
   (props: { producerId: string; stageId: string; numToPurchaseOption: PurchaseAmount; }) => {
-    console.log("SingleProducerDisplay render");
-
     // Actions and state from the game store
     const producer: Producer = useGameStore(
       (state) => state.stages[props.stageId].producers[props.producerId]
+    );
+    const producerIsActive = useGameStore(
+      (state) => state.stages[props.stageId].producers[props.producerId].dynamic.isActive
     );
     const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
 
@@ -92,7 +93,7 @@ const SingleProducerDisplay = memo(
       (state) => state.resources[relevantResource].currentAmount
     );
 
-    if (!producer.dynamic.isActive) {
+    if (!producerIsActive) {
       return null; // If the producer is not active, do not render anything
     }
   

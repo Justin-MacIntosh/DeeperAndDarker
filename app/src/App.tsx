@@ -11,6 +11,7 @@ import OfflineEarningsDialog from './OfflineEarningsDialog';
 import StageContent from './components/StageContent';
 import ProducerList from './components/ProducerDisplay';
 import 'react-modern-drawer/dist/index.css'
+import UnlockList from './components/UnlockList';
 
 
 /* Main App component that renders the game interface */
@@ -26,8 +27,8 @@ const App = () => {
   // Effect to handle game ticks
   useEffect(() => {
     const tickIntervalId = setInterval(() => {
-      tickAction(200);
-    }, 200);
+      tickAction(250);
+    }, 250);
     return () => clearInterval(tickIntervalId);
   }, []);
 
@@ -50,7 +51,7 @@ const App = () => {
           className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
         />
       </Drawer>
-      <main className="bg-dark-purple min-w-[1100px]">
+      <main className="bg-dark-purple min-h-screen min-w-[1100px]">
         <button
           className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
           onMouseOver={toggleDrawer}
@@ -67,6 +68,7 @@ const App = () => {
           <StageContent stageId="stage_1"/>
           <div id="sidebar" className="flex-1 min-w-[400px]">
             <ProducerList stageId="stage_1"/>
+            <UnlockList stageId="stage_1"/>
           </div>
         </div>
         <Footer saveCurrentGameData={saveCurrentGameData}/>

@@ -1,5 +1,6 @@
 import { resetGameState } from '../game_state/stateStorageHelpers';
 import { useGameStore } from '../game_state/GameStore';
+import { INITIAL_GAME_STATE } from '../game_state/InitialGameState';
 
 /* 
  * Footer component displays the footer with save and reset buttons,
@@ -10,6 +11,7 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
 
   const resetAction = useGameStore((state) => state.resetGame);
   const resetGame = () => {
+    console.log(INITIAL_GAME_STATE);
     resetGameState();
     resetAction();
   }

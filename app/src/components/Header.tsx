@@ -17,11 +17,11 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     >
       <StageTitle stageId={stageId} />
       <div className="flex-grow"/>
-      <div id="production-stats" className="min-w-[200px] text-right">
+      <div id="production-stats" className="min-w-[180px] text-right">
         <CurrentResourcesDisplay resource='silver' />
         <ResourcesPerSecondDisplay resource='silver' />
       </div>
-      <div id="production-stats" className="min-w-[200px] text-right">
+      <div id="production-stats" className="min-w-[180px] text-right">
         <CurrentResourcesDisplay resource='copper' />
         <ResourcesPerSecondDisplay resource='copper' />
       </div>

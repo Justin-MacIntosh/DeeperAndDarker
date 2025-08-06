@@ -30,7 +30,6 @@ export const INITIAL_GAME_STATE: GameState = {
             producedResource: "copper",
             baseProduction: BigInt(50),
             color: "blue",
-            animateAppearance: false,
           },
           dynamic: {
             count: 0,
@@ -132,7 +131,7 @@ export const INITIAL_GAME_STATE: GameState = {
           },
           dynamic: {
             count: 0,
-            isActive: true,
+            isActive: false,
           }
         },
         mnr_s1_fabricator: {
@@ -143,12 +142,12 @@ export const INITIAL_GAME_STATE: GameState = {
               producersEffected: [
                 {
                   stageId: "stage_1",
-                  producerId: "mnr_n1",
+                  producerId: "mnr_s1",
                 }
               ],
             },
             name: "MNR-S1 Fabricator",
-            description: "Reduces cost of MNR-S1 by 20%",
+            description: "Reduces cost of MR-S1 by 20%",
             iconOption: "IconBuildingFactory",
             purchaseResource: "silver",
             baseCost: BigInt(1500),
@@ -156,31 +155,7 @@ export const INITIAL_GAME_STATE: GameState = {
           },
           dynamic: {
             count: 0,
-            isActive: true,
-          }
-        },
-        mnr_s2_fabricator: {
-          static: {
-            effect: {
-              type: "costReduction",
-              multiplierAmount: .8,
-              producersEffected: [
-                {
-                  stageId: "stage_1",
-                  producerId: "mnr_n1",
-                }
-              ],
-            },
-            name: "MNR-S1 Fabricator",
-            description: "Reduces cost of MNR-S1 by 20%",
-            iconOption: "IconBuildingFactory",
-            purchaseResource: "silver",
-            baseCost: BigInt(1500),
-            baseRateOfCostIncrease: 1.3,
-          },
-          dynamic: {
-            count: 0,
-            isActive: true,
+            isActive: false,
           }
         },
       },
@@ -213,20 +188,37 @@ export const INITIAL_GAME_STATE: GameState = {
       unlocks: {
         silver_production: {
           static: {
-            name: "Research MNR-S1 Fabrication",
-            description: "Allows the creation of MNR-S1: Silver-Mining Robots",
+            name: "MNR-S1 Fabrication",
+            description: "Allows the creation of Silver-Mining Robots",
             iconOption: "IconRobot",
-            resourceToPurchase: "copper",
+            purchaseResource: "copper",
+            color: "red",
             cost: BigInt(30000),
-            unlock: {
-              type: "producer",
-              stage: "stage_1",
-              producer: "mnr_s1",
-            },
+            unlocks: [
+              {
+                type: "producer",
+                stageId: "stage_1",
+                producerId: "mnr_s1",
+              },
+              {
+                type: "upgrade",
+                stageId: "stage_1",
+                upgradeId: "mnr_s1_control_center",
+              },
+              {
+                type: "upgrade",
+                stageId: "stage_1",
+                upgradeId: "mnr_s1_fabricator",
+              },
+              {
+                type: "unlock",
+                stageId: "stage_1",
+                unlockId: "settlement",
+              }
+            ],
           },
           dynamic: {
             isActive: true,
-            hasBeenPurchased: false,
           }
         },
         settlement: {
@@ -234,16 +226,19 @@ export const INITIAL_GAME_STATE: GameState = {
             name: "Planet Yan Settlement",
             description: "Begin settling on Planet Yan",
             iconOption: "IconBuilding",
-            resourceToPurchase: "silver",
+            purchaseResource: "silver",
             cost: BigInt(10000),
-            unlock: {
-              type: "stage",
-              stage: "stage_2",
-            },
+            animateAppearance: true,
+            color: "green",
+            unlocks: [
+              {
+                type: "stage",
+                stageId: "stage_2",
+              }
+            ],
           },
           dynamic: {
-            isActive: true,
-            hasBeenPurchased: false,
+            isActive: false,
           }
         }
       }

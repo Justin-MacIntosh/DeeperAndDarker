@@ -1,10 +1,12 @@
 import { memo, useState } from 'react';
-
 import { useShallow } from 'zustand/react/shallow'
+import { clsx } from "clsx"
+
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../game_state/GameStore';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
 import ResourceIcon from '../icons/ResourceIcon';
+import { formatNumber } from '../helpers/formatNumber';
 
 var Fraction = require('fractional').Fraction;
 
@@ -76,6 +78,21 @@ const SingleUpgrade = (
   const upgrade = useGameStore(
     (state) => state.stages[stageId].upgrades[upgradeId]
   );
+  const upgradeIsActive = useGameStore(
+    (state) => state.stages[stageId].upgrades[upgradeId].dynamic.isActive
+  );
+  const purchaseUpgradeAction = useGameStore(
+    (state) => state.purchaseUpgrade
+  );
+
+  const relevantResource = upgrade.static.purchaseResource;
+  const resourceAmount = useGameStore(
+    (state) => state.resources[relevantResource].currentAmount
+  );
+
+  if (!upgradeIsActive) {
+    return null; // If the upgrade is not active, do not render anything
+  }
 
   const rateOfIncrease = upgrade.static.baseRateOfCostIncrease ** (upgrade.dynamic.count);
   const rateOfncreaseFraction = new Fraction(rateOfIncrease);
@@ -84,23 +101,35 @@ const SingleUpgrade = (
     BigInt(rateOfncreaseFraction.numerator)
   ) / BigInt(rateOfncreaseFraction.denominator);
 
+  const cardActiveClasses = clsx(
+    "cursor-pointer hover:brightness-[108%] hover:-translate-y-1",
+    "active:brightness-[105%] active:-translate-y-0.5"
+  );
+  const cardDisabledClasses = "brightness-75 cursor-not-allowed";
+  const isClickDisabled = currentCost > resourceAmount;
+
   return (
     <tr
       key={upgradeId}
-      className="
-        cursor-pointer select-none bg-med-purple p-3 rounded-xl transition-all
-        hover:brightness-[108%] hover:-translate-y-1
-        active:brightness-[105%] active:-translate-y-0.5"
+      className={clsx(
+        "select-none bg-med-purple p-3 rounded-xl transition-all",
+        isClickDisabled ? cardDisabledClasses : cardActiveClasses,
+      )}
+      onClick={() => {
+        if (!isClickDisabled) {
+          purchaseUpgradeAction(stageId, upgradeId);
+        }
+      }}
     >
       <td className="p-5 rounded-l-xl">
         <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
       </td>
       <td className="p-5">
-        <p className="text-xl underline">{upgrade.static.name}</p>
+        <span className="text-xl"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
         <p>{upgrade.static.description}</p>
       </td>
-      <td className="p-5 rounded-r-xl">
-        {currentCost}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
+      <td className="lowercase p-5 rounded-r-xl">
+        {formatNumber(currentCost)}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
       </td>
     </tr>
   );
@@ -123,13 +152,13 @@ const BuffsDisplay = memo(({ stageId }: { stageId: string }) => {
           grid grid-cols-[repeat(auto-fit,_minmax(140px,_max-content))]
           gap-9 justify-items-center justify-center pr-4 py-3 mb-5"
       >
-        {buffIds.map((buffId) => (
+        {/* {buffIds.map((buffId) => (
           <SingleEffect
             key={buffId}
             buffId={buffId}
             stageId={stageId}
           />
-        ))}
+        ))} */}
       </ul>
     </div>
   );
