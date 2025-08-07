@@ -2,13 +2,13 @@ import { memo } from 'react';
 import { clsx } from 'clsx';
 import { useShallow } from 'zustand/react/shallow'
 
-import ResourceIcon from '../icons/ResourceIcon';
+import ResourceIcon from '../../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
 
-import { Unlockable } from '../game_state/types';
-import { useGameStore } from '../game_state/GameStore';
-import { formatNumber } from '../helpers/formatNumber';
-import TablerIconDisplay from '../icons/TablerIconDisplay';
+import { Unlockable } from '../../game_state/types';
+import { useGameStore } from '../../game_state/GameStore';
+import { formatNumber } from '../../helpers/formatNumber';
+import TablerIconDisplay from '../../icons/TablerIconDisplay';
 
 const UnlockList = memo(({ stageId }: { stageId: string }) => {
   const unlockIds = useGameStore(

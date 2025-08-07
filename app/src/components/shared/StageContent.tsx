@@ -3,10 +3,10 @@ import { useShallow } from 'zustand/react/shallow'
 import { clsx } from "clsx"
 
 import { Popover } from 'react-tiny-popover'
-import { useGameStore } from '../game_state/GameStore';
-import TablerIconDisplay from '../icons/TablerIconDisplay';
-import ResourceIcon from '../icons/ResourceIcon';
-import { formatNumber } from '../helpers/formatNumber';
+import { useGameStore } from '../../game_state/GameStore';
+import TablerIconDisplay from '../../icons/TablerIconDisplay';
+import ResourceIcon from '../../icons/ResourceIcon';
+import { formatNumber } from '../../helpers/formatNumber';
 
 var Fraction = require('fractional').Fraction;
 
@@ -54,7 +54,7 @@ const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
       id="upgrade-display"
       className="p-4 bg-light-purple flex-1 rounded-xl"
     >
-      <table
+      <ul
         id="upgrade-container" className="w-full border-separate [border-spacing:0px_10px]"
       >
         {ugradeIds.map((upgradeId) => {
@@ -66,7 +66,7 @@ const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
             />
           );
         })}
-      </table>
+      </ul>
     </div>
   );
 });
@@ -109,10 +109,10 @@ const SingleUpgrade = (
   const isClickDisabled = currentCost > resourceAmount;
 
   return (
-    <tr
+    <li
       key={upgradeId}
       className={clsx(
-        "select-none bg-med-purple p-3 rounded-xl transition-all",
+        "select-none bg-med-purple p-3 rounded-xl transition-all fade-in-upgrade flex flex-row items-center gap-3 mb-3",
         isClickDisabled ? cardDisabledClasses : cardActiveClasses,
       )}
       onClick={() => {
@@ -121,17 +121,17 @@ const SingleUpgrade = (
         }
       }}
     >
-      <td className="p-5 rounded-l-xl">
+      <div className="flex-1">
         <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
-      </td>
-      <td className="p-5">
+      </div>
+      <div className="flex-[3]">
         <span className="text-xl"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
         <p>{upgrade.static.description}</p>
-      </td>
-      <td className="lowercase p-5 rounded-r-xl">
+      </div>
+      <div className="flex-[2]">
         {formatNumber(currentCost)}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
-      </td>
-    </tr>
+      </div>
+    </li>
   );
 }
 

@@ -44,21 +44,28 @@ body {
   color: #eee;
 }
 
-/* Sidebar */
-.fade-in {
-  animation: fade-in 0.5s ease-in-out;
-}
-@keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+div.preload *{
+  animation-duration: 0s !important;
+  -webkit-animation-duration: 0s !important;
+  transition:background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
 }
 
+/* Sidebar */
+.fade-in-sidebar {
+  transform-origin: top left;
+  animation-fill-mode: forwards;
+  animation: fade-in-sidebar 0.6s ease-in-out;
+}
+@keyframes fade-in-sidebar {
+  from {
+    scale: 0;
+    height: 0px;
+  }
+  to {
+    scale: 100%;
+    height: 111px;
+  }
+}
 
 .circle {
   box-sizing: border-box;
@@ -69,4 +76,21 @@ body {
   border: 3px solid rgb(134, 52, 20);
   box-shadow: 0px 1px 3px grey;
   filter: brightness(100%);
+}
+
+
+.fade-in-upgrade {
+  transform-origin: top left;
+  animation-fill-mode: forwards;
+  animation: fade-in-upgrade .5s ease-in-out;
+}
+@keyframes fade-in-upgrade {
+  from {
+    scale: 0;
+    height: 0px;
+  }
+  to {
+    scale: 100%;
+    height: 84px;
+  }
 }

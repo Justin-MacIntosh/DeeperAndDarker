@@ -1,17 +1,10 @@
 import { useEffect, useState } from 'react';
+import Drawer from 'react-modern-drawer'
+import 'react-modern-drawer/dist/index.css'
 
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
-
-import Drawer from 'react-modern-drawer'
-
-import Footer from './components/Footer';
-import Header from './components/Header';
-import OfflineEarningsDialog from './OfflineEarningsDialog';
-import StageContent from './components/StageContent';
-import ProducerList from './components/ProducerDisplay';
-import 'react-modern-drawer/dist/index.css'
-import UnlockList from './components/UnlockList';
+import BraxiosLayout from './components/Stages/BraxiosLayout';
 
 
 /* Main App component that renders the game interface */
@@ -32,6 +25,21 @@ const App = () => {
     return () => clearInterval(tickIntervalId);
   }, []);
 
+  const [currentStage, setCurrentStage] = useState("stage_1");
+
+  let stageContent = null;
+  switch (currentStage) {
+    case "stage_1":
+      stageContent = <BraxiosLayout saveCurrentGameData={saveCurrentGameData} />;
+      break;
+    default:
+      stageContent = <div>Stage not implemented yet</div>;
+      break;
+  }
+
+  // https://stackoverflow.com/questions/69150928/how-to-create-multiple-themes-using-tailwind-css
+  // https://stackoverflow.com/questions/77494641/use-data-theme-variable-value-in-css
+
   return (
     <>
       <Drawer
@@ -51,27 +59,12 @@ const App = () => {
           className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
         />
       </Drawer>
+      <button
+        className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
+        onMouseOver={toggleDrawer}
+      />
       <main className="bg-dark-purple min-h-screen min-w-[1100px]">
-        <button
-          className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
-          onMouseOver={toggleDrawer}
-        />
-        <OfflineEarningsDialog/>
-        <Header stageId="stage_1"/>
-        <div
-          id="main"
-          className="
-            p-5 mx-7 bg-med-purple
-            border-gray-300 border-solid border-2 rounded-xl
-            flex flex-row gap-6"
-        >
-          <StageContent stageId="stage_1"/>
-          <div id="sidebar" className="flex-1 min-w-[400px]">
-            <ProducerList stageId="stage_1"/>
-            <UnlockList stageId="stage_1"/>
-          </div>
-        </div>
-        <Footer saveCurrentGameData={saveCurrentGameData}/>
+        { stageContent }
       </main>
     </>
   );

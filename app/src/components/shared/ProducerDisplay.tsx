@@ -4,18 +4,18 @@ import { useShallow } from 'zustand/react/shallow'
 
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 
-import ResourceIcon from '../icons/ResourceIcon';
+import ResourceIcon from '../../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
-
-import { Producer } from '../game_state/types';
-import { useGameStore } from '../game_state/GameStore';
-import { formatNumber } from '../helpers/formatNumber';
+import { Producer } from '../../game_state/types';
+import { useGameStore } from '../../game_state/GameStore';
+import { formatNumber } from '../../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
   calculateProducerProduction,
   calculateMaxPossiblePurchase
-} from '../helpers/producerStateHelpers';
-import TablerIconDisplay from '../icons/TablerIconDisplay';
+} from '../../helpers/producerStateHelpers';
+import TablerIconDisplay from '../../icons/TablerIconDisplay';
+
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
@@ -121,7 +121,7 @@ const SingleProducerDisplay = memo(
     }
     return (
       <div
-        className={clsx("mb-5", producer.static.animateAppearance && "fade-in")}
+        className={clsx("mb-5", producer.static.animateAppearance && "fade-in-sidebar")}
       >
         <div className="text-lg flex flex-row mb-2">
           <h2 className="uppercase flex-1">

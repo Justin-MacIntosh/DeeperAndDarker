@@ -173,6 +173,7 @@ export const useGameStore = create<
     // Calculate effect on producers
     const effect = upgradeToBuy.static.effect;
     for (const { stageId, producerId } of effect.producersEffected) {
+      // TODO: fix using spread operator to avoid mutating state directly
       const producer = updatedStages[stageId].producers[producerId];
       if (effect.type === "productionMultiplier") {
         producer.dynamic.productionMultiplier *= effect.multiplierAmount;
@@ -181,6 +182,7 @@ export const useGameStore = create<
           amountPerSecond: recalculateResourceProduction(updatedStages, producer.static.producedResource),
         };
       } else if (effect.type === "costReduction") {
+      // TODO: fix using spread operator to avoid mutating state directly
         producer.dynamic.costReductionMultiplier *= effect.multiplierAmount;
       }
     }
@@ -249,8 +251,7 @@ export const useGameStore = create<
               [unlock.producerId]: {
                 ...updatedStages[unlock.stageId].producers[unlock.producerId],
                 dynamic: {
-                  ...updatedStages[unlock.stageId].producers[unlock.producerId]
-                    .dynamic,
+                  ...updatedStages[unlock.stageId].producers[unlock.producerId].dynamic,
                   isActive: true,
                 },
               },
@@ -265,8 +266,7 @@ export const useGameStore = create<
               [unlock.upgradeId]: {
                 ...updatedStages[unlock.stageId].upgrades[unlock.upgradeId],
                 dynamic: {
-                  ...updatedStages[unlock.stageId].upgrades[unlock.upgradeId]
-                    .dynamic,
+                  ...updatedStages[unlock.stageId].upgrades[unlock.upgradeId].dynamic,
                   isActive: true,
                 },
               },
@@ -296,8 +296,7 @@ export const useGameStore = create<
               [unlock.unlockId]: {
                 ...updatedStages[unlock.stageId].unlocks[unlock.unlockId],
                 dynamic: {
-                  ...updatedStages[unlock.stageId].unlocks[unlock.unlockId]
-                    .dynamic,
+                  ...updatedStages[unlock.stageId].unlocks[unlock.unlockId].dynamic,
                   isActive: true,
                 },
               },

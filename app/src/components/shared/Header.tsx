@@ -1,8 +1,8 @@
 import { memo } from 'react';
 
-import ResourceIcon from '../icons/ResourceIcon';
-import { useGameStore } from '../game_state/GameStore';
-import { formatNumber } from '../helpers/formatNumber';
+import ResourceIcon from '../../icons/ResourceIcon';
+import { useGameStore } from '../../game_state/GameStore';
+import { formatNumber } from '../../helpers/formatNumber';
 
 /* Header component displays the planet title and current production statistics. */
 const Header = memo(({ stageId }: { stageId: string }) => {
