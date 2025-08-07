@@ -47,7 +47,7 @@ const ProducerList = memo(({ stageId }: { stageId: string }) => {
             <ListboxOptions
               anchor="bottom"
               className="
-                w-24 p-2 bg-med-purple
+                w-24 p-2 bg-med
                 border-solid border-gray-400 border-2 rounded-xl"
             >
               <ListboxOption className="list-box-option mb-2" key={"1"} value={1}>x1</ListboxOption>

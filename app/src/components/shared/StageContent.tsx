@@ -31,7 +31,7 @@ const StageContent = memo(({ stageId }: { stageId: string }) => {
         <div
           id="upgrade-data-display"
           className="
-            p-4 min-h-[400px] bg-light-purple flex-1
+            p-4 min-h-[400px] bg-light flex-1
             rounded-xl"
         >
           <h3 className="uppercase text-xl">Upgrades</h3>
@@ -52,7 +52,7 @@ const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
   return (
     <div
       id="upgrade-display"
-      className="p-4 bg-light-purple flex-1 rounded-xl"
+      className="p-4 bg-light flex-1 rounded-xl"
     >
       <ul
         id="upgrade-container" className="w-full border-separate [border-spacing:0px_10px]"
@@ -112,7 +112,7 @@ const SingleUpgrade = (
     <li
       key={upgradeId}
       className={clsx(
-        "select-none bg-med-purple p-3 rounded-xl transition-all fade-in-upgrade flex flex-row items-center gap-3 mb-3",
+        "select-none bg-med p-3 rounded-xl transition-all fade-in-upgrade flex flex-row items-center gap-3 mb-3",
         isClickDisabled ? cardDisabledClasses : cardActiveClasses,
       )}
       onClick={() => {
@@ -143,7 +143,7 @@ const BuffsDisplay = memo(({ stageId }: { stageId: string }) => {
   return (
     <div
       id="buffs-display"
-      className="p-4 bg-light-purple flex-1 rounded-xl"
+      className="p-4 bg-light flex-1 rounded-xl"
     >
       <h3 className="uppercase text-xl mb-5">Protocols</h3>
       <ul
@@ -185,7 +185,7 @@ const SingleEffect = (
         content={
           <div
             className="
-              bg-med-purple p-5 z-10
+              bg-med p-5 z-10
               border-gray-300 border-solid border-2 rounded-xl"
           >
             <h1 className="uppercase">{buff.static.name}</h1>

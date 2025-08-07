@@ -4,9 +4,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'dark-purple': '#1A090D',
-        'med-purple': '#4A314d',
-        'light-purple': '#6B6570',
+        'dark': 'var(--color-dark)',
+        'med': 'var(--color-med)',
+        'light': 'var(--color-light)',
         'crd-blue': '#5B5BC4',
         'crd-red': '#AA3F37',
         'crd-green': '#57973E',

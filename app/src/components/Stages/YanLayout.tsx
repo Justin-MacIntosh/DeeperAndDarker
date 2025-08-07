@@ -8,7 +8,7 @@ import UnlockList from '../shared/UnlockList';
 import { useEffect } from 'react';
 
 
-const BraxiosLayout = (
+const YanLayout = (
   { saveCurrentGameData }:
   { saveCurrentGameData: () => void}
 ) => {
@@ -26,9 +26,9 @@ const BraxiosLayout = (
   }, []);
 
   return (
-    <main data-theme="deep-space" className="bg-dark min-h-screen min-w-[1100px]">
+    <main data-theme="planet-yan" className="bg-dark min-h-screen min-w-[1100px]">
       <div className="preload">
-        <Header stageId="stage_1"/>
+        <Header stageId="stage_2"/>
         <div
           id="main"
           className="
@@ -36,10 +36,10 @@ const BraxiosLayout = (
             border-gray-300 border-solid border-2 rounded-xl
             flex flex-row gap-6"
         >
-          <StageContent stageId="stage_1"/>
+          <StageContent stageId="stage_2"/>
           <div id="sidebar" className="flex-1 min-w-[400px]">
-            <ProducerList stageId="stage_1"/>
-            <UnlockList stageId="stage_1"/>
+            <ProducerList stageId="stage_2"/>
+            <UnlockList stageId="stage_2"/>
           </div>
         </div>
         <Footer saveCurrentGameData={saveCurrentGameData}/>
@@ -48,4 +48,4 @@ const BraxiosLayout = (
   );
 }
 
-export default BraxiosLayout;
+export default YanLayout;

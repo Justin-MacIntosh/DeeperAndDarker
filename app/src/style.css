@@ -10,18 +10,32 @@
         select-none transition-all duration-75;
     }
     .list-box-option {
-      @apply text-center cursor-pointer bg-med-purple rounded-lg
+      @apply text-center cursor-pointer bg-med rounded-lg
         px-3 py-1.5 select-none brightness-125 hover:brightness-150
     }
     .structure-display-box {
       @apply
-        bg-med-purple h-32 w-32
+        bg-med h-32 w-32
         border-gray-300 border-solid border-2 rounded-xl
         hover:brightness-125 hover:-translate-y-1
         active:brightness-125 active:-translate-y-0.5
         cursor-pointer transition-all duration-75
         flex items-center justify-center
     }
+}
+
+@layer base {
+  main[data-theme='deep-space'] {
+    --color-dark: rgb(26, 9, 13);
+    --color-med: rgb(74, 49, 77);
+    --color-light: rgb(107, 101, 112);
+  }
+
+  main[data-theme='planet-yan'] {
+    --color-dark: rgb(16, 34, 25);
+    --color-med: rgb(41, 71, 47);
+    --color-light: rgb(64, 90, 59);
+  }
 }
 
 /* Global Style Reset */

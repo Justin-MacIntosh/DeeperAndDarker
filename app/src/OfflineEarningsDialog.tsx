@@ -24,7 +24,7 @@ const OfflineEarningsDialog = memo(() => {
         <DialogPanel
           className="
             max-w-lg p-12
-            bg-dark-purple
+            bg-gray-800
             border-gray-300 border-solid border-2 rounded-xl"
         >
           <DialogTitle className="text-2xl mb-3">Offline earnings</DialogTitle>

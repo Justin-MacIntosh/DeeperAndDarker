@@ -15,8 +15,8 @@ export const INITIAL_GAME_STATE: GameState = {
   },
   stages: {
     stage_1: {
-      name: "Braxios Solar System",
-      description: "Deep Space",
+      name: "Deep Space",
+      description: "In the Braxios Solar System",
       isActive: true,
       producers: {
         mnr_n1: {
@@ -242,6 +242,15 @@ export const INITIAL_GAME_STATE: GameState = {
           }
         }
       }
+    },
+    stage_2: {
+      name: "Planet Yan",
+      description: "Lush and rich in minerals",
+      isActive: false,
+      producers: {},
+      upgrades: {},
+      buffs: {},
+      unlocks: {}
     }
   }
 }

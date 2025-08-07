@@ -21,8 +21,8 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
       <div className="flex-1"></div>
       <div className="min-w-[400px] text-right">
         <LastDateTimeSavedDisplay />
-        <button className="btn-default bg-med-purple mr-3" onClick={saveCurrentGameData}>Save</button>
-        <button className="btn-default bg-med-purple" onClick={resetGame}>Reset</button>
+        <button className="btn-default bg-med mr-3" onClick={saveCurrentGameData}>Save</button>
+        <button className="btn-default bg-med" onClick={resetGame}>Reset</button>
       </div>
     </footer>
   );

@@ -27,7 +27,7 @@ const SidebarCard = (props: CardProps) => {
     <div
       className={clsx(
         "flex h-[75px] max-h-[75px] overflow-hidden",
-        "rounded-2xl bg-light-purple",
+        "rounded-2xl bg-light",
         "transition-all select-none card",
         props.isClickDisabled ? cardDisabledClasses : cardActiveClasses,
       )}
