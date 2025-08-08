@@ -27,6 +27,7 @@ export interface Stage {
   name: string;
   description: string;
   isActive: boolean; // Whether the stage is currently active
+  resourcesToDisplay: string[];
   producers: {
     [key: string]: Producer; // Keyed by producer ID
   };
@@ -52,7 +53,6 @@ export interface Producer {
     baseRateOfCostIncrease: number; // Rate of cost increase
     producedResource: string; // Resource name produced by this producer
     baseProduction: bigint; // Base production amount per second
-    animateAppearance?: boolean;
     color: string;
   },
   dynamic: {
@@ -74,7 +74,6 @@ export interface Upgrade {
     baseCost: bigint;
     baseRateOfCostIncrease: number; // Optional, used for upgrades that increase in cost
     maximumPurchasable?: number; // Optional, used for upgrades that have a limit
-    animateAppearance?: boolean;
   },
   dynamic: {
     count: number;
@@ -122,7 +121,6 @@ export interface Unlockable {
     purchaseResource: string; // Resource required to unlock
     cost: bigint;
     unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock | UnlockableUnlock>;
-    animateAppearance?: boolean; // Optional, used for UI animations
     color: string; // Optional color for UI representation
   },
   dynamic: {

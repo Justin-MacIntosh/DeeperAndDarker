@@ -1,5 +1,4 @@
 import { memo, useState } from 'react';
-import { clsx } from 'clsx';
 import { useShallow } from 'zustand/react/shallow'
 
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
@@ -120,9 +119,7 @@ const SingleProducerDisplay = memo(
       amountToPurchaseDisplay = "0";
     }
     return (
-      <div
-        className={clsx("mb-5", producer.static.animateAppearance && "fade-in-sidebar")}
-      >
+      <div className="mb-5 fade-in-sidebar">
         <div className="text-lg flex flex-row mb-2">
           <h2 className="uppercase flex-1">
             {producer.static.name}: {producer.dynamic.count} (+{amountToPurchaseDisplay})

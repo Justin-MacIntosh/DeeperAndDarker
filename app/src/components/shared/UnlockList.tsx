@@ -64,7 +64,7 @@ const SingleUnlockDisplay = memo(
     const currentCostStr: string = formatNumber(unlock.static.cost);
     return (
       <div
-        className={clsx("mb-5", unlock.static.animateAppearance && "fade-in")}
+        className="mb-5 fade-in-sidebar"
       >
         <div className="text-lg flex flex-row mb-2">
           <h2 className="uppercase flex-1">
@@ -78,7 +78,7 @@ const SingleUnlockDisplay = memo(
           }
           contentElement={<>{unlock.static.description}</>}
           suffixElement={
-            <>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></>
+            <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
           }
           onClick={() => {
             purchaseUnlockAction(props.stageId, props.unlockId)

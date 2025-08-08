@@ -10,6 +10,7 @@ module.exports = {
         'crd-blue': '#5B5BC4',
         'crd-red': '#AA3F37',
         'crd-green': '#57973E',
+        'crd-purple': '#222222',
       },
     }
   },

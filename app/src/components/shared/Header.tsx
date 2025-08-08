@@ -1,11 +1,17 @@
 import { memo } from 'react';
+import { useShallow } from 'zustand/react/shallow'
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../helpers/formatNumber';
 
-/* Header component displays the planet title and current production statistics. */
+/* Header component displays the Stage's details title and current production statistics. */
 const Header = memo(({ stageId }: { stageId: string }) => {
+
+  const resourceIdsToDisplay = useGameStore(
+    useShallow((state) => state.stages[stageId].resourcesToDisplay)
+  );
+
   console.log("Header render");
   return (
     <header
@@ -17,21 +23,18 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     >
       <StageTitle stageId={stageId} />
       <div className="flex-grow"/>
-      <div id="production-stats" className="min-w-[180px] text-right">
-        <CurrentResourcesDisplay resource='silver' />
-        <ResourcesPerSecondDisplay resource='silver' />
-      </div>
-      <div id="production-stats" className="min-w-[180px] text-right">
-        <CurrentResourcesDisplay resource='copper' />
-        <ResourcesPerSecondDisplay resource='copper' />
-      </div>
+      {resourceIdsToDisplay.map(
+        (resourceId) => {
+          return <ResourceDisplay key={resourceId} resourceId={resourceId}/>;
+        }
+      )}
     </header>
   )
 });
 
-/* PlanetTitle component displays the planet name and biome. */
+/* StageTitle component displays the stage's name and description. */
 const StageTitle = ({ stageId }: { stageId: string }) => {
-  console.log("PlanetTitle render");
+  console.log("StageTitle render");
   const stageName = useGameStore((state) => state.stages[stageId].name);
   const stageDesc = useGameStore((state) => state.stages[stageId].description);
   return (
@@ -42,6 +45,16 @@ const StageTitle = ({ stageId }: { stageId: string }) => {
   );
 }
 
+/* Parent ResourceDisplay Component to wrap CurrentResourcesDisplay and ResourcesPerSecondDisplay */
+const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
+    return (
+      <div id="production-stats" className="min-w-[180px] text-right">
+        <CurrentResourcesDisplay resource={resourceId} />
+        <ResourcesPerSecondDisplay resource={resourceId} />
+      </div>
+    );
+}
+
 /*
  * CurrentResourcesDisplay and ResourcesPerSecondDisplay components display the
  * current resources and resources per second respectively.
@@ -50,7 +63,7 @@ const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
   // console.log("CurrentResourcesDisplay render");
   const currentResources = useGameStore((state) => state.resources[resource].currentAmount);
   return (
-    <h1 className="lowercase text-3xl font-bold">
+    <h1 className="text-3xl font-bold">
       {formatNumber(currentResources)}<ResourceIcon resource={resource} size={30}/>
     </h1>
   );
@@ -60,7 +73,7 @@ const ResourcesPerSecondDisplay = ({ resource }: { resource: string }) => {
 
   const resourcesPerSecond = useGameStore((state) => state.resources[resource].amountPerSecond);
   return (
-    <h3 className="lowercase text-lg">
+    <h3 className="text-lg">
       {formatNumber(resourcesPerSecond)}<ResourceIcon resource={resource} size={18}/>/sec
     </h3>
   );

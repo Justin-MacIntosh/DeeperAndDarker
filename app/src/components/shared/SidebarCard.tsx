@@ -4,7 +4,7 @@ interface CardProps {
   icon: React.ReactNode;
   contentElement: React.ReactNode;
   suffixElement: React.ReactNode;
-  color: 'blue' | 'red' | 'green';
+  color: 'blue' | 'red' | 'green' | 'purple';
   onClick: () => void;
   isClickDisabled: boolean;
 }
@@ -14,6 +14,7 @@ const SidebarCard = (props: CardProps) => {
     blue: 'bg-crd-blue',
     red: 'bg-crd-red',
     green: 'bg-crd-green',
+    purple: 'bg-crd-purple',
   };
   const colorClass = colorClassMapping[props.color] || 'bg-crd-blue';
 

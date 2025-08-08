@@ -1,8 +1,8 @@
 export function formatNumber(num: bigint): string {
-  if (num > BigInt(99999)) {
+  if (num > BigInt(9999)) {
     return num.toLocaleString(
       'en-US', { notation: "scientific", maximumFractionDigits: 2 }
-    );
+    ).toLowerCase();
   }
-  return num.toString();
+  return num.toString().toLowerCase();
 }

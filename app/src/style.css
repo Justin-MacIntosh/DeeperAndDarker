@@ -66,9 +66,9 @@ div.preload *{
 
 /* Sidebar */
 .fade-in-sidebar {
-  transform-origin: top left;
+  transform-origin: top;
   animation-fill-mode: forwards;
-  animation: fade-in-sidebar 0.6s ease-in-out;
+  animation: fade-in-sidebar 0.4s ease-out;
 }
 @keyframes fade-in-sidebar {
   from {
@@ -94,9 +94,9 @@ div.preload *{
 
 
 .fade-in-upgrade {
-  transform-origin: top left;
+  transform-origin: top;
   animation-fill-mode: forwards;
-  animation: fade-in-upgrade .5s ease-in-out;
+  animation: fade-in-upgrade .4s ease-out;
 }
 @keyframes fade-in-upgrade {
   from {

@@ -5,7 +5,7 @@ export const INITIAL_GAME_STATE: GameState = {
   lastTimeSaved: 0,
   resources: {
     copper: {
-      currentAmount: BigInt(100000),
+      currentAmount: BigInt(100),
       amountPerSecond: BigInt(0),
     },
     silver: {
@@ -18,6 +18,7 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "Deep Space",
       description: "In the Braxios Solar System",
       isActive: true,
+      resourcesToDisplay: ["silver", "copper"],
       producers: {
         mnr_n1: {
           static: {
@@ -49,7 +50,6 @@ export const INITIAL_GAME_STATE: GameState = {
             producedResource: "silver",
             baseProduction: BigInt(100),
             color: "red",
-            animateAppearance: true,
           },
           dynamic: {
             count: 0,
@@ -192,7 +192,7 @@ export const INITIAL_GAME_STATE: GameState = {
             description: "Allows the creation of Silver-Mining Robots",
             iconOption: "IconRobot",
             purchaseResource: "copper",
-            color: "red",
+            color: "purple",
             cost: BigInt(30000),
             unlocks: [
               {
@@ -228,7 +228,6 @@ export const INITIAL_GAME_STATE: GameState = {
             iconOption: "IconBuilding",
             purchaseResource: "silver",
             cost: BigInt(10000),
-            animateAppearance: true,
             color: "green",
             unlocks: [
               {
@@ -247,6 +246,7 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "Planet Yan",
       description: "Lush and rich in minerals",
       isActive: false,
+      resourcesToDisplay: [],
       producers: {},
       upgrades: {},
       buffs: {},
