@@ -1,6 +1,6 @@
 import { memo, useState } from 'react';
-import { useShallow } from 'zustand/react/shallow'
 
+import { useShallow } from 'zustand/react/shallow'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { AnimatePresence, motion } from "motion/react"
 

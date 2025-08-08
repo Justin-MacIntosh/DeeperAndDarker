@@ -1,11 +1,10 @@
+import { useEffect } from 'react';
+
 import Footer from '../shared/Footer';
 import Header from '../shared/Header';
-import OfflineEarningsDialog from '../../OfflineEarningsDialog';
 import StageContent from '../shared/StageContent';
 import ProducerList from '../shared/ProducerDisplay';
-import 'react-modern-drawer/dist/index.css'
 import UnlockList from '../shared/UnlockList';
-import { useEffect } from 'react';
 
 
 const YanLayout = (
