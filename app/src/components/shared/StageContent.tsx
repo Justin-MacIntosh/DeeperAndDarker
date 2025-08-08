@@ -10,6 +10,7 @@ import TablerIconDisplay from '../../icons/TablerIconDisplay';
 import ResourceIcon from '../../icons/ResourceIcon';
 import { formatNumber } from '../../helpers/formatNumber';
 
+
 var Fraction = require('fractional').Fraction;
 
 const StageContent = memo(({ stageId }: { stageId: string }) => {
@@ -25,15 +26,9 @@ const StageContent = memo(({ stageId }: { stageId: string }) => {
         className="flex flex-col 2xl:flex-row rounded-xl gap-3"
       >
         <div
-          id="graphic-display"
-          className="
-            min-h-[400px] bg-black
-            w-full rounded-xl 2xl:w-[500px]"
-        ></div>
-        <div
           id="upgrade-data-display"
           className="
-            p-4 min-h-[400px] bg-light flex-1
+            p-4 bg-med flex-1
             rounded-xl"
         >
           <h3 className="uppercase text-xl">Upgrades</h3>
@@ -52,24 +47,19 @@ const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
     useShallow((state) => Object.keys(state.stages[stageId].upgrades))
   );
   return (
-    <div
-      id="upgrade-display"
-      className="p-4 bg-light flex-1 rounded-xl"
+    <ul
+      id="upgrade-container" className="p-4 w-full border-separate [border-spacing:0px_10px]"
     >
-      <ul
-        id="upgrade-container" className="w-full border-separate [border-spacing:0px_10px]"
-      >
-        {ugradeIds.map((upgradeId) => {
-          return (
-            <SingleUpgrade
-              key={upgradeId}
-              stageId={stageId}
-              upgradeId={upgradeId}
-            />
-          );
-        })}
-      </ul>
-    </div>
+      {ugradeIds.map((upgradeId) => {
+        return (
+          <SingleUpgrade
+            key={upgradeId}
+            stageId={stageId}
+            upgradeId={upgradeId}
+          />
+        );
+      })}
+    </ul>
   );
 });
 
@@ -103,7 +93,7 @@ const SingleUpgrade = (
     "cursor-pointer hover:brightness-[108%] hover:-translate-y-1",
     "active:brightness-[105%] active:-translate-y-0.5"
   );
-  const cardDisabledClasses = "brightness-75 cursor-not-allowed";
+  const cardDisabledClasses = "opacity-50 cursor-not-allowed";
   const isClickDisabled = currentCost > resourceAmount;
 
   return (
@@ -119,7 +109,7 @@ const SingleUpgrade = (
           <li
             key={upgradeId}
             className={clsx(
-              "select-none bg-med p-3 rounded-xl transition-all flex flex-row items-center gap-3",
+              "select-none bg-light p-3 rounded-xl transition-all flex flex-row items-center gap-3 opacity-",
               isClickDisabled ? cardDisabledClasses : cardActiveClasses,
             )}
             onClick={() => {
@@ -153,7 +143,7 @@ const BuffsDisplay = memo(({ stageId }: { stageId: string }) => {
   return (
     <div
       id="buffs-display"
-      className="p-4 bg-light flex-1 rounded-xl"
+      className="p-4 bg-med flex-1 rounded-xl"
     >
       <h3 className="uppercase text-xl mb-5">Protocols</h3>
       <ul

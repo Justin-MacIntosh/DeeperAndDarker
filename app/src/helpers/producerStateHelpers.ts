@@ -42,7 +42,6 @@ export const calculatePriceForMultiplePurchases = (
   }
 
   const totalIncreaseInPrice = rateExponentialTotal * costMultiplier;
-
   const totalIncreaseFraction = new Fraction(totalIncreaseInPrice);
   const totalCost = (
     producer.static.baseCost *
@@ -61,12 +60,12 @@ export const calculateProducerProduction = (
 ): bigint => {
   const productionMultiplier = producer.dynamic.productionMultiplier;
 
-  const increaseInProductionNum = producer.dynamic.count * productionMultiplier;
-  const increaseInProductionFraction = new Fraction(increaseInProductionNum);
+  const productionMultFraction = new Fraction(productionMultiplier);
   const totalProduction = (
     producer.static.baseProduction *
-    BigInt(increaseInProductionFraction.numerator)
-  ) / BigInt(increaseInProductionFraction.denominator);
+    BigInt(producer.dynamic.count) *
+    BigInt(productionMultFraction.numerator)
+  ) / BigInt(productionMultFraction.denominator);
 
   return totalProduction;
 };

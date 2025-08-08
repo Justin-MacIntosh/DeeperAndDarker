@@ -62,8 +62,6 @@ const SingleUnlockDisplay = memo(
       (state) => state.resources[relevantResource].currentAmount
     );
 
-    console.log(unlockIsActive)
-
     // Calculate the cost and number of producers to purchase
     const currentCostStr: string = formatNumber(unlock.static.cost);
     return (

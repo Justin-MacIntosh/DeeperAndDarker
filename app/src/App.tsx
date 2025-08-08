@@ -7,7 +7,7 @@ import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 import BraxiosLayout from './components/Stages/BraxiosLayout';
 import YanLayout from './components/Stages/YanLayout';
-import GlobalDrawer from './components/shared/GlobalDrawer';
+import GlobalDrawer from './GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
 
 
@@ -18,7 +18,7 @@ const StageFade = ({ children, key }: { children: ReactNode, key: string }) => {
       transition={{ duration: .5 }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: .1 } }}
+      exit={{ opacity: 0, transition: { duration: .2 } }}
     >
       { children }
     </motion.div>
@@ -29,6 +29,23 @@ const StageFade = ({ children, key }: { children: ReactNode, key: string }) => {
 const App = () => {
   const tickAction = useGameStore((state) => state.tick);
   const { saveCurrentGameData } = useSaveStateToLocalStorage();
+
+  useEffect(() => {
+    document.addEventListener("mousemove", graphicManip);
+
+    function graphicManip(e: MouseEvent) {
+      const elem = document.getElementById("braxios-main");
+      if (!elem) return;
+
+      let _w = window.innerWidth/2;
+      let _h = window.innerHeight/2;
+      let _mouseX = e.clientX;
+      let _mouseY = e.clientY;
+      let _depth3 = `${50 - (_mouseX - _w) * 0.01}% ${50 - (_mouseY - _h) * 0.01}%`;
+      let x = `${_depth3}`;
+      elem.style.backgroundPosition = x;
+    }
+  }, []);
 
   // Effect to handle game ticks
   useEffect(() => {
@@ -54,7 +71,7 @@ const App = () => {
   }
 
   return (
-    <div className="bg-gray-900">
+    <div className="bg-neutral-900">
       <GlobalDrawer setCurrentStage={setCurrentStage} />
       <OfflineEarningsDialog/>
       <AnimatePresence initial={false} mode="wait">

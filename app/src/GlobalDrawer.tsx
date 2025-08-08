@@ -1,7 +1,7 @@
 import { useState } from 'react';
 
 import Drawer from 'react-modern-drawer'
-import { useGameStore } from '../../game_state/GameStore';
+import { useGameStore } from './game_state/GameStore';
 import { useShallow } from 'zustand/react/shallow';
 
 

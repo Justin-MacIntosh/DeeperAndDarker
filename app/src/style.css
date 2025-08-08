@@ -24,18 +24,45 @@
     }
 }
 
+#braxios-main {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('./assets/img/Deep_Space_Bg.png');
+  background-size: 120%;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* filter: brightness(0.8); */
+}
+
 @layer base {
   body[data-theme='deep-space'] {
-    --color-dark: rgb(26, 9, 13);
-    --color-med: rgb(74, 49, 77);
-    --color-light: rgb(107, 101, 112);
+    --color-dark: theme('colors.stone.900');
+    --color-med: theme('colors.stone.800');
+    --color-light: theme('colors.stone.600');
   }
+  
+  /* body[data-theme='deep-space'] {
+    --color-dark: rgb(34, 13, 18);
+    --color-med: rgb(70, 43, 73);
+    --color-light: rgb(107, 101, 112);
+  } */
+
+  /* body[data-theme='deep-space'] {
+    --color-dark: #060407;
+    --color-med: #50336b;
+    --color-light: #bea8d2;
+    --color-accent: #814eb2;
+  } */
 
   body[data-theme='planet-yan'] {
+    --color-dark: theme('colors.lime.950');
+    --color-med: theme('colors.lime.900');
+    --color-light: theme('colors.lime.600');
+  }
+
+  /* body[data-theme='planet-yan'] {
     --color-dark: rgb(16, 34, 25);
     --color-med: rgb(41, 71, 47);
     --color-light: rgb(64, 90, 59);
-  }
+  } */
 }
 
 /* Global Style Reset */

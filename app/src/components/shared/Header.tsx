@@ -17,7 +17,7 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     <header
       id="header"
       className="
-        sticky top-0 z-10 p-5 mb-7 bg-med
+        sticky top-0 z-10 p-5 mb-7 bg-dark
         border-gray-300 border-solid border-2 border-l-0 border-r-0
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >

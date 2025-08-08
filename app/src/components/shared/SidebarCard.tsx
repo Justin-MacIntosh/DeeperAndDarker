@@ -22,7 +22,7 @@ const SidebarCard = (props: CardProps) => {
     "cursor-pointer hover:brightness-[108%] hover:-translate-y-1 ",
     "active:brightness-[105%] active:-translate-y-0.5"
   );
-  const cardDisabledClasses = "brightness-75 cursor-not-allowed";
+  const cardDisabledClasses = "opacity-50 cursor-not-allowed";
 
   return (
     <div

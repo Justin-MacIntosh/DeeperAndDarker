@@ -17,7 +17,7 @@ const YanLayout = (
   }, []);
 
   return (
-    <main className="bg-dark min-h-screen min-w-[1100px]">
+    <main className="bg-emerald-950 min-h-screen min-w-[1100px]">
       <Header stageId="stage_2"/>
       <div
         id="main"

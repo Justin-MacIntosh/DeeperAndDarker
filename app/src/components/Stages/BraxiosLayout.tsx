@@ -17,12 +17,12 @@ const BraxiosLayout = (
   }, []);
 
   return (
-    <main className="bg-dark min-h-screen min-w-[1100px]">
+    <main id="braxios-main" className="bg-dark min-h-screen min-w-[1100px]">
       <Header stageId="stage_1"/>
       <div
         id="main"
         className="
-          p-5 mx-7 bg-med
+          p-5 mx-7 bg-dark
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >
