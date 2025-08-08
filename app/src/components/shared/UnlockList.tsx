@@ -1,6 +1,6 @@
 import { memo } from 'react';
-import { clsx } from 'clsx';
 import { useShallow } from 'zustand/react/shallow'
+import { AnimatePresence, motion } from "motion/react"
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
@@ -14,7 +14,15 @@ const UnlockList = memo(({ stageId }: { stageId: string }) => {
   const unlockIds = useGameStore(
     useShallow((state) => Object.keys(state.stages[stageId].unlocks))
   );
-  
+  const anyUnlocksActive = useGameStore(
+    useShallow((state) => Object.values(state.stages[stageId].unlocks).some(
+      (unlock) => unlock.dynamic.isActive
+    ))
+  );
+
+  if (!anyUnlocksActive) {
+    return null; // If there are no unlocks, do not render anything
+  }
   return (
     <>
       <div className="flex flex-row justify-between items-center mb-3">
@@ -56,36 +64,41 @@ const SingleUnlockDisplay = memo(
 
     console.log(unlockIsActive)
 
-    if (!unlockIsActive) {
-      return null; // If the producer is not active, do not render anything
-    }
-
     // Calculate the cost and number of producers to purchase
     const currentCostStr: string = formatNumber(unlock.static.cost);
     return (
-      <div
-        className="mb-5 fade-in-sidebar"
-      >
-        <div className="text-lg flex flex-row mb-2">
-          <h2 className="uppercase flex-1">
-            {unlock.static.name}
-          </h2>
-        </div>
-        <SidebarCard
-          color={unlock.static.color as any}
-          icon={
-            <TablerIconDisplay icon={unlock.static.iconOption} size={55} />
-          }
-          contentElement={<>{unlock.static.description}</>}
-          suffixElement={
-            <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
-          }
-          onClick={() => {
-            purchaseUnlockAction(props.stageId, props.unlockId)
-          }}
-          isClickDisabled={unlock.static.cost > currentRelevantResources}
-        />
-      </div>
+      <AnimatePresence initial={false}>
+        {
+          unlockIsActive &&
+          <motion.div
+            transition={{ duration: .8 }}
+            initial={{ opacity: 0, scale: 0, height: 0 }}
+            animate={{ opacity: 1, scale: 1, height: "111px" }}
+            exit={{ opacity: 0, scale: 0, height: 0, margin: 0 }}
+            className='mb-5 origin-top-left'
+          >
+            <div className="text-lg flex flex-row mb-2">
+              <h2 className="uppercase flex-1">
+                {unlock.static.name}
+              </h2>
+            </div>
+            <SidebarCard
+              color={unlock.static.color as any}
+              icon={
+                <TablerIconDisplay icon={unlock.static.iconOption} size={55} />
+              }
+              contentElement={<>{unlock.static.description}</>}
+              suffixElement={
+                <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
+              }
+              onClick={() => {
+                purchaseUnlockAction(props.stageId, props.unlockId)
+              }}
+              isClickDisabled={unlock.static.cost > currentRelevantResources}
+            />
+          </motion.div>
+        }
+      </AnimatePresence>
     );
   }
 );

@@ -2,6 +2,7 @@ import { memo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow'
 
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
+import { AnimatePresence, motion } from "motion/react"
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
@@ -91,10 +92,6 @@ const SingleProducerDisplay = memo(
     const currentRelevantResources: bigint = useGameStore(
       (state) => state.resources[relevantResource].currentAmount
     );
-
-    if (!producerIsActive) {
-      return null; // If the producer is not active, do not render anything
-    }
   
     const resourcesPerSecond = calculateProducerProduction(producer);
 
@@ -119,30 +116,40 @@ const SingleProducerDisplay = memo(
       amountToPurchaseDisplay = "0";
     }
     return (
-      <div className="mb-5 fade-in-sidebar">
-        <div className="text-lg flex flex-row mb-2">
-          <h2 className="uppercase flex-1">
-            {producer.static.name}: {producer.dynamic.count} (+{amountToPurchaseDisplay})
-          </h2>
-          <h2 className="flex-1 text-right">
-            {formatNumber(resourcesPerSecond)}<ResourceIcon resource={producer.static.producedResource} size={18} />/sec
-          </h2>
-        </div>
-        <SidebarCard
-          color={producer.static.color as any} // TODO: Fix later
-          icon={
-            <TablerIconDisplay icon={producer.static.iconOption} size={55} />
-          }
-          contentElement={<>{producer.static.description}</>}
-          suffixElement={
-            <>{formatNumber(currentCost)}<ResourceIcon resource={producer.static.purchaseResource} size={18} /></>
-          }
-          onClick={() => {
-            purchaseProducerAction(props.stageId, props.producerId, numToPurchase)
-          }}
-          isClickDisabled={currentCost > currentRelevantResources}
-        />
-      </div>
+      <AnimatePresence initial={false}>
+        {
+        producerIsActive &&
+          <motion.div
+            transition={{ duration: .8 }}
+            initial={{ opacity: 0, scale: 0, height: 0 }}
+            animate={{ opacity: 1, scale: 1, height: "111px" }}
+            className='mb-5 origin-top-left'
+          >
+            <div className="text-lg flex flex-row mb-2">
+              <h2 className="uppercase flex-1">
+                {producer.static.name}: {producer.dynamic.count} (+{amountToPurchaseDisplay})
+              </h2>
+              <h2 className="flex-1 text-right">
+                {formatNumber(resourcesPerSecond)}<ResourceIcon resource={producer.static.producedResource} size={18} />/sec
+              </h2>
+            </div>
+            <SidebarCard
+              color={producer.static.color as any} // TODO: Fix later
+              icon={
+                <TablerIconDisplay icon={producer.static.iconOption} size={55} />
+              }
+              contentElement={<>{producer.static.description}</>}
+              suffixElement={
+                <>{formatNumber(currentCost)}<ResourceIcon resource={producer.static.purchaseResource} size={18} /></>
+              }
+              onClick={() => {
+                purchaseProducerAction(props.stageId, props.producerId, numToPurchase)
+              }}
+              isClickDisabled={currentCost > currentRelevantResources}
+            />
+          </motion.div>
+        }
+      </AnimatePresence>
     );
   }
 );

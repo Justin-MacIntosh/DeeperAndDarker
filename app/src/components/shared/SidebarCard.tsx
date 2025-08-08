@@ -51,7 +51,7 @@ const SidebarCard = (props: CardProps) => {
       </div>
       <div
         className={clsx(
-          "min-w-[110px] text-sm text-center content-center",
+          "min-w-[110px] pl-[6px] text-sm text-center content-center",
           "[clip-path:polygon(15px_0,100%_0,100%_100%,0_100%)]",
           colorClass
         )}

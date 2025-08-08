@@ -17,6 +17,7 @@
     "clsx": "^2.1.1",
     "fraction.js": "^3.0.0",
     "fractional": "^1.0.0",
+    "motion": "^12.23.12",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
     "react-modern-drawer": "^1.4.0",

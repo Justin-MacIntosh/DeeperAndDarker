@@ -5,7 +5,7 @@ export const INITIAL_GAME_STATE: GameState = {
   lastTimeSaved: 0,
   resources: {
     copper: {
-      currentAmount: BigInt(100),
+      currentAmount: BigInt(100000000),
       amountPerSecond: BigInt(0),
     },
     silver: {
@@ -64,7 +64,7 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "productionMultiplier",
-              multiplierAmount: 1.5,
+              multiplierAmount: 1.4,
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -73,11 +73,11 @@ export const INITIAL_GAME_STATE: GameState = {
               ],
             },
             name: "MNR-N1 Control Center",
-            description: "Increases MNR-N1 Production by 50%",
+            description: "Increases MNR-N1 Production by 40%",
             iconOption: "IconBuildingBroadcastTower",
             purchaseResource: "copper",
-            baseCost: BigInt(15000),
-            baseRateOfCostIncrease: 1.5,
+            baseCost: BigInt(12500),
+            baseRateOfCostIncrease: 1.8,
             maximumPurchasable: 4,
           },
           dynamic: {
@@ -89,7 +89,7 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "costReduction",
-              multiplierAmount: .8,
+              multiplierAmount: .7,
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -98,11 +98,11 @@ export const INITIAL_GAME_STATE: GameState = {
               ],
             },
             name: "MNR-N1 Fabricator",
-            description: "Reduces cost of MNR-N1 by 20%",
+            description: "Reduces cost of MNR-N1 by 30%",
             iconOption: "IconBuildingFactory",
             purchaseResource: "copper",
             baseCost: BigInt(10000),
-            baseRateOfCostIncrease: 1.3,
+            baseRateOfCostIncrease: 1.8,
           },
           dynamic: {
             count: 0,
@@ -113,7 +113,7 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "productionMultiplier",
-              multiplierAmount: 1.5,
+              multiplierAmount: 1.4,
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -122,11 +122,11 @@ export const INITIAL_GAME_STATE: GameState = {
               ],
             },
             name: "MNR-S1 Control Center",
-            description: "Increases MNR-S1 Production by 50%",
+            description: "Increases MNR-S1 Production by 40%",
             iconOption: "IconBuildingBroadcastTower",
-            purchaseResource: "copper",
-            baseCost: BigInt(30000),
-            baseRateOfCostIncrease: 1.5,
+            purchaseResource: "silver",
+            baseCost: BigInt(10000),
+            baseRateOfCostIncrease: 1.8,
             maximumPurchasable: 4,
           },
           dynamic: {
@@ -138,7 +138,7 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "costReduction",
-              multiplierAmount: .8,
+              multiplierAmount: .7,
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -147,11 +147,11 @@ export const INITIAL_GAME_STATE: GameState = {
               ],
             },
             name: "MNR-S1 Fabricator",
-            description: "Reduces cost of MR-S1 by 20%",
+            description: "Reduces cost of MR-S1 by 30%",
             iconOption: "IconBuildingFactory",
             purchaseResource: "silver",
-            baseCost: BigInt(1500),
-            baseRateOfCostIncrease: 1.3,
+            baseCost: BigInt(5000),
+            baseRateOfCostIncrease: 1.8,
           },
           dynamic: {
             count: 0,
@@ -193,7 +193,7 @@ export const INITIAL_GAME_STATE: GameState = {
             iconOption: "IconRobot",
             purchaseResource: "copper",
             color: "purple",
-            cost: BigInt(30000),
+            cost: BigInt(100000),
             unlocks: [
               {
                 type: "producer",
@@ -227,7 +227,7 @@ export const INITIAL_GAME_STATE: GameState = {
             description: "Begin settling on Planet Yan",
             iconOption: "IconBuilding",
             purchaseResource: "silver",
-            cost: BigInt(10000),
+            cost: BigInt(100000),
             color: "green",
             unlocks: [
               {

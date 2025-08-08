@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react';
+import { ReactNode, useEffect, useState } from 'react';
 import 'react-modern-drawer/dist/index.css'
+
+import { AnimatePresence, motion } from "motion/react"
 
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
@@ -8,6 +10,20 @@ import YanLayout from './components/Stages/YanLayout';
 import GlobalDrawer from './components/shared/GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
 
+
+const StageFade = ({ children, key }: { children: ReactNode, key: string }) => {
+  return (
+    <motion.div
+      key="deep-space"
+      transition={{ duration: .5 }}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0, transition: { duration: .1 } }}
+    >
+      { children }
+    </motion.div>
+  );
+}
 
 /* Main App component that renders the game interface */
 const App = () => {
@@ -38,11 +54,24 @@ const App = () => {
   }
 
   return (
-    <>
+    <div className="bg-gray-900">
       <GlobalDrawer setCurrentStage={setCurrentStage} />
       <OfflineEarningsDialog/>
-      { stageContent }
-    </>
+      <AnimatePresence initial={false} mode="wait">
+        {
+          currentStage === "stage_1" &&
+          <StageFade key="deep-space">
+            <BraxiosLayout saveCurrentGameData={saveCurrentGameData} />
+          </StageFade>
+        }
+        {
+          currentStage === "stage_2" &&
+          <StageFade key="planet-yan">
+            <YanLayout saveCurrentGameData={saveCurrentGameData} />
+          </StageFade>
+        }
+      </AnimatePresence>
+    </div>
   );
 }
 export default App;

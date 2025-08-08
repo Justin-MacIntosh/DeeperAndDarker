@@ -25,13 +25,13 @@
 }
 
 @layer base {
-  main[data-theme='deep-space'] {
+  body[data-theme='deep-space'] {
     --color-dark: rgb(26, 9, 13);
     --color-med: rgb(74, 49, 77);
     --color-light: rgb(107, 101, 112);
   }
 
-  main[data-theme='planet-yan'] {
+  body[data-theme='planet-yan'] {
     --color-dark: rgb(16, 34, 25);
     --color-med: rgb(41, 71, 47);
     --color-light: rgb(64, 90, 59);
@@ -58,29 +58,6 @@ body {
   color: #eee;
 }
 
-div.preload *{
-  animation-duration: 0s !important;
-  -webkit-animation-duration: 0s !important;
-  transition:background-color 0s, opacity 0s, color 0s, width 0s, height 0s, padding 0s, margin 0s !important;
-}
-
-/* Sidebar */
-.fade-in-sidebar {
-  transform-origin: top;
-  animation-fill-mode: forwards;
-  animation: fade-in-sidebar 0.4s ease-out;
-}
-@keyframes fade-in-sidebar {
-  from {
-    scale: 0;
-    height: 0px;
-  }
-  to {
-    scale: 100%;
-    height: 111px;
-  }
-}
-
 .circle {
   box-sizing: border-box;
   height: 20px;
@@ -90,21 +67,4 @@ div.preload *{
   border: 3px solid rgb(134, 52, 20);
   box-shadow: 0px 1px 3px grey;
   filter: brightness(100%);
-}
-
-
-.fade-in-upgrade {
-  transform-origin: top;
-  animation-fill-mode: forwards;
-  animation: fade-in-upgrade .4s ease-out;
-}
-@keyframes fade-in-upgrade {
-  from {
-    scale: 0;
-    height: 0px;
-  }
-  to {
-    scale: 100%;
-    height: 84px;
-  }
 }

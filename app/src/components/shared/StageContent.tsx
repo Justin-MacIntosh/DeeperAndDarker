@@ -1,6 +1,8 @@
 import { memo, useState } from 'react';
 import { useShallow } from 'zustand/react/shallow'
+import { AnimatePresence, motion } from "motion/react"
 import { clsx } from "clsx"
+
 
 import { Popover } from 'react-tiny-popover'
 import { useGameStore } from '../../game_state/GameStore';
@@ -90,10 +92,6 @@ const SingleUpgrade = (
     (state) => state.resources[relevantResource].currentAmount
   );
 
-  if (!upgradeIsActive) {
-    return null; // If the upgrade is not active, do not render anything
-  }
-
   const rateOfIncrease = upgrade.static.baseRateOfCostIncrease ** (upgrade.dynamic.count);
   const rateOfncreaseFraction = new Fraction(rateOfIncrease);
   const currentCost = (
@@ -109,29 +107,41 @@ const SingleUpgrade = (
   const isClickDisabled = currentCost > resourceAmount;
 
   return (
-    <li
-      key={upgradeId}
-      className={clsx(
-        "select-none bg-med p-3 rounded-xl transition-all fade-in-upgrade flex flex-row items-center gap-3 mb-3",
-        isClickDisabled ? cardDisabledClasses : cardActiveClasses,
+    <AnimatePresence initial={false}>
+      {
+        upgradeIsActive && (
+        <motion.div
+          transition={{ duration: .8 }}
+          initial={{ opacity: 0, scale: 0, height: 0 }}
+          animate={{ opacity: 1, scale: 1, height: "84px" }}
+          className="mb-3 origin-top-left"
+        >
+          <li
+            key={upgradeId}
+            className={clsx(
+              "select-none bg-med p-3 rounded-xl transition-all flex flex-row items-center gap-3",
+              isClickDisabled ? cardDisabledClasses : cardActiveClasses,
+            )}
+            onClick={() => {
+              if (!isClickDisabled) {
+                purchaseUpgradeAction(stageId, upgradeId);
+              }
+            }}
+          >
+            <div className="flex-1">
+              <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
+            </div>
+            <div className="flex-[3]">
+              <span className="text-xl"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
+              <p>{upgrade.static.description}</p>
+            </div>
+            <div className="flex-[2]">
+              {formatNumber(currentCost)}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
+            </div>
+          </li>
+        </motion.div>
       )}
-      onClick={() => {
-        if (!isClickDisabled) {
-          purchaseUpgradeAction(stageId, upgradeId);
-        }
-      }}
-    >
-      <div className="flex-1">
-        <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
-      </div>
-      <div className="flex-[3]">
-        <span className="text-xl"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
-        <p>{upgrade.static.description}</p>
-      </div>
-      <div className="flex-[2]">
-        {formatNumber(currentCost)}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
-      </div>
-    </li>
+    </AnimatePresence>
   );
 }
 
@@ -185,7 +195,7 @@ const SingleEffect = (
         content={
           <div
             className="
-              bg-med p-5 z-10
+              bg-med z-10
               border-gray-300 border-solid border-2 rounded-xl"
           >
             <h1 className="uppercase">{buff.static.name}</h1>

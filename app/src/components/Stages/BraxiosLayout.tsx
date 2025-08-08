@@ -12,21 +12,13 @@ const BraxiosLayout = (
   { saveCurrentGameData }:
   { saveCurrentGameData: () => void}
 ) => {
-  // This effect is used to remove the preload class after the page has loaded.
-  // This prevents animations from playing on initial load.
+  // Set the data-theme attribute to "deep-space" for theming
   useEffect(() => {
-    setTimeout(() => {
-      console.log("Removing preload class");
-      const preloadElements = document.getElementsByClassName("preload");
-      if (preloadElements.length > 0) {
-        document.getElementsByClassName("preload")[0].className="";
-      }
-    },
-    1000);
+    document.body.setAttribute("data-theme", "deep-space");
   }, []);
 
   return (
-    <main data-theme="deep-space" className="bg-dark min-h-screen min-w-[1100px]">
+    <main className="bg-dark min-h-screen min-w-[1100px]">
       <div className="preload">
         <Header stageId="stage_1"/>
         <div

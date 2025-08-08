@@ -22,6 +22,8 @@ const GlobalDrawer = ({ setCurrentStage }: { setCurrentStage: (stageId: string) 
         zIndex={1000}
         size={"200px"}
         duration={300}
+        overlayColor={"rgba(0, 0, 0, 0.3)"}
+        overlayClassName='transition-all duration-300 ease-in-out'
         className="border-right border-gray-300 border-r-solid border-r-[3px]"
       >
         <div className="h-full bg-gray-800 text-gray-300 flex flex-col p-5">
