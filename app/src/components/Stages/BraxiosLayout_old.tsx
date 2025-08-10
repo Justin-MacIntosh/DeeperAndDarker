@@ -7,18 +7,18 @@ import ProducerList from '../shared/stock_layouts/ProducerDisplay';
 import UnlockList from '../shared/stock_layouts/UnlockList';
 
 
-const YanLayout = (
+const BraxiosLayout = (
   { saveCurrentGameData }:
   { saveCurrentGameData: () => void}
 ) => {
-  // Set the data-theme attribute to "planet-yan" for theming
+  // Set the data-theme attribute to "deep-space" for theming
   useEffect(() => {
-    document.body.setAttribute("data-theme", "planet-yan");
+    document.body.setAttribute("data-theme", "deep-space");
   }, []);
 
   return (
-    <main id="planet-yan-main" className="mouse-affected-bg bg-bg min-h-screen min-w-[1100px]">
-      <Header stageId="stage_2" displayResources={true}/>
+    <main id="braxios-main" className="mouse-affected-bg bg-background min-h-screen min-w-[1100px]">
+      <Header stageId="stage_1" displayResources={true}/>
       <div
         id="main"
         className="
@@ -26,10 +26,10 @@ const YanLayout = (
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >
-        <StageContent stageId="stage_2"/>
+        <StageContent stageId="stage_1"/>
         <div id="sidebar" className="flex-1 min-w-[400px]">
-          <ProducerList stageId="stage_2"/>
-          <UnlockList stageId="stage_2"/>
+          <ProducerList stageId="stage_1"/>
+          <UnlockList stageId="stage_1"/>
         </div>
       </div>
       <Footer saveCurrentGameData={saveCurrentGameData}/>
@@ -37,4 +37,4 @@ const YanLayout = (
   );
 }
 
-export default YanLayout;
+export default BraxiosLayout;

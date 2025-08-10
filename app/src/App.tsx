@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react"
 
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
-import BraxiosLayout from './components/Stages/BraxiosLayout2';
+import BraxiosLayout from './components/Stages/BraxiosLayout';
 import YanLayout from './components/Stages/YanLayout';
 import GlobalDrawer from './GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
@@ -42,7 +42,7 @@ const App = () => {
       let _h = window.innerHeight/2;
       let _mouseX = e.clientX;
       let _mouseY = e.clientY;
-      let _depth3 = `${50 - (_mouseX - _w) * 0.01}% ${50 - (_mouseY - _h) * 0.01}%`;
+      let _depth3 = `${50 - (_mouseX - _w) * 0.002}% ${50 - (_mouseY - _h) * 0.002}%`;
       let x = `${_depth3}`;
       elem.style.backgroundPosition = x;
     }

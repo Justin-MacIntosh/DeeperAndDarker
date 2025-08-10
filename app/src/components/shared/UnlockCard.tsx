@@ -1,60 +1,17 @@
 import { memo } from 'react';
-import { useShallow } from 'zustand/react/shallow'
 import { AnimatePresence, motion } from "motion/react"
 
 import ResourceIcon from '../../icons/ResourceIcon';
-import SidebarCard from './SidebarCard';
+import SidebarCard from './Card';
 
 import { Unlockable } from '../../game_state/types';
 import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../helpers/formatNumber';
 import TablerIconDisplay from '../../icons/TablerIconDisplay';
 
-const UnlockList = memo(({ stageId }: { stageId: string }) => {
-  const unlockIds = useGameStore(
-    useShallow((state) => Object.keys(state.stages[stageId].unlocks))
-  );
-  const anyUnlocksActive = useGameStore(
-    useShallow((state) => Object.values(state.stages[stageId].unlocks).some(
-      (unlock) => unlock.dynamic.isActive
-    ))
-  );
 
-  return (
-    <AnimatePresence initial={false}>
-      {
-        anyUnlocksActive &&
-        <motion.div
-          transition={{ duration: .5 }}
-          initial={{ opacity: 0, scale: 0, width: 0 }}
-          animate={{ opacity: 1, scale: 1, width: "400px" }}
-          exit={{ opacity: 0, scale: 0, width: 0, margin: 0 }}
-          className='w-[400px] ml-6 origin-top text-nowrap'
-        >
-          <div className="flex flex-row justify-between items-center mb-3">
-            <h1 className="uppercase text-2xl font-bold">Research</h1>
-          </div>
-          <div className="flex flex-col">
-            {unlockIds.map(
-              (unlockId) => {
-                return (
-                  <SingleUnlockDisplay
-                    key={unlockId}
-                    unlockId={unlockId}
-                    stageId={stageId}
-                  />
-                )
-              }
-            )}
-          </div>
-        </motion.div>
-      }
-    </AnimatePresence>
-  );
-});
-
-const SingleUnlockDisplay = memo(
-  (props: { unlockId: string; stageId: string; }) => {
+const UnlockCard = memo(
+  (props: { unlockId: string; stageId: string; optionalCallback?: () => void }) => {
     // Actions and state from the game store
     const unlock: Unlockable = useGameStore(
       (state) => state.stages[props.stageId].unlocks[props.unlockId]
@@ -62,7 +19,7 @@ const SingleUnlockDisplay = memo(
     const unlockIsActive = useGameStore(
       (state) => state.stages[props.stageId].unlocks[props.unlockId].dynamic.isActive
     );
-    const purchaseUnlockAction = useGameStore((state) => state.purchaseUnlock)
+    const purchaseUnlockAction = useGameStore((state) => state.purchaseUnlock);
 
     // Get the current amount of the resource required to purchase this producer
     const relevantResource = unlock.static.purchaseResource;
@@ -73,7 +30,7 @@ const SingleUnlockDisplay = memo(
     // Calculate the cost and number of producers to purchase
     const currentCostStr: string = formatNumber(unlock.static.cost);
     return (
-      <AnimatePresence initial={true}>
+      <AnimatePresence initial={false}>
         {
           unlockIsActive &&
           <motion.div
@@ -98,7 +55,10 @@ const SingleUnlockDisplay = memo(
                 <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
               }
               onClick={() => {
-                purchaseUnlockAction(props.stageId, props.unlockId)
+                purchaseUnlockAction(props.stageId, props.unlockId);
+                if (props.optionalCallback) {
+                  props.optionalCallback();
+                }
               }}
               isClickDisabled={unlock.static.cost > currentRelevantResources}
             />
@@ -109,4 +69,4 @@ const SingleUnlockDisplay = memo(
   }
 );
 
-export default UnlockList;
+export default UnlockCard;

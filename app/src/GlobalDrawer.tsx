@@ -10,9 +10,23 @@ const GlobalDrawer = ({ setCurrentStage }: { setCurrentStage: (stageId: string) 
   const stageIds = useGameStore(
     useShallow((state) => Object.keys(state.stages))
   );
+  const numActiveStages = useGameStore(
+    useShallow((state) => Object.values(state.stages).reduce(
+      (count, stage) => {
+        if (stage.isActive) {
+          return count + 1;
+        }
+        return count;
+      }, 0
+    ))
+  );
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false)
 
+  if (numActiveStages < 2) {
+    return null;
+  }
+  
   return (
     <>
       <Drawer
@@ -38,6 +52,7 @@ const GlobalDrawer = ({ setCurrentStage }: { setCurrentStage: (stageId: string) 
         <button className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl" />
       </Drawer>
       <button
+        id="global-drawer-btn"
         className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
         onMouseOver={() => { setIsDrawerOpen(true); }}
       />

@@ -5,11 +5,11 @@ export const INITIAL_GAME_STATE: GameState = {
   lastTimeSaved: 0,
   resources: {
     copper: {
-      currentAmount: BigInt(100),
+      currentAmount: BigInt(1000000),
       amountPerSecond: BigInt(0),
     },
     silver: {
-      currentAmount: BigInt(0),
+      currentAmount: BigInt(1000000),
       amountPerSecond: BigInt(0),
     }
   },

@@ -6,8 +6,7 @@ import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../helpers/formatNumber';
 
 /* Header component displays the Stage's details title and current production statistics. */
-const Header = memo(({ stageId }: { stageId: string }) => {
-
+const Header = memo(({ stageId, displayResources }: { stageId: string; displayResources: boolean }) => {
   const resourceIdsToDisplay = useGameStore(
     useShallow((state) => state.stages[stageId].resourcesToDisplay)
   );
@@ -23,7 +22,7 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     >
       <StageTitle stageId={stageId} />
       <div className="flex-grow"/>
-      {resourceIdsToDisplay.map(
+      {displayResources && resourceIdsToDisplay.map(
         (resourceId) => {
           return <ResourceDisplay key={resourceId} resourceId={resourceId}/>;
         }
