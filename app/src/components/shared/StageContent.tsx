@@ -28,7 +28,7 @@ const StageContent = memo(({ stageId }: { stageId: string }) => {
         <div
           id="upgrade-data-display"
           className="
-            p-4 bg-med flex-1
+            p-4 bg-secondary flex-1
             rounded-xl"
         >
           <h3 className="uppercase text-xl">Upgrades</h3>
@@ -63,7 +63,7 @@ const UpgradeDisplay = memo(({ stageId }: { stageId: string }) => {
   );
 });
 
-const SingleUpgrade = (
+export const SingleUpgrade = (
   { stageId, upgradeId }:
   { stageId: string, upgradeId: string }
 ) => {
@@ -104,12 +104,12 @@ const SingleUpgrade = (
           transition={{ duration: .8 }}
           initial={{ opacity: 0, scale: 0, height: 0 }}
           animate={{ opacity: 1, scale: 1, height: "84px" }}
-          className="mb-3 origin-top-left"
+          className="mb-3 origin-top"
         >
           <li
             key={upgradeId}
             className={clsx(
-              "select-none bg-light p-3 rounded-xl transition-all flex flex-row items-center gap-3 opacity-",
+              "select-none bg-accent p-3 rounded-xl transition-all flex flex-row items-center gap-3 opacity-",
               isClickDisabled ? cardDisabledClasses : cardActiveClasses,
             )}
             onClick={() => {
@@ -122,10 +122,10 @@ const SingleUpgrade = (
               <TablerIconDisplay icon={upgrade.static.iconOption} size={60} />
             </div>
             <div className="flex-[3]">
-              <span className="text-xl"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
-              <p>{upgrade.static.description}</p>
+              <span className="text-sm"><span className="underline">{upgrade.static.name}</span> ({upgrade.dynamic.count})</span>
+              <p className="text-sm">{upgrade.static.description}</p>
             </div>
-            <div className="flex-[2]">
+            <div className="flex-[1]">
               {formatNumber(currentCost)}<ResourceIcon resource={upgrade.static.purchaseResource} size={18} />
             </div>
           </li>
@@ -143,7 +143,7 @@ const BuffsDisplay = memo(({ stageId }: { stageId: string }) => {
   return (
     <div
       id="buffs-display"
-      className="p-4 bg-med flex-1 rounded-xl"
+      className="p-4 bg-secondary flex-1 rounded-xl"
     >
       <h3 className="uppercase text-xl mb-5">Protocols</h3>
       <ul
@@ -185,7 +185,7 @@ const SingleEffect = (
         content={
           <div
             className="
-              bg-med z-10
+              bg-primary z-10
               border-gray-300 border-solid border-2 rounded-xl"
           >
             <h1 className="uppercase">{buff.static.name}</h1>

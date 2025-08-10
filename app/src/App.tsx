@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "motion/react"
 
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
-import BraxiosLayout from './components/Stages/BraxiosLayout';
+import BraxiosLayout from './components/Stages/BraxiosLayout2';
 import YanLayout from './components/Stages/YanLayout';
 import GlobalDrawer from './GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
@@ -34,8 +34,9 @@ const App = () => {
     document.addEventListener("mousemove", graphicManip);
 
     function graphicManip(e: MouseEvent) {
-      const elem = document.getElementById("braxios-main");
-      if (!elem) return;
+      const elems = document.getElementsByClassName("mouse-affected-bg");
+      if (!elems.length) return;
+      const elem = elems[0] as HTMLElement;
 
       let _w = window.innerWidth/2;
       let _h = window.innerHeight/2;

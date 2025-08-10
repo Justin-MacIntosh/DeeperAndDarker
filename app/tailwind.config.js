@@ -4,9 +4,10 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        'dark': 'var(--color-dark)',
-        'med': 'var(--color-med)',
-        'light': 'var(--color-light)',
+        'background': 'var(--color-background)',
+        'primary': 'var(--color-primary)',
+        'secondary': 'var(--color-secondary)',
+        'accent': 'var(--color-accent)',
         'crd-blue': '#5B5BC4',
         'crd-red': '#AA3F37',
         'crd-green': '#57973E',

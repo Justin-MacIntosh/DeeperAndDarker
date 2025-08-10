@@ -1,8 +1,8 @@
 import { memo, useState } from 'react';
 
-import { useShallow } from 'zustand/react/shallow'
 import { Listbox, ListboxButton, ListboxOption, ListboxOptions } from '@headlessui/react'
 import { AnimatePresence, motion } from "motion/react"
+import { useShallow } from 'zustand/react/shallow'
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import SidebarCard from './SidebarCard';
@@ -12,7 +12,7 @@ import { formatNumber } from '../../helpers/formatNumber';
 import {
   calculatePriceForMultiplePurchases,
   calculateProducerProduction,
-  calculateMaxPossiblePurchase
+  calculateMaxPossiblePurchase,
 } from '../../helpers/producerStateHelpers';
 import TablerIconDisplay from '../../icons/TablerIconDisplay';
 
@@ -47,7 +47,7 @@ const ProducerList = memo(({ stageId }: { stageId: string }) => {
             <ListboxOptions
               anchor="bottom"
               className="
-                w-24 p-2 bg-med
+                w-24 p-2 bg-primary
                 border-solid border-gray-400 border-2 rounded-xl"
             >
               <ListboxOption className="list-box-option mb-2" key={"1"} value={1}>x1</ListboxOption>
@@ -76,7 +76,7 @@ const ProducerList = memo(({ stageId }: { stageId: string }) => {
   );
 });
 
-const SingleProducerDisplay = memo(
+export const SingleProducerDisplay = memo(
   (props: { producerId: string; stageId: string; numToPurchaseOption: PurchaseAmount; }) => {
     // Actions and state from the game store
     const producer: Producer = useGameStore(
@@ -123,7 +123,7 @@ const SingleProducerDisplay = memo(
             transition={{ duration: .8 }}
             initial={{ opacity: 0, scale: 0, height: 0 }}
             animate={{ opacity: 1, scale: 1, height: "111px" }}
-            className='mb-5 origin-top-left'
+            className='mb-5 origin-top'
           >
             <div className="text-lg flex flex-row mb-2">
               <h2 className="uppercase flex-1">

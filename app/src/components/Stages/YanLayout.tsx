@@ -17,12 +17,12 @@ const YanLayout = (
   }, []);
 
   return (
-    <main className="bg-emerald-950 min-h-screen min-w-[1100px]">
+    <main id="planet-yan-main" className="mouse-affected-bg bg-bg min-h-screen min-w-[1100px]">
       <Header stageId="stage_2"/>
       <div
         id="main"
         className="
-          p-5 mx-7 bg-med
+          p-5 mx-10 bg-primary
           border-gray-300 border-solid border-2 rounded-xl
           flex flex-row gap-6"
       >

@@ -10,12 +10,12 @@
         select-none transition-all duration-75;
     }
     .list-box-option {
-      @apply text-center cursor-pointer bg-med rounded-lg
+      @apply text-center cursor-pointer bg-primary rounded-lg
         px-3 py-1.5 select-none brightness-125 hover:brightness-150
     }
     .structure-display-box {
       @apply
-        bg-med h-32 w-32
+        bg-primary h-32 w-32
         border-gray-300 border-solid border-2 rounded-xl
         hover:brightness-125 hover:-translate-y-1
         active:brightness-125 active:-translate-y-0.5
@@ -25,7 +25,15 @@
 }
 
 #braxios-main {
-  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('./assets/img/Deep_Space_Bg.png');
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('./assets/img/Deep_Space_Bg.png');
+  background-size: 120%;
+  background-position: center;
+  background-repeat: no-repeat;
+  /* filter: brightness(0.8); */
+}
+
+#planet-yan-main {
+  background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('./assets/img/Planet_Yan_Bg.png');
   background-size: 120%;
   background-position: center;
   background-repeat: no-repeat;
@@ -34,9 +42,10 @@
 
 @layer base {
   body[data-theme='deep-space'] {
-    --color-dark: theme('colors.stone.900');
-    --color-med: theme('colors.stone.800');
-    --color-light: theme('colors.stone.600');
+    --color-background: theme('colors.stone.900');
+    --color-primary: theme('colors.stone.900');
+    --color-secondary: theme('colors.stone.800');
+    --color-accent: theme('colors.stone.600');
   }
   
   /* body[data-theme='deep-space'] {
@@ -53,10 +62,17 @@
   } */
 
   body[data-theme='planet-yan'] {
+    --color-background: #181D27;
+    --color-primary: #254D32;
+    --color-secondary: #3A7D44;
+    --color-accent: #69B578;
+  }
+
+  /* body[data-theme='planet-yan'] {
     --color-dark: theme('colors.lime.950');
     --color-med: theme('colors.lime.900');
     --color-light: theme('colors.lime.600');
-  }
+  } */
 
   /* body[data-theme='planet-yan'] {
     --color-dark: rgb(16, 34, 25);
@@ -94,4 +110,12 @@ body {
   border: 3px solid rgb(134, 52, 20);
   box-shadow: 0px 1px 3px grey;
   filter: brightness(100%);
+}
+
+.test-grid {
+  display: grid;
+  grid-template-columns: min-content min-content;
+  grid-template-rows: 1fr;
+  grid-column-gap: 0px;
+  grid-row-gap: 0px;
 }

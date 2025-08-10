@@ -28,7 +28,7 @@ const SidebarCard = (props: CardProps) => {
     <div
       className={clsx(
         "flex h-[75px] max-h-[75px] overflow-hidden",
-        "rounded-2xl bg-light",
+        "rounded-2xl bg-accent",
         "transition-all select-none card",
         props.isClickDisabled ? cardDisabledClasses : cardActiveClasses,
       )}
@@ -46,7 +46,7 @@ const SidebarCard = (props: CardProps) => {
       )}>
         { props.icon }
       </div>
-      <div className="flex flex-1 items-center">
+      <div className="flex flex-1 items-center overflow-hidden">
         {props.contentElement}
       </div>
       <div

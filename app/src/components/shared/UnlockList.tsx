@@ -20,28 +20,36 @@ const UnlockList = memo(({ stageId }: { stageId: string }) => {
     ))
   );
 
-  if (!anyUnlocksActive) {
-    return null; // If there are no unlocks, do not render anything
-  }
   return (
-    <>
-      <div className="flex flex-row justify-between items-center mb-3">
-        <h1 className="uppercase text-2xl font-bold">Research</h1>
-      </div>
-      <div className="flex flex-col">
-        {unlockIds.map(
-          (unlockId) => {
-            return (
-              <SingleUnlockDisplay
-                key={unlockId}
-                unlockId={unlockId}
-                stageId={stageId}
-              />
-            )
-          }
-        )}
-      </div>
-    </>
+    <AnimatePresence initial={false}>
+      {
+        anyUnlocksActive &&
+        <motion.div
+          transition={{ duration: .5 }}
+          initial={{ opacity: 0, scale: 0, width: 0 }}
+          animate={{ opacity: 1, scale: 1, width: "400px" }}
+          exit={{ opacity: 0, scale: 0, width: 0, margin: 0 }}
+          className='w-[400px] ml-6 origin-top text-nowrap'
+        >
+          <div className="flex flex-row justify-between items-center mb-3">
+            <h1 className="uppercase text-2xl font-bold">Research</h1>
+          </div>
+          <div className="flex flex-col">
+            {unlockIds.map(
+              (unlockId) => {
+                return (
+                  <SingleUnlockDisplay
+                    key={unlockId}
+                    unlockId={unlockId}
+                    stageId={stageId}
+                  />
+                )
+              }
+            )}
+          </div>
+        </motion.div>
+      }
+    </AnimatePresence>
   );
 });
 
@@ -65,7 +73,7 @@ const SingleUnlockDisplay = memo(
     // Calculate the cost and number of producers to purchase
     const currentCostStr: string = formatNumber(unlock.static.cost);
     return (
-      <AnimatePresence initial={false}>
+      <AnimatePresence initial={true}>
         {
           unlockIsActive &&
           <motion.div
@@ -73,7 +81,7 @@ const SingleUnlockDisplay = memo(
             initial={{ opacity: 0, scale: 0, height: 0 }}
             animate={{ opacity: 1, scale: 1, height: "111px" }}
             exit={{ opacity: 0, scale: 0, height: 0, margin: 0 }}
-            className='mb-5 origin-top-left'
+            className='mb-5 origin-top'
           >
             <div className="text-lg flex flex-row mb-2">
               <h2 className="uppercase flex-1">

@@ -17,7 +17,7 @@ const Header = memo(({ stageId }: { stageId: string }) => {
     <header
       id="header"
       className="
-        sticky top-0 z-10 p-5 mb-7 bg-dark
+        sticky top-0 z-10 p-5 mb-10 bg-primary
         border-gray-300 border-solid border-2 border-l-0 border-r-0
         flex flex-row shadow-[0_5px_10px_rgba(0,0,0,0.5)]"
     >
@@ -46,7 +46,7 @@ const StageTitle = ({ stageId }: { stageId: string }) => {
 }
 
 /* Parent ResourceDisplay Component to wrap CurrentResourcesDisplay and ResourcesPerSecondDisplay */
-const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
+export const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
     return (
       <div id="production-stats" className="min-w-[180px] text-right">
         <CurrentResourcesDisplay resource={resourceId} />
@@ -59,7 +59,7 @@ const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
  * CurrentResourcesDisplay and ResourcesPerSecondDisplay components display the
  * current resources and resources per second respectively.
  */
-const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
+export const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
   // console.log("CurrentResourcesDisplay render");
   const currentResources = useGameStore((state) => state.resources[resource].currentAmount);
   return (
