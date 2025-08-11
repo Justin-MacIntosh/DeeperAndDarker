@@ -16,6 +16,12 @@ import TablerIconDisplay from '../../icons/TablerIconDisplay';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
+const producerCardVariant = {
+  initial: { opacity: 0, scale: 0, height: 0 },
+  animate: { opacity: 1, scale: 1, height: "111px" },
+  exit: { opacity: 0, scale: 0, height: 0 },
+};
+
 
 export const ProducerCard = memo(
   (props: { producerId: string; stageId: string; numToPurchaseOption: PurchaseAmount; }) => {
@@ -53,18 +59,18 @@ export const ProducerCard = memo(
     }
 
     let amountToPurchaseDisplay = numToPurchase.toString();
-    if (props.numToPurchaseOption === 'Max' && currentCost > currentRelevantResources) {
+    if (currentCost > currentRelevantResources) {
       amountToPurchaseDisplay = "0";
     }
     return (
-      <AnimatePresence initial={false}>
+      <>
         {
         producerIsActive &&
           <motion.div
-            transition={{ duration: .8 }}
-            initial={{ opacity: 0, scale: 0, height: 0 }}
-            animate={{ opacity: 1, scale: 1, height: "111px" }}
-            className='mb-5 origin-top'
+            key={props.stageId + " " + props.producerId}
+            variants={producerCardVariant}
+            transition={{ duration: .5 }}
+            className='mb-2 origin-top'
           >
             <div className="text-lg flex flex-row mb-2">
               <h2 className="uppercase flex-1">
@@ -90,7 +96,7 @@ export const ProducerCard = memo(
             />
           </motion.div>
         }
-      </AnimatePresence>
+      </>
     );
   }
 );

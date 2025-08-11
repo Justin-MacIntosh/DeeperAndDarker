@@ -8,6 +8,12 @@ import { formatNumber } from '../../helpers/formatNumber';
 
 var Fraction = require('fractional').Fraction;
 
+const upgradeCardVariant = {
+  initial: { opacity: 0, scale: 0, height: 0 },
+  animate: { opacity: 1, scale: 1, height: "85px" },
+  exit: { opacity: 0, scale: 0, height: 0 },
+};
+
 export const UpgradeCard = (
   { stageId, upgradeId }:
   { stageId: string, upgradeId: string }
@@ -42,14 +48,14 @@ export const UpgradeCard = (
   const isClickDisabled = currentCost > resourceAmount;
 
   return (
-    <AnimatePresence initial={false}>
+    <>
       {
         upgradeIsActive && (
         <motion.div
-          transition={{ duration: .8 }}
-          initial={{ opacity: 0, scale: 0, height: 0 }}
-          animate={{ opacity: 1, scale: 1, height: "84px" }}
-          className="mb-3 origin-top"
+          key={stageId + " " + upgradeId}
+          variants={upgradeCardVariant}
+          transition={{ duration: .5 }}
+          className='mb-2 origin-top'
         >
           <li
             key={upgradeId}
@@ -76,7 +82,7 @@ export const UpgradeCard = (
           </li>
         </motion.div>
       )}
-    </AnimatePresence>
+    </>
   );
 }
 

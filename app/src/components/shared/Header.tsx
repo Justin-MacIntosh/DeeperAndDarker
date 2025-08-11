@@ -69,8 +69,12 @@ export const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
 };
 const ResourcesPerSecondDisplay = ({ resource }: { resource: string }) => {
   // console.log("ResourcesPerSecondDisplay render");  
-
   const resourcesPerSecond = useGameStore((state) => state.resources[resource].amountPerSecond);
+
+  if (resourcesPerSecond === BigInt(0)) {
+    return null; // Don't display if there are no resources per second
+  }
+
   return (
     <h3 className="text-lg">
       {formatNumber(resourcesPerSecond)}<ResourceIcon resource={resource} size={18}/>/sec

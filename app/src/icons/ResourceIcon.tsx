@@ -1,4 +1,4 @@
-import { IconInnerShadowBottomRightFilled } from "@tabler/icons-react";
+import { IconInnerShadowBottomRightFilled, IconSchool, IconSword, IconUserFilled } from "@tabler/icons-react";
 
 const ResourceIcon = ({ resource, size }: { resource: string, size: number }) => {
 
@@ -7,6 +7,12 @@ const ResourceIcon = ({ resource, size }: { resource: string, size: number }) =>
       return <IconInnerShadowBottomRightFilled viewBox="0 2 24 24" className="inline" color="#e78d5a" size={size}/>;
     case 'silver':
       return <IconInnerShadowBottomRightFilled viewBox="0 2 24 24" className="inline" color="#c0c0c0" size={size}/>;
+    case 'yan_might':
+      return <IconSword viewBox="0 2 24 24" className="inline" color="#D0D050" size={size}/>;
+    case 'yan_research':
+      return <IconSchool viewBox="0 2 24 24" className="inline" color="#D0D050" size={size}/>;
+    case 'personnel':
+      return <IconUserFilled viewBox="0 2 24 24" className="inline" color="#E0E0E0" size={size}/>;
     default:
       return null;
   }

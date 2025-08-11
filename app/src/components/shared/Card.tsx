@@ -46,7 +46,7 @@ const SidebarCard = (props: CardProps) => {
       )}>
         { props.icon }
       </div>
-      <div className="flex flex-1 items-center overflow-hidden">
+      <div className="flex flex-1 items-center overflow-hidden text-md">
         {props.contentElement}
       </div>
       <div

@@ -11,6 +11,18 @@ export const INITIAL_GAME_STATE: GameState = {
     silver: {
       currentAmount: BigInt(1000000),
       amountPerSecond: BigInt(0),
+    },
+    personnel: {
+      currentAmount: BigInt(10),
+      amountPerSecond: BigInt(0),
+    },
+    yan_research: {
+      currentAmount: BigInt(0),
+      amountPerSecond: BigInt(0),
+    },
+    yan_might: {
+      currentAmount: BigInt(0),
+      amountPerSecond: BigInt(0),
     }
   },
   stages: {
@@ -246,11 +258,91 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "Planet Yan",
       description: "Lush and rich in minerals",
       isActive: false,
-      resourcesToDisplay: [],
-      producers: {},
+      resourcesToDisplay: ["personnel", "silver"],
+      producers: {
+        yan_researcher: {
+          static: {
+            name: "Yan Researcher",
+            description: "Researches the mysteries of Planet Yan",
+            iconOption: "IconUser",
+            purchaseResource: "personnel",
+            baseCost: BigInt(1),
+            baseRateOfCostIncrease: 1,
+            producedResource: "yan_research",
+            baseProduction: BigInt(10),
+            color: "blue",
+          },
+          dynamic: {
+            count: 0,
+            productionMultiplier: 1,
+            costReductionMultiplier: 1,
+            isActive: false,
+          }
+        },
+        yan_soldier: {
+          static: {
+            name: "Yan Soldier",
+            description: "Required to face threats on Planet Yan",
+            iconOption: "IconUser",
+            purchaseResource: "personnel",
+            baseCost: BigInt(1),
+            baseRateOfCostIncrease: 1,
+            producedResource: "yan_might",
+            baseProduction: BigInt(5),
+            color: "red",
+          },
+          dynamic: {
+            count: 0,
+            productionMultiplier: 1,
+            costReductionMultiplier: 1,
+            isActive: false,
+          }
+        }
+      },
       upgrades: {},
       buffs: {},
-      unlocks: {}
+      unlocks: {
+        establish_military_base: {
+          static: {
+            name: "Choice 1: Military Base",
+            description: "Establish a military base on Planet Yan",
+            iconOption: "IconBuilding",
+            purchaseResource: "silver",
+            cost: BigInt(100000),
+            color: "red",
+            unlocks: [
+              {
+                type: "producer",
+                stageId: "stage_2",
+                producerId: "yan_soldier",
+              },
+            ],
+          },
+          dynamic: {
+            isActive: true,
+          }
+        },
+        establish_research_base: {
+          static: {
+            name: "Choice 2: Research Base",
+            description: "Establish a research base on Planet Yan",
+            iconOption: "IconBuilding",
+            purchaseResource: "silver",
+            cost: BigInt(100000),
+            color: "green",
+            unlocks: [
+              {
+                type: "producer",
+                stageId: "stage_2",
+                producerId: "yan_researcher",
+              },
+            ],
+          },
+          dynamic: {
+            isActive: true,
+          }
+        },
+      }
     }
   }
 }

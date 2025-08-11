@@ -8,6 +8,7 @@ import {
   IconRobot,
   IconHome,
   IconBolt,
+  IconUser,
   IconBuilding,
 } from "@tabler/icons-react";
 
@@ -17,6 +18,7 @@ export type IconOption =
   | "IconBuildingFactory"
   | "IconHome"
   | "IconBolt"
+  | "IconUser"
   | "IconBuilding"
   | "IconFlowerFilled"
   | "IconPaperBag";
@@ -33,6 +35,7 @@ export const ICON_MAPPING: { [Key in IconOption]: iconType } = {
   IconHome: IconHome,
   IconBuilding: IconBuilding,
   IconBolt: IconBolt,
+  IconUser: IconUser,
 
   // Planet icons
   IconFlowerFilled: IconFlowerFilled,

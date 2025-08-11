@@ -108,26 +108,26 @@ const CopperDisplay = () => {
   );
 };
 
+const containerVariant = {
+  initial: { opacity: 0, scale: 0, width: 0 },
+  animate: { opacity: 1, scale: 1, width: "600px", transition: { when: "beforeChildren", staggerChildren: .1, duration: .6 } },
+  exit: { opacity: 0, scale: 0, width: 0, transition: { duration: .6 } }
+};
+
 const SilverDisplay = () => {
   const isSilverActive = useGameStore((state) => state.stages["stage_1"].producers["mnr_s1"].dynamic.isActive);
 
-  let silverNotification: ReactNode = (
-    <p className="uppercase">MNR-S1 Mining Robots are needed to mine Silver.</p>
-  );
-  if (isSilverActive) {
-    silverNotification = null;
-  }
-
   return (
-    <AnimatePresence initial={false}>
+    <AnimatePresence mode="wait" initial={false} propagate>
       {
       isSilverActive &&
         <motion.div
-          transition={{ duration: .8 }}
-          initial={{ opacity: 0, scale: 0, width: 0 }}
-          animate={{ opacity: 1, scale: 1, width: "600px" }}
-          exit={{ opacity: 0, scale: 0, width: 0 }}
-          className='origin-top'
+          key={"deep_space_silver"}
+          variants={containerVariant}
+          className='origin-top overflow-hidden text-nowrap'
+          initial="initial"
+          animate="animate"
+          exit="exit"
         >
           <div
             id="silver-container"
@@ -137,7 +137,6 @@ const SilverDisplay = () => {
               <h3 className="uppercase text-2xl">Silver <ResourceIcon resource="silver" size={24} /></h3>
               <CurrentResourcesDisplay resource="silver"/>
             </div>
-            {silverNotification}
             <ProducerCard producerId="mnr_s1" stageId="stage_1" numToPurchaseOption={1}/>
             <UpgradeCard upgradeId="mnr_s1_control_center" stageId="stage_1"/>
             <UpgradeCard upgradeId="mnr_s1_fabricator" stageId="stage_1"/>
