@@ -15,13 +15,8 @@ const YanLayout = (
   { saveCurrentGameData }:
   { saveCurrentGameData: () => void}
 ) => {
-  // Set the data-theme attribute to "planet-yan" for theming
-  useEffect(() => {
-    document.body.setAttribute("data-theme", "planet-yan");
-  }, []);
-
   return (
-    <main id="planet-yan-main" className="mouse-affected-bg bg-bg min-h-screen min-w-[1100px]">
+    <main id="planet-yan-main" className="absolute top-0 w-full mouse-affected-bg bg-bg min-h-screen min-w-[1100px]" data-theme="planet-yan">
       <Header stageId="stage_2" displayResources={true} />
       <div className="justify-items-center">
         <div

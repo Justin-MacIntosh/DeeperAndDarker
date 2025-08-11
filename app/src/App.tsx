@@ -1,36 +1,47 @@
 import { ReactNode, useEffect, useState } from 'react';
 import 'react-modern-drawer/dist/index.css'
 
-import { AnimatePresence, motion } from "motion/react"
-
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 import BraxiosLayout from './components/Stages/BraxiosLayout';
 import YanLayout from './components/Stages/YanLayout';
 import GlobalDrawer from './GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
+import clsx from 'clsx';
 
 
-const stageVariant = {
-  initial: { opacity: 0 },
-  animate: { opacity: 1, transition: { duration: .6 } },
-  exit: { opacity: 0, transition: { duration: .6 } }
+const Fade = ({ children, show, onShowCallback }: {children: ReactNode, show: boolean, onShowCallback: () => void}) => {
+  const [shouldRender, setRender] = useState(show);
+
+  useEffect(() => {
+    if (show) {
+      setRender(true);
+    }
+  }, [show]);
+
+  const onAnimationEnd = () => {
+    if (!show) {
+      setRender(false);
+    } else {
+      onShowCallback();
+    }
+  };
+
+  const opacityClasses = show ? "opacity-100" : "opacity-0";
+
+  return (
+    shouldRender ? (
+      <div
+        className={clsx(opacityClasses)}
+        style={{ animation: `${show ? "fadeIn" : "fadeOut"} .5s` }}
+        onAnimationEnd={onAnimationEnd}
+      >
+        {children}
+      </div>
+    ): null
+  );
 };
 
-
-const StageFade = ({ children, key }: { children: ReactNode, key: string }) => {
-  return (
-    <motion.div
-      key={key}
-      variants={stageVariant}
-      initial="initial"
-      animate="animate"
-      exit="exit"
-    >
-      { children }
-    </motion.div>
-  );
-}
 
 /* Main App component that renders the game interface */
 const App = () => {
@@ -64,38 +75,16 @@ const App = () => {
   }, []);
 
   const [currentStage, setCurrentStage] = useState("stage_1");
-
-  let stageContent = null;
-  switch (currentStage) {
-    case "stage_1":
-      stageContent = <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />;
-      break;
-    case "stage_2":
-      stageContent = <YanLayout saveCurrentGameData={saveCurrentGameData} key="planet-yan" />;
-      break;
-    default:
-      stageContent = <div>Stage not implemented yet</div>;
-      break;
-  }
-
   return (
-    <div className="bg-neutral-900">
+    <div className="bg-neutral-900 absolute top-0 w-full h-full">
       <GlobalDrawer setCurrentStage={setCurrentStage} />
       <OfflineEarningsDialog/>
-      <AnimatePresence initial={false} mode="wait" propagate={false}>
-        {
-          currentStage === "stage_1" &&
-          <StageFade key="deep-space">
-            <BraxiosLayout saveCurrentGameData={saveCurrentGameData} />
-          </StageFade>
-        }
-        {
-          currentStage === "stage_2" &&
-          <StageFade key="planet-yan">
-            <YanLayout saveCurrentGameData={saveCurrentGameData} />
-          </StageFade>
-        }
-      </AnimatePresence>
+      <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
+        <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />
+      </Fade>
+      <Fade show={currentStage === "stage_2"} onShowCallback={() => {document.body.setAttribute("data-theme", "planet-yan");}}>
+        <YanLayout saveCurrentGameData={saveCurrentGameData} key="planet-yan" />
+      </Fade>
     </div>
   );
 }

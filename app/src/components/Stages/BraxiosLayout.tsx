@@ -33,7 +33,7 @@ function CustomTooltip(props: TooltipRenderProps) {
   const { step, tooltipProps } = props;
 
   return (
-    <div className="bg-primary p-5 border-gray-300 border-solid border-2 rounded-xl" {...tooltipProps}>
+    <div className="bg-gray-800 p-5 border-gray-300 border-solid border-2 rounded-xl" {...tooltipProps}>
       {step.title && <h4 className="underline text-2xl">{step.title}</h4>}
       <div className="text-lg">{step.content}</div>
     </div>
@@ -47,15 +47,11 @@ const BraxiosLayout = ({
 }) => {
   const [showStage2Tutorial, setShowStage2Tutorial] = useState(false);
 
-  // Set the data-theme attribute to "deep-space" for theming
-  useEffect(() => {
-    document.body.setAttribute("data-theme", "deep-space");
-  }, []);
-
   return (
     <main
       id="braxios-main"
-      className="mouse-affected-bg bg-background min-h-screen min-w-[1100px]"
+      data-theme="deep-space"
+      className="absolute top-0 w-full mouse-affected-bg bg-background min-h-screen min-w-[1100px]"
     >
       <Joyride
         run={showStage2Tutorial}
@@ -119,7 +115,7 @@ const CopperDisplay = () => {
 const containerVariant = {
   initial: { opacity: 0, scale: 0, width: 0 },
   animate: { opacity: 1, scale: 1, width: "600px", transition: { when: "beforeChildren", staggerChildren: .1, duration: .6 } },
-  exit: { opacity: 0, scale: 0, width: 0, transition: { duration: .8 } }
+  exit: { opacity: 0, scale: 0, width: 0, transition: { when: "afterChildren", staggerChildren: .1, duration: .8 } }
 };
 
 const SilverDisplay = () => {
@@ -133,8 +129,11 @@ const SilverDisplay = () => {
           key={"deep_space_silver"}
           variants={containerVariant}
           className='origin-top overflow-hidden text-nowrap'
+          initial="initial"
+          animate="animate"
+          exit="exit"
         >
-          <div
+          <motion.div
             id="silver-container"
             className="min-w-[600px] flex-1 flex flex-col rounded-xl gap-3 p-4 bg-secondary"
           >
@@ -145,7 +144,7 @@ const SilverDisplay = () => {
             <ProducerCard producerId="mnr_s1" stageId="stage_1" numToPurchaseOption={1}/>
             <UpgradeCard upgradeId="mnr_s1_control_center" stageId="stage_1"/>
             <UpgradeCard upgradeId="mnr_s1_fabricator" stageId="stage_1"/>
-          </div>
+          </motion.div>
         </motion.div>
       }
     </AnimatePresence>
