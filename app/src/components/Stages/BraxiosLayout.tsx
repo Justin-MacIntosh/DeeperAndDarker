@@ -93,41 +93,46 @@ const BraxiosLayout = ({
 
 const CopperDisplay = () => {
   return (
-    <div
-      id="copper-container"
-      className="min-w-[600px] flex flex-col rounded-xl gap-3 p-4 bg-secondary"
-    >
-      <div className="flex flex-row justify-between items-center">
-      <h3 className="uppercase text-2xl">Copper <ResourceIcon resource="copper" size={24} /></h3>
-        <CurrentResourcesDisplay resource="copper"/>
-      </div>
-      <ProducerCard producerId="mnr_n1" stageId="stage_1" numToPurchaseOption={1}/>
-      <UpgradeCard upgradeId="mnr_n1_control_center" stageId="stage_1"/>
-      <UpgradeCard upgradeId="mnr_n1_fabricator" stageId="stage_1"/>
-    </div>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={"deep_space_copper"}
+        variants={containerVariant}
+        className='origin-top overflow-hidden text-nowrap'
+      >
+        <div
+          id="copper-container"
+          className="flex flex-col rounded-xl gap-3 p-4 bg-secondary"
+        >
+          <div className="flex flex-row justify-between items-center">
+          <h3 className="uppercase text-2xl">Copper <ResourceIcon resource="copper" size={24} /></h3>
+            <CurrentResourcesDisplay resource="copper"/>
+          </div>
+          <ProducerCard producerId="mnr_n1" stageId="stage_1" numToPurchaseOption={1}/>
+          <UpgradeCard upgradeId="mnr_n1_control_center" stageId="stage_1"/>
+          <UpgradeCard upgradeId="mnr_n1_fabricator" stageId="stage_1"/>
+        </div>
+      </motion.div>
+    </AnimatePresence>
   );
 };
 
 const containerVariant = {
   initial: { opacity: 0, scale: 0, width: 0 },
   animate: { opacity: 1, scale: 1, width: "600px", transition: { when: "beforeChildren", staggerChildren: .1, duration: .6 } },
-  exit: { opacity: 0, scale: 0, width: 0, transition: { duration: .6 } }
+  exit: { opacity: 0, scale: 0, width: 0, transition: { duration: .8 } }
 };
 
 const SilverDisplay = () => {
   const isSilverActive = useGameStore((state) => state.stages["stage_1"].producers["mnr_s1"].dynamic.isActive);
 
   return (
-    <AnimatePresence mode="wait" initial={false} propagate>
+    <AnimatePresence mode="wait" initial={false}>
       {
       isSilverActive &&
         <motion.div
           key={"deep_space_silver"}
           variants={containerVariant}
           className='origin-top overflow-hidden text-nowrap'
-          initial="initial"
-          animate="animate"
-          exit="exit"
         >
           <div
             id="silver-container"

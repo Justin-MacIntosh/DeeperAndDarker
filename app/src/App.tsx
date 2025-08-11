@@ -11,14 +11,21 @@ import GlobalDrawer from './GlobalDrawer';
 import OfflineEarningsDialog from './OfflineEarningsDialog';
 
 
+const stageVariant = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: .6 } },
+  exit: { opacity: 0, transition: { duration: .6 } }
+};
+
+
 const StageFade = ({ children, key }: { children: ReactNode, key: string }) => {
   return (
     <motion.div
-      key="deep-space"
-      transition={{ duration: .5 }}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0, transition: { duration: .2 } }}
+      key={key}
+      variants={stageVariant}
+      initial="initial"
+      animate="animate"
+      exit="exit"
     >
       { children }
     </motion.div>
@@ -61,10 +68,10 @@ const App = () => {
   let stageContent = null;
   switch (currentStage) {
     case "stage_1":
-      stageContent = <BraxiosLayout saveCurrentGameData={saveCurrentGameData} />;
+      stageContent = <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />;
       break;
     case "stage_2":
-      stageContent = <YanLayout saveCurrentGameData={saveCurrentGameData} />;
+      stageContent = <YanLayout saveCurrentGameData={saveCurrentGameData} key="planet-yan" />;
       break;
     default:
       stageContent = <div>Stage not implemented yet</div>;
@@ -75,7 +82,7 @@ const App = () => {
     <div className="bg-neutral-900">
       <GlobalDrawer setCurrentStage={setCurrentStage} />
       <OfflineEarningsDialog/>
-      <AnimatePresence initial={false} mode="wait">
+      <AnimatePresence initial={false} mode="wait" propagate={false}>
         {
           currentStage === "stage_1" &&
           <StageFade key="deep-space">
