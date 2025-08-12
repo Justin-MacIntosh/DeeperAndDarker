@@ -17,9 +17,9 @@ import TablerIconDisplay from '../../icons/TablerIconDisplay';
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
 const producerCardVariant = {
-  initial: { opacity: 0, scale: 0, margin: 0, height: 0 },
+  initial: { opacity: 0, scale: 0, height: 0 },
   animate: { opacity: 1, scale: 1, height: "111px" },
-  exit: { opacity: 0, scale: 0, margin: 0, height: 0 },
+  exit: { opacity: 0, scale: 0, height: 0 },
 };
 
 
@@ -65,7 +65,7 @@ export const ProducerCard = memo(
     return (
       <>
         {
-        producerIsActive &&
+        true &&
           <motion.div
             key={props.stageId + " " + props.producerId}
             variants={producerCardVariant}

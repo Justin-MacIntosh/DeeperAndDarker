@@ -117,3 +117,25 @@ body {
     opacity: 0;
   }
 }
+
+
+div#braxios-content + div {
+  margin-left: 1.5rem;
+} 
+
+div#braxios-content {
+  gap: 0;
+  transition: gap .2s ease-in-out;
+}
+
+div#braxios-content > div:nth-child(2) {
+  margin-top: 1.5rem;
+  margin-left: 0;
+}
+
+@media (min-width: 1536px) {
+  div#braxios-content > div:nth-child(2) {
+    margin-top: 0;
+    margin-left: 1.5rem;
+  }
+}

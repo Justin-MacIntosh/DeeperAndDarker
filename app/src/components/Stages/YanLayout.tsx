@@ -28,7 +28,7 @@ const YanLayout = (
         >
           <div
             id="yan-content"
-            className="rounded-xl flex flex-col 2xl:flex-row gap-6 mr-6"
+            className="rounded-xl flex flex-col 2xl:flex-row"
           >
             <ResearchDisplay />
             <MightDisplay />
@@ -51,9 +51,10 @@ const MightDisplay = () => {
         <motion.div
           key={"yan_might"}
           variants={containerVariant}
-          className='origin-top overflow-hidden text-nowrap'
+          className='origin-top overflow-hidden text-nowrap mr-6'
           initial="initial"
           animate="animate"
+          exit="exit"
         >
           <div
             id="yan-might-container"
@@ -74,7 +75,7 @@ const MightDisplay = () => {
 const containerVariant = {
   initial: { opacity: 0, scale: 0, width: 0 },
   animate: { opacity: 1, scale: 1, width: "600px", transition: { when: "beforeChildren", duration: .6 } },
-  exit: { opacity: 0, scale: 0, width: 0 }
+  exit: { opacity: 0, scale: 0, width: 0, marginLeft: 0, transition: { when: "afterChildren", staggerChildren: .1, duration: .8 } }
 };
 
 const ResearchDisplay = () => {
@@ -87,7 +88,7 @@ const ResearchDisplay = () => {
         <motion.div
           key={"yan_research"}
           variants={containerVariant}
-          className='origin-top overflow-hidden text-nowrap'
+          className='origin-top overflow-hidden text-nowrap mr-6'
           initial="initial"
           animate="animate"
         >

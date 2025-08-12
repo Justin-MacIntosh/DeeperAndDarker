@@ -50,7 +50,7 @@ export const UpgradeCard = (
   return (
     <>
       {
-        upgradeIsActive && (
+        true && (
         <motion.div
           key={stageId + " " + upgradeId}
           variants={upgradeCardVariant}
