@@ -120,7 +120,7 @@ export interface Unlockable {
     iconOption: IconOption; // Optional icon for UI representation
     purchaseResource: string; // Resource required to unlock
     cost: bigint;
-    unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock | UnlockableUnlock>;
+    unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock | UnlockableUnlock | LockUnlock>;
     color: string; // Optional color for UI representation
   },
   dynamic: {
@@ -148,6 +148,11 @@ interface BuffUnlock {
 }
 interface UnlockableUnlock {
   type: "unlock";
+  stageId: string;
+  unlockId: string;
+}
+interface LockUnlock {
+  type: "lock";
   stageId: string;
   unlockId: string;
 }

@@ -64,67 +64,70 @@ export const useGameStore = create<
 
   // Purchase a producer by its ID and quantity
   purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => {
-      if (numToPurchase <= 0) {
-        console.error("Number to purchase must be greater than zero.");
-        return;
-      }
+    if (numToPurchase <= 0) {
+      console.error("Number to purchase must be greater than zero.");
+      return;
+    }
 
-      const { resources, stages } = get();
-      const stage = stages[stageId];
-      if (!stage) {
-        console.error(`Stage with ID ${stageId} not found.`);
-        return;
-      }
-      const producerToBuy = stage.producers[producerId];
-      if (!producerToBuy) {
-        console.error(`Producer with ID ${producerId} not found in stage ${stageId}.`);
-        return;
-      }
+    const { resources, stages } = get();
+    const stage = stages[stageId];
+    if (!stage) {
+      console.error(`Stage with ID ${stageId} not found.`);
+      return;
+    }
+    const producerToBuy = stage.producers[producerId];
+    if (!producerToBuy) {
+      console.error(`Producer with ID ${producerId} not found in stage ${stageId}.`);
+      return;
+    }
+    if (!producerToBuy.dynamic.isActive) {
+      console.error(`Producer with ID ${producerId} is already purchased or inactive.`);
+      return;
+    }
 
-      const purchaseResource = producerToBuy.static.purchaseResource;
-      const producedResource = producerToBuy.static.producedResource;
-      const currentCost = calculatePriceForMultiplePurchases(producerToBuy, numToPurchase);
+    const purchaseResource = producerToBuy.static.purchaseResource;
+    const producedResource = producerToBuy.static.producedResource;
+    const currentCost = calculatePriceForMultiplePurchases(producerToBuy, numToPurchase);
 
-      if (resources[purchaseResource].currentAmount < currentCost) {
-        console.error(`Not enough ${purchaseResource} to buy producer with ID ${producerId}.`);
-        return;
-      }
+    if (resources[purchaseResource].currentAmount < currentCost) {
+      console.error(`Not enough ${purchaseResource} to buy producer with ID ${producerId}.`);
+      return;
+    }
 
-      // Update the producer count in the stage
-      const updatedStages = {
-        ...stages,
-        [stageId]: {
-          ...stage,
-          producers: {
-            ...stage.producers,
-            [producerId]: {
-              ...producerToBuy,
-              dynamic: {
-                ...producerToBuy.dynamic,
-                count: producerToBuy.dynamic.count + numToPurchase,
-              }
-            },
+    // Update the producer count in the stage
+    const updatedStages = {
+      ...stages,
+      [stageId]: {
+        ...stage,
+        producers: {
+          ...stage.producers,
+          [producerId]: {
+            ...producerToBuy,
+            dynamic: {
+              ...producerToBuy.dynamic,
+              count: producerToBuy.dynamic.count + numToPurchase,
+            }
           },
         },
-      };
+      },
+    };
 
+    // Update resource counts and production rates
+    const updatedResources = { ...resources };
+    updatedResources[purchaseResource] = {
+      ...updatedResources[purchaseResource],
+      currentAmount: updatedResources[purchaseResource].currentAmount - currentCost,
+    };
+    updatedResources[producedResource] = {
+      ...updatedResources[producedResource],
+      amountPerSecond: recalculateResourceProduction(updatedStages, producedResource),
+    };
 
-      // Update resource counts and production rates
-      const updatedResources = { ...resources };
-      updatedResources[purchaseResource] = {
-        ...updatedResources[purchaseResource],
-        currentAmount: updatedResources[purchaseResource].currentAmount - currentCost,
-      };
-      updatedResources[producedResource] = {
-        ...updatedResources[producedResource],
-        amountPerSecond: recalculateResourceProduction(updatedStages, producedResource),
-      };
-
-      set({
-        resources: updatedResources,
-        stages: updatedStages,
-      });
-    },
+    set({
+      resources: updatedResources,
+      stages: updatedStages,
+    });
+  },
 
   // Purchase a producer by its ID and quantity
   purchaseUpgrade: (stageId: string, upgradeId: string) => {
@@ -137,6 +140,10 @@ export const useGameStore = create<
     const upgradeToBuy = stage.upgrades[upgradeId];
     if (!upgradeToBuy) {
       console.error(`Upgrade with ID ${upgradeId} not found in stage ${stageId}.`);
+      return;
+    }
+    if (!upgradeToBuy.dynamic.isActive) {
+      console.error(`Upgrade with ID ${upgradeId} is already purchased or inactive.`);
       return;
     }
     const purchaseResource = upgradeToBuy.static.purchaseResource;
@@ -205,6 +212,10 @@ export const useGameStore = create<
     const unlockableToBuy = stage.unlocks[unlockableId];
     if (!unlockableToBuy) {
       console.error(`Unlockable with ID ${unlockableId} not found in stage ${stageId}.`);
+      return;
+    }
+    if (!unlockableToBuy.dynamic.isActive) {
+      console.error(`Unlockable with ID ${unlockableId} is already purchased or inactive.`);
       return;
     }
 
@@ -298,6 +309,21 @@ export const useGameStore = create<
                 dynamic: {
                   ...updatedStages[unlock.stageId].unlocks[unlock.unlockId].dynamic,
                   isActive: true,
+                },
+              },
+            },
+          };
+          break;
+        case "lock":
+          updatedStages[unlock.stageId] = {
+            ...updatedStages[unlock.stageId],
+            unlocks: {
+              ...updatedStages[unlock.stageId].unlocks,
+              [unlock.unlockId]: {
+                ...updatedStages[unlock.stageId].unlocks[unlock.unlockId],
+                dynamic: {
+                  ...updatedStages[unlock.stageId].unlocks[unlock.unlockId].dynamic,
+                  isActive: false,
                 },
               },
             },

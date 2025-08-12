@@ -125,7 +125,7 @@ const SilverDisplay = () => {
         <motion.div
           key={"deep_space_silver"}
           variants={silverContainerVariant}
-          className='origin-top overflow-hidden text-nowrap'
+          className='origin-top overflow-hidden text-nowrap ml-0 mt-6 2xl:ml-6 2xl:mt-0'
           initial="initial"
           animate="animate"
           exit="exit"

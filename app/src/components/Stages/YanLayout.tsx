@@ -1,15 +1,66 @@
-import { ReactNode, memo, useEffect, useState } from 'react';
+import { memo } from 'react';
 
 import { AnimatePresence, motion } from "motion/react";
 import { useShallow } from 'zustand/react/shallow';
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import ProducerCard from '../shared/ProducerCard';
-import UpgradeCard from '../shared/UpgradeCard';
 import UnlockCard from '../shared/UnlockCard';
 import Footer from '../shared/Footer';
 import Header, { CurrentResourcesDisplay } from '../shared/Header';
 import { useGameStore } from '../../game_state/GameStore';
+import { Joyride, TooltipRenderProps } from 'react-joyride';
+
+
+const settlingYanTutorialSteps = [
+  {
+    target: '#planet-yan-unlocks',
+    title: "Settling Planet Yan",
+    content: (
+      <>
+        <p>It will take many tries to settle the planet.</p>
+      </>
+    ),
+    disableBeacon: true,
+    placement: "left" as "left",
+  },
+  {
+    target: '#planet-yan-unlocks',
+    title: "Settling Planet Yan",
+    content: (
+      <>
+        <p>On each attempt, you'll need to choose between</p>
+        <p>a Military or Research approach!</p>
+      </>
+    ),
+    disableBeacon: true,
+    placement: "left" as "left",
+  },
+  {
+    target: '#planet-yan-unlocks',
+    title: "Settling Planet Yan",
+    content: (
+      <>
+        <p>Research will help you upgrade future attempts,</p>
+        <p>and Military will capture specimens for future Research.</p>
+      </>
+    ),
+    disableBeacon: true,
+    placement: "left" as "left",
+  },
+];
+
+function CustomTooltip(props: TooltipRenderProps) {
+    const { index, size, step, tooltipProps } = props;
+
+  return (
+    <div className="bg-gray-800 p-5 border-gray-300 border-solid border-2 rounded-xl" {...tooltipProps}>
+      {step.title && <h4 className="underline text-2xl">{step.title} ({index + 1} of {size})</h4>}
+      <div className="text-lg">{step.content}</div>
+    </div>
+  );
+}
+
 
 const YanLayout = (
   { saveCurrentGameData }:
@@ -17,6 +68,17 @@ const YanLayout = (
 ) => {
   return (
     <main id="planet-yan-main" className="absolute top-0 w-full mouse-affected-bg bg-bg min-h-screen min-w-[1100px]" data-theme="planet-yan">
+      <Joyride
+        run={true}
+        steps={settlingYanTutorialSteps}
+        tooltipComponent={CustomTooltip}
+        
+        styles={{
+          options: {
+            arrowColor: 'rgb(209 213 219 / var(--tw-border-opacity, 1))',
+          },
+        }}
+      />
       <Header stageId="stage_2" displayResources={true} />
       <div className="justify-items-center">
         <div
@@ -123,6 +185,7 @@ const UnlockSidebar = memo(({ stageId }: { stageId: string }) => {
       {
         anyUnlocksActive &&
         <motion.div
+          id="planet-yan-unlocks"
           transition={{ duration: .5 }}
           initial={{ opacity: 0, scale: 0, width: 0 }}
           animate={{ opacity: 1, scale: 1, width: "400px" }}

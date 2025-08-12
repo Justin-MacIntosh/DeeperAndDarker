@@ -305,7 +305,7 @@ export const INITIAL_GAME_STATE: GameState = {
         establish_military_base: {
           static: {
             name: "Choice 1: Military Base",
-            description: "Establish a military base on Planet Yan",
+            description: "Military Base",
             iconOption: "IconBuilding",
             purchaseResource: "silver",
             cost: BigInt(100000),
@@ -316,6 +316,11 @@ export const INITIAL_GAME_STATE: GameState = {
                 stageId: "stage_2",
                 producerId: "yan_soldier",
               },
+              {
+                type: "lock",
+                stageId: "stage_2",
+                unlockId: "establish_research_base",
+              },
             ],
           },
           dynamic: {
@@ -325,7 +330,7 @@ export const INITIAL_GAME_STATE: GameState = {
         establish_research_base: {
           static: {
             name: "Choice 2: Research Base",
-            description: "Establish a research base on Planet Yan",
+            description: "Research Base",
             iconOption: "IconBuilding",
             purchaseResource: "silver",
             cost: BigInt(100000),
@@ -335,6 +340,11 @@ export const INITIAL_GAME_STATE: GameState = {
                 type: "producer",
                 stageId: "stage_2",
                 producerId: "yan_researcher",
+              },
+              {
+                type: "lock",
+                stageId: "stage_2",
+                unlockId: "establish_military_base",
               },
             ],
           },
