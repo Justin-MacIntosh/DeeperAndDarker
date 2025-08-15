@@ -20,7 +20,7 @@ export const INITIAL_GAME_STATE: GameState = {
       currentAmount: BigInt(0),
       amountPerSecond: BigInt(0),
     },
-    yan_might: {
+    yan_military_presence: {
       currentAmount: BigInt(0),
       amountPerSecond: BigInt(0),
     }
@@ -287,7 +287,7 @@ export const INITIAL_GAME_STATE: GameState = {
             purchaseResource: "personnel",
             baseCost: BigInt(1),
             baseRateOfCostIncrease: 1,
-            producedResource: "yan_might",
+            producedResource: "yan_military_presence",
             baseProduction: BigInt(5),
             color: "red",
           },
@@ -354,5 +354,9 @@ export const INITIAL_GAME_STATE: GameState = {
         },
       }
     }
+  },
+  tutorials: {
+    stage_selection: false,
+    settling_yan: false,
   }
 }

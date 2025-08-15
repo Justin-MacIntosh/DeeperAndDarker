@@ -32,10 +32,11 @@ export const useGameStore = create<
     purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => void;
     purchaseUpgrade: (stageId: string, upgradeId: string) => void;
     purchaseUnlock: (stageId: string, unlockableId: string) => void;
+    setTutorialSeen: (tutorialId: string) => void;
     updateTimeSaved: (timeSaved: number) => void;
     resetGame: () => void;
   }
->((set, get) => ({
+>((set, get, store) => ({
   ...LOADED_GAME_STATE,
 
   // Tick function to update resources based on time elapsed
@@ -340,6 +341,20 @@ export const useGameStore = create<
     });
   },
 
+  // Set a tutorial as seen
+  setTutorialSeen: (tutorialId: string) => {
+    const { tutorials } = get();
+
+    // Check if the tutorial exists in the state
+    const tutorial = tutorials[tutorialId];
+    if (tutorial === undefined) {
+      console.error(`Tutorial with ID ${tutorialId} not found.`);
+      return;
+    }
+  
+    set({ tutorials: { ...tutorials, [tutorialId]: true } });
+  },
+
   // Update the last time the game state was saved
   updateTimeSaved: (lastTimeSaved: number) => {
     set({ lastTimeSaved: lastTimeSaved });
@@ -347,6 +362,6 @@ export const useGameStore = create<
 
   // Reset the game state to the initial state
   resetGame: () => {
-    set({ ...INITIAL_GAME_STATE });
+    set(store.getInitialState())
   },
 }));

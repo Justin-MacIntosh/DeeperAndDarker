@@ -11,6 +11,9 @@ export interface GameState {
     }
   };
   offlineData?: OfflineData;
+  tutorials: {
+    [key: string]: boolean; // Keyed by Tutorial ID
+  };
   stages: {
     [key: string]: Stage; // Keyed by stage ID
   };

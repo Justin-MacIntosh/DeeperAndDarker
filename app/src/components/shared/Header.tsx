@@ -47,9 +47,9 @@ const StageTitle = ({ stageId }: { stageId: string }) => {
 /* Parent ResourceDisplay Component to wrap CurrentResourcesDisplay and ResourcesPerSecondDisplay */
 export const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
     return (
-      <div id="production-stats" className="min-w-[180px] text-right">
-        <CurrentResourcesDisplay resource={resourceId} />
-        <ResourcesPerSecondDisplay resource={resourceId} />
+      <div id={"production-stats-" + resourceId} className="min-w-[180px] text-right">
+        <CurrentResourcesDisplay resourceId={resourceId} />
+        <ResourcesPerSecondDisplay resourceId={resourceId} />
       </div>
     );
 }
@@ -58,18 +58,18 @@ export const ResourceDisplay = ({ resourceId }: { resourceId: string }) => {
  * CurrentResourcesDisplay and ResourcesPerSecondDisplay components display the
  * current resources and resources per second respectively.
  */
-export const CurrentResourcesDisplay = ({ resource }: { resource: string }) => {
+export const CurrentResourcesDisplay = ({ resourceId }: { resourceId: string }) => {
   // console.log("CurrentResourcesDisplay render");
-  const currentResources = useGameStore((state) => state.resources[resource].currentAmount);
+  const currentResources = useGameStore((state) => state.resources[resourceId].currentAmount);
   return (
-    <h1 className="text-3xl font-bold">
-      {formatNumber(currentResources)}<ResourceIcon resource={resource} size={30}/>
+    <h1 id={"current-resources-" + resourceId} className="text-3xl font-bold">
+      {formatNumber(currentResources)}<ResourceIcon resource={resourceId} size={30}/>
     </h1>
   );
 };
-const ResourcesPerSecondDisplay = ({ resource }: { resource: string }) => {
+const ResourcesPerSecondDisplay = ({ resourceId }: { resourceId: string }) => {
   // console.log("ResourcesPerSecondDisplay render");  
-  const resourcesPerSecond = useGameStore((state) => state.resources[resource].amountPerSecond);
+  const resourcesPerSecond = useGameStore((state) => state.resources[resourceId].amountPerSecond);
 
   if (resourcesPerSecond === BigInt(0)) {
     return null; // Don't display if there are no resources per second
@@ -77,7 +77,7 @@ const ResourcesPerSecondDisplay = ({ resource }: { resource: string }) => {
 
   return (
     <h3 className="text-lg">
-      {formatNumber(resourcesPerSecond)}<ResourceIcon resource={resource} size={18}/>/sec
+      {formatNumber(resourcesPerSecond)}<ResourceIcon resource={resourceId} size={18}/>/sec
     </h3>
   );
 };

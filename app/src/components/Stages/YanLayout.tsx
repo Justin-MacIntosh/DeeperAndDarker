@@ -2,6 +2,8 @@ import { memo } from 'react';
 
 import { AnimatePresence, motion } from "motion/react";
 import { useShallow } from 'zustand/react/shallow';
+import { CallBackProps, Joyride, TooltipRenderProps } from 'react-joyride';
+import clsx from 'clsx';
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import ProducerCard from '../shared/ProducerCard';
@@ -9,7 +11,7 @@ import UnlockCard from '../shared/UnlockCard';
 import Footer from '../shared/Footer';
 import Header, { CurrentResourcesDisplay } from '../shared/Header';
 import { useGameStore } from '../../game_state/GameStore';
-import { Joyride, TooltipRenderProps } from 'react-joyride';
+import ResourceContainer from '../shared/ResourceContainer';
 
 
 const settlingYanTutorialSteps = [
@@ -48,11 +50,22 @@ const settlingYanTutorialSteps = [
     disableBeacon: true,
     placement: "left" as "left",
   },
+  {
+    target: '#current-resources-personnel',
+    title: "Settling Planet Yan",
+    content: (
+      <>
+        <p>You will only have so many personnel to spend when you arrive on the Planet.</p>
+        <p>So choose wisely!</p>
+      </>
+    ),
+    disableBeacon: true,
+    placement: "bottom" as "bottom",
+  },
 ];
 
 function CustomTooltip(props: TooltipRenderProps) {
-    const { index, size, step, tooltipProps } = props;
-
+  const { index, size, step, tooltipProps } = props;
   return (
     <div className="bg-gray-800 p-5 border-gray-300 border-solid border-2 rounded-xl" {...tooltipProps}>
       {step.title && <h4 className="underline text-2xl">{step.title} ({index + 1} of {size})</h4>}
@@ -61,18 +74,31 @@ function CustomTooltip(props: TooltipRenderProps) {
   );
 }
 
-
 const YanLayout = (
   { saveCurrentGameData }:
   { saveCurrentGameData: () => void}
 ) => {
+  const yanTutorialSeen = useGameStore((state) => state.tutorials["settling_yan"]);
+  const setTutorialSeen = useGameStore((state) => state.setTutorialSeen);
+
+  const handleJoyrideCallback = (data: CallBackProps, tutorialId: string) => {
+    const { action, lifecycle, type } = data;
+    if (type === 'tour:status' && action === 'reset' && lifecycle === 'complete') {
+      setTutorialSeen(tutorialId);
+    }
+  };
+
   return (
-    <main id="planet-yan-main" className="absolute top-0 w-full mouse-affected-bg bg-bg min-h-screen min-w-[1100px]" data-theme="planet-yan">
+    <main
+      id="planet-yan-main"
+      className="absolute top-0 w-full mouse-affected-bg bg-bg min-h-screen min-w-[1100px]"
+      data-theme="planet-yan"
+    >
       <Joyride
-        run={true}
+        run={!yanTutorialSeen}
         steps={settlingYanTutorialSteps}
+        callback={(data) => {handleJoyrideCallback(data, "settling_yan")}}
         tooltipComponent={CustomTooltip}
-        
         styles={{
           options: {
             arrowColor: 'rgb(209 213 219 / var(--tw-border-opacity, 1))',
@@ -82,15 +108,20 @@ const YanLayout = (
       <Header stageId="stage_2" displayResources={true} />
       <div className="justify-items-center">
         <div
-          id="main"
+          id="yan-grid"
           className="
             p-5 mx-10 bg-primary
             border-gray-300 border-solid border-2 rounded-xl
-            grid grid-cols-[min-content_min-content] transition-all duration-75"
+            grid grid-cols-[max-content_min-content]"
         >
           <div
-            id="yan-content"
-            className="rounded-xl flex flex-col 2xl:flex-row"
+            id="yan-resource-containers"
+            className={clsx(
+              "max-w-[1250px] rounded-xl",
+              "flex flex-wrap flex-col 2xl:flex-row",
+              "mt-[-1.5rem] mr-[-1.5rem] justify-center",
+              "[&:has(>div)+div]:ml-6" // Apply margin to sidebar if it exists
+            )}
           >
             <ResearchDisplay />
             <MightDisplay />
@@ -105,68 +136,27 @@ const YanLayout = (
 
 const MightDisplay = () => {
   const isYanMightActive = useGameStore((state) => state.stages["stage_2"].producers["yan_soldier"].dynamic.isActive);
-
   return (
-    <AnimatePresence initial={false}>
-      {
-      isYanMightActive &&
-        <motion.div
-          key={"yan_might"}
-          variants={containerVariant}
-          className='origin-top overflow-hidden text-nowrap mr-6'
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          <div
-            id="yan-might-container"
-            className="min-w-[600px] flex-1 flex flex-col rounded-xl gap-3 p-4 bg-secondary"
-          >
-            <div className="flex flex-row justify-between items-center">
-              <h3 className="uppercase text-2xl">Military Presence <ResourceIcon resource="yan_might" size={24} /></h3>
-              <CurrentResourcesDisplay resource="yan_might"/>
-            </div>
-            <ProducerCard producerId="yan_soldier" stageId="stage_2" numToPurchaseOption={1}/>
-          </div>
-        </motion.div>
-      }
-    </AnimatePresence>
+    <ResourceContainer show={isYanMightActive} keyPrefix="yan_mil_presence">
+      <div className="flex flex-row justify-between items-center">
+        <h3 className="uppercase text-2xl">Military Presence <ResourceIcon resource="yan_military_presence" size={24} /></h3>
+        <CurrentResourcesDisplay resourceId="yan_military_presence"/>
+      </div>
+      <ProducerCard producerId="yan_soldier" stageId="stage_2" numToPurchaseOption={1}/>
+    </ResourceContainer>
   );
-};
-
-const containerVariant = {
-  initial: { opacity: 0, scale: 0, width: 0 },
-  animate: { opacity: 1, scale: 1, width: "600px", transition: { when: "beforeChildren", duration: .6 } },
-  exit: { opacity: 0, scale: 0, width: 0, marginLeft: 0, transition: { when: "afterChildren", staggerChildren: .1, duration: .8 } }
 };
 
 const ResearchDisplay = () => {
   const isYanResearchActive = useGameStore((state) => state.stages["stage_2"].producers["yan_researcher"].dynamic.isActive);
-
   return (
-    <AnimatePresence initial={false} mode="wait">
-      {
-      isYanResearchActive &&
-        <motion.div
-          key={"yan_research"}
-          variants={containerVariant}
-          className='origin-top overflow-hidden text-nowrap mr-6'
-          initial="initial"
-          animate="animate"
-        >
-          <div
-            id="yan-research-container"
-            className="min-w-[600px] flex-1 flex flex-col rounded-xl gap-3 p-4 bg-secondary"
-          >
-            <div className="flex flex-row justify-between items-center">
-              <h3 className="uppercase text-2xl">Planet Yan Research <ResourceIcon resource="yan_research" size={24} /></h3>
-              <CurrentResourcesDisplay resource="yan_research"/>
-            </div>
-            <ProducerCard producerId="yan_researcher" stageId="stage_2" numToPurchaseOption={1}/>
-          </div>
-        </motion.div>
-      }
-    </AnimatePresence>
+    <ResourceContainer show={isYanResearchActive} keyPrefix="yan_research">
+      <div className="flex flex-row justify-between items-center">
+        <h3 className="uppercase text-2xl">Planet Yan Research <ResourceIcon resource="yan_research" size={24} /></h3>
+        <CurrentResourcesDisplay resourceId="yan_research"/>
+      </div>
+      <ProducerCard producerId="yan_researcher" stageId="stage_2" numToPurchaseOption={1}/>
+    </ResourceContainer>
   );
 };
 
@@ -187,9 +177,9 @@ const UnlockSidebar = memo(({ stageId }: { stageId: string }) => {
         <motion.div
           id="planet-yan-unlocks"
           transition={{ duration: .5 }}
-          initial={{ opacity: 0, scale: 0, width: 0 }}
-          animate={{ opacity: 1, scale: 1, width: "400px" }}
-          exit={{ opacity: 0, scale: 0, width: 0, margin: 0 }}
+          initial={{ opacity: 0, scale: 0, width: 0, height: 0 }}
+          animate={{ opacity: 1, scale: 1, width: "400px", height: "auto" }}
+          exit={{ opacity: 0, scale: 0, width: 0, margin: 0, height: 0 }}
           className='w-[400px] origin-top text-nowrap'
         >
           <div className="flex flex-row justify-between items-center mb-3">
@@ -198,13 +188,7 @@ const UnlockSidebar = memo(({ stageId }: { stageId: string }) => {
           <div className="flex flex-col">
             {unlockIds.map(
               (unlockId) => {
-                return (
-                  <UnlockCard
-                    key={unlockId}
-                    unlockId={unlockId}
-                    stageId={stageId}
-                  />
-                )
+                return <UnlockCard key={unlockId} unlockId={unlockId} stageId={stageId}/>;
               }
             )}
           </div>

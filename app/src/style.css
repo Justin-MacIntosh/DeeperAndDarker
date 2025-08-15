@@ -63,8 +63,8 @@
   main[data-theme='planet-yan'] {
     --color-background: #181D27;
     --color-primary: #254D32;
-    --color-secondary: #3A7D44;
-    --color-accent: #69B578;
+    --color-secondary: #46754f;
+    --color-accent: #6d9966;
   }
 
   /* body[data-theme='planet-yan'] {
@@ -100,8 +100,7 @@ body {
   color: #eee;
 }
 
-
-@keyframes fadeIn {
+@keyframes stageFadeIn {
   0% {
     opacity: 0;
   }
@@ -109,7 +108,7 @@ body {
     opacity: 1;
   }
 }
-@keyframes fadeOut {
+@keyframes stageFadeOut {
   0% {
     opacity: 1;
   }
@@ -117,8 +116,3 @@ body {
     opacity: 0;
   }
 }
-
-
-div#braxios-content + div {
-  margin-left: 1.5rem;
-} 

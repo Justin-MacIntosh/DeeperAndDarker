@@ -5,8 +5,8 @@ import {
   DialogPanel, DialogTitle
 } from '@headlessui/react'
 
-import { useGameStore } from './game_state/GameStore';
-import { formatNumber } from './helpers/formatNumber';
+import { useGameStore } from '../../game_state/GameStore';
+import { formatNumber } from '../../helpers/formatNumber';
 
 const OfflineEarningsDialog = memo(() => {
   const timeOfflineData = useGameStore((state) => state.offlineData);
@@ -33,6 +33,8 @@ const OfflineEarningsDialog = memo(() => {
             earned:
             <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['copper'])} copper</li>
             <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['silver'])} silver</li>
+            <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['yan_military_presence'])} Military Might (Planet Yan)</li>
+            <li className="ml-2">{formatNumber(timeOfflineData.resourcesEarned['yan_research'])} Research (Planet Yan)</li>
           </Description>
         </DialogPanel>
       </div>

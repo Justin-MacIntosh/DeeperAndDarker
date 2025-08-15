@@ -1,8 +1,9 @@
 import { useState } from 'react';
 
 import Drawer from 'react-modern-drawer'
-import { useGameStore } from './game_state/GameStore';
 import { useShallow } from 'zustand/react/shallow';
+
+import { useGameStore } from '../../game_state/GameStore';
 
 
 // GlobalDrawer component that provides a navigation drawer for stage selection

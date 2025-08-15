@@ -1,13 +1,15 @@
 import { ReactNode, useEffect, useState } from 'react';
-import 'react-modern-drawer/dist/index.css'
+
+import clsx from 'clsx';
 
 import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 import BraxiosLayout from './components/Stages/BraxiosLayout';
 import YanLayout from './components/Stages/YanLayout';
-import GlobalDrawer from './GlobalDrawer';
-import OfflineEarningsDialog from './OfflineEarningsDialog';
-import clsx from 'clsx';
+import GlobalDrawer from './components/global/GlobalDrawer';
+import OfflineEarningsDialog from './components/global/OfflineEarningsDialog';
+
+import 'react-modern-drawer/dist/index.css'
 
 
 const Fade = ({ children, show, onShowCallback }: {children: ReactNode, show: boolean, onShowCallback: () => void}) => {
@@ -33,7 +35,7 @@ const Fade = ({ children, show, onShowCallback }: {children: ReactNode, show: bo
     shouldRender ? (
       <div
         className={clsx(opacityClasses)}
-        style={{ animation: `${show ? "fadeIn" : "fadeOut"} .5s` }}
+        style={{ animation: `${show ? "stageFadeIn" : "stageFadeOut"} .5s` }}
         onAnimationEnd={onAnimationEnd}
       >
         {children}
