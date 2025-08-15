@@ -3,24 +3,25 @@ import { create } from 'zustand';
 import { loadGameState } from './stateStorageHelpers';
 import { INITIAL_GAME_STATE } from './InitialGameState';
 import { GameState } from './types';
+import { calculatePriceForMultiplePurchases } from './state_helpers/producerHelpers';
+import { updateStateForUpgradePurchase } from './state_helpers/upgradeHelpers';
+import { recalculateResourceProduction } from './state_helpers/resourceHelpers';
+import { multiplyBigIntByNumber } from '../number_helpers/bigIntUtils';
 import {
-  calculatePriceForMultiplePurchases,
-  recalculateResourceProduction
-} from '../helpers/producerStateHelpers';
-
-var Fraction = require('fractional').Fraction;
+  updateProducerInStages, updateUpgradeInStages, updateUnlockInStages
+} from './state_helpers/spreadHelpers';
 
 const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
-function measureTime<T extends (...args: any[]) => any>(fn: T, actionName: string): T {
-  return ((...args: any[]) => {
-    const start = performance.now();
-    const result = fn(...args);
-    const end = performance.now();
-    console.log(`${actionName} took ${end - start}ms`);
-    return result;
-  }) as T;
-}
+// function measureTime<T extends (...args: any[]) => any>(fn: T, actionName: string): T {
+//   return ((...args: any[]) => {
+//     const start = performance.now();
+//     const result = fn(...args);
+//     const end = performance.now();
+//     console.log(`${actionName} took ${end - start}ms`);
+//     return result;
+//   }) as T;
+// }
 
 /**
  * Game Store using Zustand for state management.
@@ -40,28 +41,23 @@ export const useGameStore = create<
   ...LOADED_GAME_STATE,
 
   // Tick function to update resources based on time elapsed
-  tick:
-    (milliseconds: number) => {
-      const { resources } = get();
+  tick: (milliseconds: number) => {
+    const { resources } = get();
 
-      const updatedResources: {
-        [key: string]: { currentAmount: bigint; amountPerSecond: bigint }
-      } = {};
+    const updatedResources: {
+      [key: string]: { currentAmount: bigint; amountPerSecond: bigint }
+    } = {};
 
-      for (const resourceKey in resources) {
-        const resource = resources[resourceKey];
-        const updatedAmount = resource.currentAmount + (
-          (resource.amountPerSecond * BigInt(milliseconds)) / BigInt(1000)
-        );
-        updatedResources[resourceKey] = { ...resource, currentAmount: updatedAmount };
-      }
+    for (const resourceKey in resources) {
+      const resource = resources[resourceKey];
+      const updatedAmount = resource.currentAmount + (
+        (resource.amountPerSecond * BigInt(milliseconds)) / BigInt(1000)
+      );
+      updatedResources[resourceKey] = { ...resource, currentAmount: updatedAmount };
+    }
 
-      set({ resources: updatedResources });
-    },
-
-
-  //  'tick'
-  // ),
+    set({ resources: updatedResources });
+  },
 
   // Purchase a producer by its ID and quantity
   purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => {
@@ -96,22 +92,11 @@ export const useGameStore = create<
     }
 
     // Update the producer count in the stage
-    const updatedStages = {
-      ...stages,
-      [stageId]: {
-        ...stage,
-        producers: {
-          ...stage.producers,
-          [producerId]: {
-            ...producerToBuy,
-            dynamic: {
-              ...producerToBuy.dynamic,
-              count: producerToBuy.dynamic.count + numToPurchase,
-            }
-          },
-        },
-      },
-    };
+    let updatedStages = { ...stages };
+    updatedStages = updateProducerInStages(
+      updatedStages, stageId, producerId,
+      { ...producerToBuy, dynamic: { ...producerToBuy.dynamic, count: producerToBuy.dynamic.count + numToPurchase } }
+    );
 
     // Update resource counts and production rates
     const updatedResources = { ...resources };
@@ -126,10 +111,7 @@ export const useGameStore = create<
       };
     }
 
-    set({
-      resources: updatedResources,
-      stages: updatedStages,
-    });
+    set({ resources: updatedResources, stages: updatedStages });
   },
 
   // Purchase a producer by its ID and quantity
@@ -151,65 +133,34 @@ export const useGameStore = create<
     }
     const purchaseResource = upgradeToBuy.static.purchaseResource;
 
-    const costIncreaseFraction = new Fraction(upgradeToBuy.static.baseRateOfCostIncrease ** (upgradeToBuy.dynamic.count));
-    const currentCost = (
-      upgradeToBuy.static.baseCost *
-      BigInt(costIncreaseFraction.numerator)
-    ) / BigInt(costIncreaseFraction.denominator);
-
-    if (resources[purchaseResource].currentAmount < currentCost) {
+    // Check if the player has enough resources to purchase the upgrade
+    const currentUpgradeCost = multiplyBigIntByNumber(
+      upgradeToBuy.static.baseCost,
+      upgradeToBuy.static.baseRateOfCostIncrease ** (upgradeToBuy.dynamic.count)
+    );
+    if (resources[purchaseResource].currentAmount < currentUpgradeCost) {
       console.error(`Not enough ${purchaseResource} to buy upgrade with ID ${upgradeId}.`);
       return;
     }
 
+    // Update the upgrade count in the stage
     const newCount = upgradeToBuy.dynamic.count + 1;
-    const updatedStages = {
-      ...stages,
-      [stageId]: {
-        ...stage,
-        upgrades: {
-          ...stage.upgrades,
-          [upgradeId]: {
-            ...upgradeToBuy,
-            dynamic: {
-              ...upgradeToBuy.dynamic,
-              count: newCount,
-            }
-          },
-        },
-      },
-    };
-    const updatedResources = { ...resources };
+    let updatedStages = { ...stages};
+    updatedStages = updateUpgradeInStages(
+      updatedStages, stageId, upgradeId,
+      { ...upgradeToBuy, dynamic: { ...upgradeToBuy.dynamic, count: newCount, } }
+    );
 
-    // Calculate effect on producers
-    const effect = upgradeToBuy.static.effect;
-    for (const { stageId, producerId } of effect.producersEffected) {
-      const producer = updatedStages[stageId].producers[producerId];
-      if (effect.type === "productionMultiplier") {
-        if (effect.multiplier.type === "log") {
-          // TODO: bad, only accounts for htis one upgrade, and mutates
-          const logMultiplier = Math.log(newCount) / Math.log(effect.multiplier.logBase) + effect.multiplier.flatAddition;
-          producer.dynamic.productionMultiplier = logMultiplier;
-        } else if (effect.multiplier.type === "flat") {
-          // TODO: bad, only accounts for htis one upgrade, and mutates
-          producer.dynamic.productionMultiplier = Math.pow(effect.multiplier.multiplierAmount, newCount);
-        }
+    let updatedResources = { ...resources };
 
-        updatedResources[producer.static.producedResource] = {
-          ...updatedResources[producer.static.producedResource],
-          amountPerSecond: recalculateResourceProduction(updatedStages, producer.static.producedResource),
-        };
-      } else if (effect.type === "costReduction") {
-        // TODO: bad, fix using spread operator to avoid mutating state directly
-        producer.dynamic.costReductionMultiplier *= effect.multiplierAmount;
-      }
-    }
-
+    // Deduct the cost of the upgrade from the resources
     updatedResources[purchaseResource] = {
       ...updatedResources[purchaseResource],
-      currentAmount: updatedResources[purchaseResource].currentAmount - currentCost,
+      currentAmount: updatedResources[purchaseResource].currentAmount - currentUpgradeCost,
     };
 
+    // Update the stages and resources based on the impact of the upgrade
+    [ updatedStages, updatedResources ] = updateStateForUpgradePurchase(updatedStages, updatedResources, stageId, upgradeId);
     set({ resources: updatedResources, stages: updatedStages });
   },
 
@@ -242,20 +193,12 @@ export const useGameStore = create<
       currentAmount: updatedResources[purchaseResource].currentAmount - unlockableToBuy.static.cost,
     };
 
-    const updatedStages = { ...stages };
-    updatedStages[stageId] = {
-      ...stage,
-      unlocks: {
-        ...stage.unlocks,
-        [unlockableId]: {
-          ...unlockableToBuy,
-          dynamic: {
-            ...unlockableToBuy.dynamic,
-            isActive: false,
-          }
-        },
-      },
-    };
+    // Update the unlockable state in the stages
+    let updatedStages = { ...stages };
+    updatedStages = updateUnlockInStages(
+      updatedStages, stageId, unlockableId,
+      { ...unlockableToBuy, dynamic: { ...unlockableToBuy.dynamic, isActive: false, } }
+    );
 
     for (const unlock of unlockableToBuy.static.unlocks) {
       switch (unlock.type) {
@@ -266,89 +209,42 @@ export const useGameStore = create<
           };
           break;
         case "producer":
-          updatedStages[unlock.stageId] = {
-            ...updatedStages[unlock.stageId],
-            producers: {
-              ...updatedStages[unlock.stageId].producers,
-              [unlock.producerId]: {
-                ...updatedStages[unlock.stageId].producers[unlock.producerId],
-                dynamic: {
-                  ...updatedStages[unlock.stageId].producers[unlock.producerId].dynamic,
-                  isActive: true,
-                },
-              },
-            },
-          };
+          const producer = updatedStages[unlock.stageId].producers[unlock.producerId];
+          updatedStages = updateProducerInStages(
+            updatedStages, unlock.stageId, unlock.producerId,
+            { ...producer, dynamic: { ...producer.dynamic, isActive: true, } }
+          );
           break;
         case "upgrade":
-          updatedStages[unlock.stageId] = {
-            ...updatedStages[unlock.stageId],
-            upgrades: {
-              ...updatedStages[unlock.stageId].upgrades,
-              [unlock.upgradeId]: {
-                ...updatedStages[unlock.stageId].upgrades[unlock.upgradeId],
-                dynamic: {
-                  ...updatedStages[unlock.stageId].upgrades[unlock.upgradeId].dynamic,
-                  isActive: true,
-                },
-              },
-            },
-          };
-          break;
-        case "buff":
-          updatedStages[unlock.stageId] = {
-            ...updatedStages[unlock.stageId],
-            buffs: {
-              ...updatedStages[unlock.stageId].buffs,
-              [unlock.buffId]: {
-                ...updatedStages[unlock.stageId].buffs[unlock.buffId],
-                dynamic: {
-                  ...updatedStages[unlock.stageId].buffs[unlock.buffId].dynamic,
-                  isActive: true,
-                },
-              },
-            },
-          };
+          const upgrade = updatedStages[unlock.stageId].upgrades[unlock.upgradeId];
+          updatedStages = updateUpgradeInStages(
+            updatedStages, unlock.stageId, unlock.upgradeId,
+            { ...upgrade, dynamic: { ...upgrade.dynamic, isActive: true, } }
+          );
           break;
         case "unlock":
-          updatedStages[unlock.stageId] = {
-            ...updatedStages[unlock.stageId],
-            unlocks: {
-              ...updatedStages[unlock.stageId].unlocks,
-              [unlock.unlockId]: {
-                ...updatedStages[unlock.stageId].unlocks[unlock.unlockId],
-                dynamic: {
-                  ...updatedStages[unlock.stageId].unlocks[unlock.unlockId].dynamic,
-                  isActive: true,
-                },
-              },
-            },
-          };
+          const unlockableToBeUnlocked = updatedStages[unlock.stageId].unlocks[unlock.unlockId];
+          updatedStages = updateUnlockInStages(
+            updatedStages, unlock.stageId, unlock.unlockId,
+            { ...unlockableToBeUnlocked, dynamic: { ...unlockableToBeUnlocked.dynamic, isActive: true, } }
+          );
           break;
         case "lock":
-          updatedStages[unlock.stageId] = {
-            ...updatedStages[unlock.stageId],
-            unlocks: {
-              ...updatedStages[unlock.stageId].unlocks,
-              [unlock.unlockId]: {
-                ...updatedStages[unlock.stageId].unlocks[unlock.unlockId],
-                dynamic: {
-                  ...updatedStages[unlock.stageId].unlocks[unlock.unlockId].dynamic,
-                  isActive: false,
-                },
-              },
-            },
-          };
+          const unlockableToBeLocked = updatedStages[unlock.stageId].unlocks[unlock.unlockId];
+          updatedStages = updateUnlockInStages(
+            updatedStages, unlock.stageId, unlock.unlockId,
+            { ...unlockableToBeLocked, dynamic: { ...unlockableToBeLocked.dynamic, isActive: false, } }
+          );
+          break;
+        case "buff":
+          // TODO
           break;
         default:
           break;
       }
     }
 
-    set({
-      resources: updatedResources,
-      stages: updatedStages,
-    });
+    set({ resources: updatedResources, stages: updatedStages });
   },
 
   // Set a tutorial as seen

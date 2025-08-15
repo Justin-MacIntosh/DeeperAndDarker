@@ -6,7 +6,7 @@ import {
 } from '@headlessui/react'
 
 import { useGameStore } from '../../game_state/GameStore';
-import { formatNumber } from '../../helpers/formatNumber';
+import { formatNumber } from '../../number_helpers/formatNumber';
 
 const OfflineEarningsDialog = memo(() => {
   const timeOfflineData = useGameStore((state) => state.offlineData);

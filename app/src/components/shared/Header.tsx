@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/react/shallow'
 
 import ResourceIcon from '../../icons/ResourceIcon';
 import { useGameStore } from '../../game_state/GameStore';
-import { formatNumber } from '../../helpers/formatNumber';
+import { formatNumber } from '../../number_helpers/formatNumber';
 
 /* Header component displays the Stage's details title and current production statistics. */
 const Header = memo(({ stageId, displayResources }: { stageId: string; displayResources: boolean }) => {

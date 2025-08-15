@@ -6,7 +6,7 @@ import SidebarCard from './Card';
 
 import { Unlockable } from '../../game_state/types';
 import { useGameStore } from '../../game_state/GameStore';
-import { formatNumber } from '../../helpers/formatNumber';
+import { formatNumber } from '../../number_helpers/formatNumber';
 import TablerIconDisplay from '../../icons/TablerIconDisplay';
 
 
