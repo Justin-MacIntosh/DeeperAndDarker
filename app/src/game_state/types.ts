@@ -100,12 +100,22 @@ export interface Buff {
 }
 interface ProductionMultiplier {
   type: "productionMultiplier";
-  multiplierAmount: number;
+  multiplier: FlatMultiplier | LogMultiplier;
   producersEffected: Array<{
     stageId: string;
     producerId: string;
   }>,
 }
+interface FlatMultiplier {
+  type: "flat";
+  multiplierAmount: number;
+}
+interface LogMultiplier {
+  type: "log";
+  logBase: number;
+  flatAddition: number;
+}
+
 interface CostReducer {
   type: "costReduction";
   multiplierAmount: number;

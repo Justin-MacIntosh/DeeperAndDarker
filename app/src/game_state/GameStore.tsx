@@ -119,10 +119,12 @@ export const useGameStore = create<
       ...updatedResources[purchaseResource],
       currentAmount: updatedResources[purchaseResource].currentAmount - currentCost,
     };
-    updatedResources[producedResource] = {
-      ...updatedResources[producedResource],
-      amountPerSecond: recalculateResourceProduction(updatedStages, producedResource),
-    };
+    if (producedResource) {
+      updatedResources[producedResource] = {
+        ...updatedResources[producedResource],
+        amountPerSecond: recalculateResourceProduction(updatedStages, producedResource),
+      };
+    }
 
     set({
       resources: updatedResources,
@@ -160,6 +162,7 @@ export const useGameStore = create<
       return;
     }
 
+    const newCount = upgradeToBuy.dynamic.count + 1;
     const updatedStages = {
       ...stages,
       [stageId]: {
@@ -170,7 +173,7 @@ export const useGameStore = create<
             ...upgradeToBuy,
             dynamic: {
               ...upgradeToBuy.dynamic,
-              count: upgradeToBuy.dynamic.count + 1,
+              count: newCount,
             }
           },
         },
@@ -181,16 +184,23 @@ export const useGameStore = create<
     // Calculate effect on producers
     const effect = upgradeToBuy.static.effect;
     for (const { stageId, producerId } of effect.producersEffected) {
-      // TODO: fix using spread operator to avoid mutating state directly
       const producer = updatedStages[stageId].producers[producerId];
       if (effect.type === "productionMultiplier") {
-        producer.dynamic.productionMultiplier *= effect.multiplierAmount;
+        if (effect.multiplier.type === "log") {
+          // TODO: bad, only accounts for htis one upgrade, and mutates
+          const logMultiplier = Math.log(newCount) / Math.log(effect.multiplier.logBase) + effect.multiplier.flatAddition;
+          producer.dynamic.productionMultiplier = logMultiplier;
+        } else if (effect.multiplier.type === "flat") {
+          // TODO: bad, only accounts for htis one upgrade, and mutates
+          producer.dynamic.productionMultiplier = Math.pow(effect.multiplier.multiplierAmount, newCount);
+        }
+
         updatedResources[producer.static.producedResource] = {
           ...updatedResources[producer.static.producedResource],
           amountPerSecond: recalculateResourceProduction(updatedStages, producer.static.producedResource),
         };
       } else if (effect.type === "costReduction") {
-      // TODO: fix using spread operator to avoid mutating state directly
+        // TODO: bad, fix using spread operator to avoid mutating state directly
         producer.dynamic.costReductionMultiplier *= effect.multiplierAmount;
       }
     }

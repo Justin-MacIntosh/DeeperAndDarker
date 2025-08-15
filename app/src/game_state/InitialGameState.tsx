@@ -76,7 +76,10 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "productionMultiplier",
-              multiplierAmount: 1.4,
+              multiplier: {
+                type: "flat",
+                multiplierAmount: 1.4
+              },
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -125,7 +128,10 @@ export const INITIAL_GAME_STATE: GameState = {
           static: {
             effect: {
               type: "productionMultiplier",
-              multiplierAmount: 1.4,
+              multiplier: {
+                type: "flat",
+                multiplierAmount: 1.4
+              },
               producersEffected: [
                 {
                   stageId: "stage_1",
@@ -171,32 +177,7 @@ export const INITIAL_GAME_STATE: GameState = {
           }
         },
       },
-      buffs: {
-        mnr_n1_supercharge: {
-          static: {
-            effect: {
-              type: "productionMultiplier",
-              multiplierAmount: 5,
-              producersEffected: [
-                {
-                  stageId: "stage_1",
-                  producerId: "mnr_n1",
-                }
-              ],
-            },
-            name: "MNR-N1 Supercharge",
-            description: "Increases MNR-N1 Production by 500%",
-            iconOption: "IconBolt",
-            resourceToPurchase: "copper",
-            cost: BigInt(100000),
-            duration: 30,
-          },
-          dynamic: {
-            isActive: true,
-            isBuffing: false,
-          },
-        }
-      },
+      buffs: {},
       unlocks: {
         silver_production: {
           static: {
