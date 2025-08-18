@@ -7,29 +7,26 @@ const resourceContainerVariant = {
     opacity: 0,
     scale: 0,
     width: 0,
-    height: 0
   },
   animate: {
     opacity: 1,
     scale: 1,
     width: "600px",
-    height: "auto",
     transition: {
       when: "beforeChildren",
       staggerChildren: 0.1,
-      duration: 0.8
+      duration: .8
     },
   },
   exit: {
     opacity: 0,
     scale: 0,
     width: 0,
-    height: 0,
     margin: 0,
     transition: {
       when: "afterChildren",
       staggerChildren: 0.1,
-      duration: 0.8
+      duration: .8
     },
   },
 };
@@ -44,6 +41,7 @@ const ResourceContainer = (
       show &&
         <motion.div
           key={keyPrefix + "_resource_container"}
+          id={keyPrefix + "_resource_container"}
           variants={resourceContainerVariant}
           className='origin-top overflow-hidden text-nowrap mr-6 mt-6'
           initial="initial"

@@ -64,7 +64,7 @@ export const ProducerCard = memo(
         key={props.stageId + " " + props.producerId}
         variants={producerCardVariant}
         transition={{ duration: .5 }}
-        className='mb-2 origin-top'
+        className='origin-top'
       >
         <div className="text-lg flex flex-row mb-2">
           <h2 className="uppercase flex-1">

@@ -298,6 +298,11 @@ export const INITIAL_GAME_STATE: GameState = {
                 producerId: "yan_soldier",
               },
               {
+                type: "unlock",
+                stageId: "stage_2",
+                unlockId: "forest_expeditions",
+              },
+              {
                 type: "lock",
                 stageId: "stage_2",
                 unlockId: "establish_research_base",
@@ -306,6 +311,40 @@ export const INITIAL_GAME_STATE: GameState = {
           },
           dynamic: {
             isActive: true,
+          }
+        },
+        forest_expeditions: {
+          static: {
+            name: "Woodland Expeditions",
+            description: "Begin sending expeditions into the Yan forests",
+            iconOption: "IconBuilding",
+            purchaseResource: "yan_military_presence",
+            cost: BigInt(100),
+            color: "red",
+            unlocks: [
+              {
+                type: "unlock",
+                stageId: "stage_2",
+                unlockId: "undergound_expeditions",
+              },
+            ],
+          },
+          dynamic: {
+            isActive: false,
+          }
+        },
+        undergound_expeditions: {
+          static: {
+            name: "Underground Expeditions",
+            description: "Begin sending expeditions into the Yan cave systems",
+            iconOption: "IconBuilding",
+            purchaseResource: "yan_military_presence",
+            cost: BigInt(100000),
+            color: "red",
+            unlocks: [],
+          },
+          dynamic: {
+            isActive: false,
           }
         },
         establish_research_base: {

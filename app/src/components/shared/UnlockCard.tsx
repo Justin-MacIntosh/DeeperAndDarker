@@ -36,9 +36,9 @@ const UnlockCard = memo(
           <motion.div
             transition={{ duration: .8 }}
             initial={{ opacity: 0, scale: 0, height: 0 }}
-            animate={{ opacity: 1, scale: 1, height: "111px" }}
-            exit={{ opacity: 0, scale: 0, height: 0, margin: 0 }}
-            className='mb-5 origin-top'
+            animate={{ opacity: 1, scale: 1, height: "111px", transition: { duration: .8 } }}
+            exit={{ opacity: 0, scale: 0, height: 0, margin: 0, transition: { duration: .8 } }}
+            className='[&:not(:last-child)]:mb-5 origin-top'
           >
             <div className="text-lg flex flex-row mb-2">
               <h2 className="uppercase flex-1">

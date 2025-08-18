@@ -116,3 +116,7 @@ body {
     opacity: 0;
   }
 }
+
+#yan_mil_presence_container {
+  interpolate-size: allow-keywords;
+}
