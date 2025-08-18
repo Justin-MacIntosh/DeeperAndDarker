@@ -1,7 +1,9 @@
 import { GameState } from "./types";
 
+export const CURRENT_ACCEPTED_VERSION = "0.0.01";
 
 export const INITIAL_GAME_STATE: GameState = {
+  version: CURRENT_ACCEPTED_VERSION,
   lastTimeSaved: 0,
   resources: {
     copper: {

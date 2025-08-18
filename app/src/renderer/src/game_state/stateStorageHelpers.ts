@@ -1,3 +1,4 @@
+import { CURRENT_ACCEPTED_VERSION } from './InitialGameState';
 import { GameState } from './types';
 
 const GAME_STATE_KEY = 'planet_cracker_game_state';
@@ -39,6 +40,11 @@ export const loadGameState = (): GameState | null => {
   // Parse the JSON and calculate offline data
   const parsedState = JSON.parse(savedState, bigIntReviver) as GameState;
   console.log("Parsed game state:", parsedState);
+
+  if (parsedState.version !== CURRENT_ACCEPTED_VERSION) {
+    console.warn(`Incompatible game state version: ${parsedState.version}. Expected: ${CURRENT_ACCEPTED_VERSION}. Resetting game state.`);
+    return null;
+  }
 
   const timeElapsed = Date.now() - parsedState.lastTimeSaved;
 

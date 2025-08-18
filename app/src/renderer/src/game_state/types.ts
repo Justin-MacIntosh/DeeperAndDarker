@@ -3,6 +3,7 @@ import { IconOption } from '../icons/types';
 
 /* GameState typing */
 export interface GameState {
+  version: string; // Game version for compatibility checks
   lastTimeSaved: number; // Timestamp of the last save
   resources: {
     [key: string]: {
