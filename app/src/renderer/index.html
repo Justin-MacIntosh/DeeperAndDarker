@@ -8,6 +8,7 @@
       name="description"
       content="Idle Game about Planetary Conquest"
     />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="apple-touch-icon" href="logo192.png" />
     <!--
       manifest.json provides metadata used when your web app is installed on a
@@ -41,4 +42,18 @@
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
   </body>
+  <!-- <script>
+    function scaleApp() {
+      const app = document.getElementById('root'); // or your top-level container
+      const scaleX = window.innerWidth / 2000;    // assume 1280x720 is your base size
+      const scaleY = window.innerHeight / 1080;
+      const scale = Math.min(scaleX, scaleY);     // maintain aspect ratio
+
+      app.style.transform = `scale(${scale})`;
+      app.style.transformOrigin = 'top left';
+    }
+
+    window.addEventListener('resize', scaleApp);
+    window.addEventListener('DOMContentLoaded', scaleApp);
+  </script> -->
 </html>

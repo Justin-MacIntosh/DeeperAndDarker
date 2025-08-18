@@ -77,7 +77,7 @@ const BraxiosLayout = ({
             id="braxios-resource-containers"
             className={clsx(
               "max-w-[1250px] rounded-xl",
-              "flex flex-wrap flex-col 2xl:flex-row",
+              "flex flex-wrap flex-row",
               "mt-[-1.5rem] mr-[-1.5rem] justify-center",
               "[&:has(>div)+div]:ml-6" // Apply margin to sidebar if it exists
             )}
