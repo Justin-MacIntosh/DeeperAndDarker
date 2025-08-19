@@ -2,18 +2,18 @@ import { app, shell, BrowserWindow, ipcMain } from 'electron';
 import { join } from 'path'
 import { electronApp, optimizer, is } from '@electron-toolkit/utils'
 
-function createWindow(): void {
+
+const createWindow = (): void => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
-    width: 900,
-    height: 670,
+    width: 1600,
+    height: 900,
     show: false,
     autoHideMenuBar: true,
     webPreferences: {
-      preload: join(__dirname, '../preload/index.js'),
-      sandbox: false
+      preload: join(__dirname, '../preload/preload.js'),
     },
-    frame: false,
+    frame: true,
     fullscreen: true,
   });
   mainWindow.setAspectRatio(16 / 9, { width: 900, height: 506 });
@@ -36,6 +36,31 @@ function createWindow(): void {
   }
 }
 
+const setupElectronApiHandlers = (): void => {
+  ipcMain.handle('fullscreen', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (window) {
+      window.setFullScreen(true);
+    }
+  });
+
+  ipcMain.handle('windowed', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (window) {
+      window.setFullScreen(false);
+      window.setSize(1600, 900);
+      window.center();
+    }
+  });
+
+  ipcMain.handle('devtools', (event) => {
+    const window = BrowserWindow.fromWebContents(event.sender);
+    if (window) {
+      window.webContents.openDevTools();
+    }
+  });
+}
+
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
@@ -50,10 +75,7 @@ app.whenReady().then(() => {
     optimizer.watchWindowShortcuts(window);
   });
 
-
-  // IPC test
-  ipcMain.on('ping', () => console.log('pong'));
-
+  setupElectronApiHandlers();
   createWindow();
 
   app.on('activate', function () {
@@ -74,3 +96,4 @@ app.on('window-all-closed', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+

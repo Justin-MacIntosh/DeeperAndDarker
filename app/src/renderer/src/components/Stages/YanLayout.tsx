@@ -5,7 +5,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { CallBackProps, Joyride, TooltipRenderProps } from 'react-joyride';
 import clsx from 'clsx';
 
-import ResourceIcon from '../../icons/ResourceIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import ProducerCard from '../shared/ProducerCard';
 import UnlockCard from '../shared/UnlockCard';
 import Footer from '../shared/Footer';

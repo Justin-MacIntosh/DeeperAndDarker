@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { useGameStore } from '../../game_state/GameStore';
 import Footer from '../shared/Footer';
 import Header, { CurrentResourcesDisplay } from '../shared/Header';
-import ResourceIcon from '../../icons/ResourceIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import ProducerCard from '../shared/ProducerCard';
 import UpgradeCard from '../shared/UpgradeCard';
 import UnlockCard from '../shared/UnlockCard';

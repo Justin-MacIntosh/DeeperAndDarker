@@ -1,13 +1,13 @@
 import { memo } from 'react';
 import { AnimatePresence, motion } from "motion/react"
 
-import ResourceIcon from '../../icons/ResourceIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import SidebarCard from './Card';
 
 import { Unlockable } from '../../game_state/types';
 import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../number_helpers/formatNumber';
-import TablerIconDisplay from '../../icons/TablerIconDisplay';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 
 const UnlockCard = memo(

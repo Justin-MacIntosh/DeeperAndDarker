@@ -1,5 +1,7 @@
 import { useState } from 'react';
 
+import { ipcRenderer } from 'electron';
+
 import Drawer from 'react-modern-drawer'
 import { useShallow } from 'zustand/react/shallow';
 
@@ -27,7 +29,11 @@ const GlobalDrawer = ({ setCurrentStage }: { setCurrentStage: (stageId: string) 
   if (numActiveStages < 2) {
     return null;
   }
-  
+
+  // Use the Electron API defined in preload.ts script
+  // @ts-ignore
+  const electronApi: any = window.electronApi;
+
   return (
     <>
       <Drawer
@@ -49,6 +55,24 @@ const GlobalDrawer = ({ setCurrentStage }: { setCurrentStage: (stageId: string) 
               setCurrentStage={setCurrentStage}
             />
           ))}
+          <button
+            className="btn-default bg-gray-600 mb-5"
+            onClick={() => { electronApi.fullscreen(); }}
+          >
+            Fullscreen
+          </button>
+          <button
+            className="btn-default bg-gray-600 mb-5"
+            onClick={() => { electronApi.windowed(); }}
+          >
+            Windowed
+          </button>
+          <button
+            className="btn-default bg-gray-600 mb-5"
+            onClick={() => { electronApi.devtools(); }}
+          >
+            Devtools
+          </button>
         </div>
         <button className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl" />
       </Drawer>

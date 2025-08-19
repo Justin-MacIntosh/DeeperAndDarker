@@ -1,4 +1,4 @@
-import { IconOption } from '../icons/types';
+import { IconOption } from '../components/icons/types';
 
 
 /* GameState typing */

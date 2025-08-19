@@ -1,7 +1,7 @@
 import { memo } from 'react';
 import { useShallow } from 'zustand/react/shallow'
 
-import ResourceIcon from '../../icons/ResourceIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../number_helpers/formatNumber';
 

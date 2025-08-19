@@ -268,6 +268,6 @@ export const useGameStore = create<
 
   // Reset the game state to the initial state
   resetGame: () => {
-    set(store.getInitialState())
+    set(INITIAL_GAME_STATE);
   },
 }));

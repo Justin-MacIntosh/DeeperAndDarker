@@ -14,6 +14,7 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
     console.log(INITIAL_GAME_STATE);
     resetGameState();
     resetAction();
+    saveCurrentGameData();
   }
 
   return (

@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 import { motion } from "motion/react"
 
-import ResourceIcon from '../../icons/ResourceIcon';
+import ResourceIcon from '../icons/ResourceIcon';
 import SidebarCard from './Card';
 import { Producer } from '../../game_state/types';
 import { useGameStore } from '../../game_state/GameStore';
@@ -12,7 +12,7 @@ import {
   calculateProducerProduction,
   calculateMaxPossiblePurchase,
 } from '../../game_state/state_helpers/producerHelpers';
-import TablerIconDisplay from '../../icons/TablerIconDisplay';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 

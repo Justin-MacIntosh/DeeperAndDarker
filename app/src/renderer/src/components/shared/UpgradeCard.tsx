@@ -2,8 +2,8 @@ import { AnimatePresence, motion } from "motion/react"
 import { clsx } from "clsx"
 
 import { useGameStore } from '../../game_state/GameStore';
-import TablerIconDisplay from '../../icons/TablerIconDisplay';
-import ResourceIcon from '../../icons/ResourceIcon';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
+import ResourceIcon from '../icons/ResourceIcon';
 import { formatNumber } from '../../number_helpers/formatNumber';
 import { multiplyBigIntByNumber } from "../../number_helpers/bigIntUtils";
 
