@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import deepcopy from 'deepcopy';
 
 import { loadGameState } from './stateStorageHelpers';
 import { INITIAL_GAME_STATE } from './InitialGameState';
@@ -11,8 +12,6 @@ import {
   updateProducerInStages, updateUpgradeInStages, updateUnlockInStages
 } from './state_helpers/spreadHelpers';
 
-const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
-
 // function measureTime<T extends (...args: any[]) => any>(fn: T, actionName: string): T {
 //   return ((...args: any[]) => {
 //     const start = performance.now();
@@ -22,6 +21,8 @@ const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 //     return result;
 //   }) as T;
 // }
+
+const LOADED_GAME_STATE = loadGameState() || INITIAL_GAME_STATE;
 
 /**
  * Game Store using Zustand for state management.
@@ -37,8 +38,8 @@ export const useGameStore = create<
     updateTimeSaved: (timeSaved: number) => void;
     resetGame: () => void;
   }
->((set, get, store) => ({
-  ...LOADED_GAME_STATE,
+>((set, get) => ({
+  ...deepcopy(LOADED_GAME_STATE),
 
   // Tick function to update resources based on time elapsed
   tick: (milliseconds: number) => {
@@ -268,6 +269,6 @@ export const useGameStore = create<
 
   // Reset the game state to the initial state
   resetGame: () => {
-    set(INITIAL_GAME_STATE);
+    set(deepcopy(INITIAL_GAME_STATE));
   },
 }));

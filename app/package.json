@@ -12,6 +12,7 @@
     "@types/react": "^19.1.8",
     "@types/react-dom": "^19.1.6",
     "clsx": "^2.1.1",
+    "deepcopy": "^2.1.0",
     "electron-updater": "^6.3.9",
     "fraction.js": "^5.3.1",
     "motion": "^12.23.12",
