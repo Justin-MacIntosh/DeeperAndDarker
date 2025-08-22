@@ -6,7 +6,6 @@ import {
 } from '@headlessui/react'
 
 import { useGameStore } from '../../game_state/GameStore';
-import { INITIAL_GAME_STATE } from '../../game_state/InitialGameState';
 import { resetGameState } from '../../game_state/stateStorageHelpers';
 
 
@@ -16,7 +15,6 @@ const SettingsButton = memo(() => {
 
   const resetAction = useGameStore((state) => state.resetGame);
   const resetGame = () => {
-    console.log(INITIAL_GAME_STATE);
     resetGameState();
     resetAction();
   }

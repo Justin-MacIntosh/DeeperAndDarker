@@ -6,6 +6,7 @@ import { useGameStore } from './game_state/GameStore';
 import { useSaveStateToLocalStorage } from './hooks/useSaveStateToLocalStorage';
 import BraxiosLayout from './components/Stages/BraxiosLayout';
 import YanLayout from './components/Stages/YanLayout';
+import CorporateLayout from './components/Stages/CorporateLayout';
 import GlobalDrawer from './components/global/GlobalDrawer';
 import OfflineEarningsDialog from './components/global/OfflineEarningsDialog';
 
@@ -81,12 +82,14 @@ const App = () => {
     <div className="bg-neutral-900 absolute top-0 w-full h-full">
       <GlobalDrawer />
       <OfflineEarningsDialog/>
-      <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
+
+      <CorporateLayout />
+      {/* <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
         <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />
       </Fade>
       <Fade show={currentStage === "stage_2"} onShowCallback={() => {document.body.setAttribute("data-theme", "planet-yan");}}>
         <YanLayout saveCurrentGameData={saveCurrentGameData} key="planet-yan" />
-      </Fade>
+      </Fade> */}
     </div>
   );
 }

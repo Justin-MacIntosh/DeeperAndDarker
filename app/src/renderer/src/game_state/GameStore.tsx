@@ -2,7 +2,7 @@ import { create } from 'zustand';
 import deepcopy from 'deepcopy';
 
 import { loadGameState } from './stateStorageHelpers';
-import { INITIAL_GAME_STATE } from './InitialGameState';
+import { INITIAL_GAME_STATE } from './Stage2StartState';
 import { GameState } from './types';
 import { calculatePriceForMultiplePurchases } from './state_helpers/producerHelpers';
 import { updateStateForUpgradePurchase } from './state_helpers/upgradeHelpers';
@@ -37,6 +37,7 @@ export const useGameStore = create<
     purchaseProducer: (stageId: string, producerId: string, numToPurchase: number) => void;
     purchaseUpgrade: (stageId: string, upgradeId: string) => void;
     purchaseUnlock: (stageId: string, unlockableId: string) => void;
+    startTask: (stageId: string, taskId: string) => void;
     setTutorialSeen: (tutorialId: string) => void;
     updateTimeSaved: (timeSaved: number) => void;
     setCurrentStage: (stageId: string) => void;
@@ -254,6 +255,58 @@ export const useGameStore = create<
     }
 
     set({ resources: updatedResources, stages: updatedStages });
+  },
+
+  startTask: (stageId: string, taskId: string) => {
+    const { resources, stages, runningTasks } = get();
+    const stage = stages[stageId];
+    if (!stage) {
+      console.error(`Stage with ID ${stageId} not found.`);
+      return;
+    }
+    const taskToStart = stage.tasks[taskId];
+    if (!taskToStart) {
+      console.error(`Task with ID ${taskId} not found in stage ${stageId}.`);
+      return;
+    }
+    if (taskToStart.dynamic.isRunning) {
+      console.error(`Task with ID ${taskId} is already running.`);
+      return;
+    }
+
+    const purchaseResource = taskToStart.static.purchaseResource;
+    if (resources[purchaseResource].currentAmount < taskToStart.static.cost) {
+      console.error(`Not enough ${purchaseResource} to start task with ID ${taskId}.`);
+      return;
+    }
+
+    const updatedResources = { ...resources };
+    updatedResources[purchaseResource] = {
+      ...updatedResources[purchaseResource],
+      currentAmount: updatedResources[purchaseResource].currentAmount - taskToStart.static.cost,
+    };
+
+    // Update the task state in the stages
+    let updatedStages = { ...stages };
+    updatedStages = updateTaskInStages(
+      updatedStages, stageId, taskId,
+      { ...taskToStart, dynamic: { ...taskToStart.dynamic, isRunning: true, } }
+    );
+
+    const currentTime = Date.now();
+    const newRunningTask = {
+      stageId,
+      taskId,
+      startTime: currentTime,
+      endTime: currentTime + (taskToStart.static.duration * 1000),
+    };
+    const updatedRunningTasks = [...runningTasks, newRunningTask];
+
+    set({
+      resources: updatedResources,
+      stages: updatedStages,
+      runningTasks: updatedRunningTasks
+    });
   },
 
   // Set a tutorial as seen

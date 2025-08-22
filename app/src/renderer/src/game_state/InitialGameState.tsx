@@ -32,6 +32,7 @@ export const INITIAL_GAME_STATE: GameState = {
       amountPerSecond: BigInt(0),
     }
   },
+  runningTasks: [],
   stages: {
     stage_1: {
       name: "Deep Space",

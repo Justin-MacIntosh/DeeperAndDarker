@@ -6,6 +6,7 @@ export interface GameState {
   version: string; // Game version for compatibility checks
   currentStage: string; // ID of the current stage
   lastTimeSaved: number; // Timestamp of the last save
+  runningTasks: RunningTask[];
   resources: {
     [key: string]: {
       currentAmount: bigint; // Current amount of the resource
@@ -85,23 +86,6 @@ export interface Upgrade {
     isActive: boolean;
   }
 }
-export interface Task {
-  static: {
-    name: string;
-    description: string;
-    iconOption: IconOption; // Optional icon for UI representation
-    duration: number; // Duration of the event in seconds
-    purchaseResource: string; // Resource required to trigger the event
-    cost: bigint; // Cost to trigger the event
-  },
-  dynamic: {
-    isActive: boolean; // Whether the event is currently active in the UI
-    isRunning: boolean; // Whether the event is currently running
-    isCompleted: boolean; // Whether the event has been completed
-    startTime?: number; // Optional, used to track when the event started
-  }
-}
-
 
 interface ProductionMultiplier {
   type: "productionMultiplier";
@@ -173,6 +157,30 @@ interface LockUnlock {
   type: "lock";
   stageId: string;
   unlockId: string;
+}
+
+/* Task typing */
+export interface Task {
+  static: {
+    name: string;
+    description: string;
+    iconOption: IconOption; // Optional icon for UI representation
+    duration: number; // Duration of the event in seconds
+    purchaseResource: string; // Resource required to trigger the event
+    cost: bigint; // Cost to trigger the event
+  },
+  dynamic: {
+    isActive: boolean; // Whether the event is currently active in the UI
+    isRunning: boolean; // Whether the event is currently running
+    isCompleted: boolean; // Whether the event has been completed
+    startTime?: number; // Optional, used to track when the event started
+  }
+}
+export interface RunningTask {
+  stageId: string;
+  taskId: string;
+  startTime: number; // Timestamp when the task started
+  endTime: number; // Timestamp when the task will end
 }
 
 /* Unused */

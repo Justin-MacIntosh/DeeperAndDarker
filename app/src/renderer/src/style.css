@@ -46,6 +46,13 @@
     --color-secondary: theme('colors.stone.800');
     --color-accent: theme('colors.stone.600');
   }
+
+  main[data-theme='corporate'] {
+    /* --color-background: theme('colors.stone.900');
+    --color-primary: theme('colors.stone.900');
+    --color-secondary: theme('colors.stone.800');
+    --color-accent: theme('colors.stone.600'); */
+  }
   
   /* body[data-theme='deep-space'] {
     --color-dark: rgb(34, 13, 18);
@@ -119,4 +126,71 @@ body {
 
 #yan_mil_presence_container {
   interpolate-size: allow-keywords;
+}
+
+#corporate-main {
+  background: url('./assets/img/Corporate_Bg.jpg');
+  background-position: center;
+  background-size: 130%;
+  background-repeat: no-repeat;
+  animation: heartbeat 30s infinite;
+
+  font-family: "Roboto", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+#corporate-main::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to right bottom, rgba(255,255,255,.7), rgba(0,0,0,.7));
+  opacity: .9;
+  z-index: 1;
+  animation: heartbeat-pseudo 30s infinite;
+}
+
+@keyframes heartbeat {
+  0% {
+    background-size: 130%;
+  }
+  20% {
+    background-size: 150%;
+  }
+  40% {
+    background-size: 130%;
+  }
+  60% {
+    background-size: 150%;
+  }
+  80% {
+    background-size: 130%;
+  }
+  100% {
+    background-size: 130%;
+  }
+}
+@keyframes heartbeat-pseudo {
+  0% {
+    opacity: 0.5;
+  }
+  20% {
+    opacity: 1;
+  }
+  40% {
+    opacity: 0.5;
+  }
+  60% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.5;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }

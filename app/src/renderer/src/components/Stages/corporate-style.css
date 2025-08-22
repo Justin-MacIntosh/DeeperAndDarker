@@ -1,0 +1,20 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  .corporate-container {
+    @apply text-gray-700 p-6 font-bold select-none;
+  }
+}
+
+.corporate-container {
+  border-radius: 18px;
+  background: linear-gradient(145deg, #cacaca, #f0f0f0);
+  box-shadow:  18px 18px 42px #bebebe,
+              -18px -18px 42px #ffffff;
+  transition: transform 0.1s;
+}
+.corporate-container:hover {
+  transform: scale(1.2);
+}

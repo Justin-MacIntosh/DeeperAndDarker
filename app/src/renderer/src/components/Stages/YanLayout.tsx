@@ -135,8 +135,9 @@ const YanLayout = (
                 "mt-[-1.5rem] mr-[-1.5rem]",
               )}
             >
-              <ResearchDisplay />
-              <MightDisplay />
+              <ResearchDisplay/>
+              <MightDisplay/>
+              <TaskDisplay/>
             </div>
           </div>
           <UnlockSidebar stageId="stage_2"/>
@@ -168,38 +169,34 @@ const MightDisplay = () => {
           numToPurchaseOption={1}
         />
       </ResourceContainer>
-      <TaskDisplay stageId='stage_2'/>
     </>
   );
 };
 
-const TaskDisplay = memo(({ stageId }: { stageId: string }) => {
-  const taskIds = useGameStore(
-    useShallow((state) => Object.keys(state.stages[stageId].tasks))
-  );
-  const anyTasksActive = useGameStore(
+const TaskDisplay = () => {
+  const activeTaskIds = useGameStore(
     useShallow(
-      (state) => Object.values(
-        state.stages[stageId].tasks
-      ).some((task) => task.dynamic.isActive)
-    )
+      (state) => 
+        Object.entries(state.stages["stage_2"].tasks).filter(
+          ([, task]) => task.dynamic.isActive
+        ).map(([taskId]) => taskId)
+      )
   );
+  const anyTasksActive = activeTaskIds.length > 0;
 
   return (
     <ResourceContainer show={anyTasksActive} keyPrefix="yan_mil_tasks">
-      <div className="flex flex-row justify-between items-center mb-3">
+      <div className="flex flex-row justify-between items-center">
         <h1 className="uppercase text-2xl">Expeditions</h1>
       </div>
-      <div className="flex flex-col h-auto">
-        {taskIds.map(
-          (taskId) => {
-            return <TaskCard key={taskId} taskId={taskId} stageId={stageId}/>;
-          }
-        )}
-      </div>
+      {activeTaskIds.map(
+        (taskId) => {
+          return <TaskCard taskId={taskId} stageId={"stage_2"}/>;
+        }
+      )}
     </ResourceContainer>
   );
-});
+};
 
 const ResearchDisplay = () => {
   const isYanResearchActive = useGameStore(

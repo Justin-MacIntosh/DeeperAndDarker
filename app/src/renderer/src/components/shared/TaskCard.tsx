@@ -1,5 +1,5 @@
-import { memo } from 'react';
-import { AnimatePresence, motion } from "motion/react"
+import { motion } from "motion/react"
+import { useShallow } from 'zustand/react/shallow';
 
 import ResourceIcon from '../icons/ResourceIcon';
 import SidebarCard from './Card';
@@ -16,59 +16,54 @@ const taskCardVariant = {
   exit: { opacity: 0, scale: 0, height: 0 },
 };
 
+const TaskCard = (props: { taskId: string; stageId: string }) => {
+  // Actions and state from the game store
+  const task: Task = useGameStore(
+    (state) => state.stages[props.stageId].tasks[props.taskId]
+  );
+  const runningTaskIds = useGameStore(
+    useShallow((state) => state.runningTasks.map((task) => task.taskId))
+  );
+  const taskIsRunning = runningTaskIds.includes(props.taskId);
 
-const TaskCard = memo(
-  (props: { taskId: string; stageId: string; optionalCallback?: () => void }) => {
-    // Actions and state from the game store
-    const task: Task = useGameStore(
-      (state) => state.stages[props.stageId].tasks[props.taskId]
-    );
-    const taskIsActive = useGameStore(
-      (state) => state.stages[props.stageId].tasks[props.taskId].dynamic.isActive
-    );
-    // const beginTaskAction = useGameStore((state) => state.beginTask);
+  const startTaskAction = useGameStore((state) => state.startTask);
 
-    // Get the current amount of the resource required to purchase this producer
-    const relevantResource = task.static.purchaseResource;
-    const currentRelevantResources: bigint = useGameStore(
-      (state) => state.resources[relevantResource].currentAmount
-    );
+  // Get the current amount of the resource required to purchase this producer
+  const relevantResource = task.static.purchaseResource;
+  const currentRelevantResources: bigint = useGameStore(
+    (state) => state.resources[relevantResource].currentAmount
+  );
 
-    // Calculate the cost and number of producers to purchase
-    const currentCostStr: string = formatNumber(task.static.cost);
-    return (
-      <AnimatePresence initial={false}>
-        {
-          taskIsActive &&
-          <motion.div
-            transition={{ duration: .8 }}
-            variants={taskCardVariant}
-            className='[&:not(:last-child)]:mb-5 origin-top'
-          >
-            <div className="text-lg flex flex-row mb-2">
-              <h2 className="uppercase flex-1">
-                {task.static.name}
-              </h2>
-            </div>
-            <SidebarCard
-              color={"red"} // Assuming tasks are always red
-              icon={
-                <TablerIconDisplay icon={task.static.iconOption} size={55} />
-              }
-              contentElement={<>{task.static.description}</>}
-              suffixElement={
-                <span>{currentCostStr}<ResourceIcon resource={task.static.purchaseResource} size={18} /></span>
-              }
-              onClick={() => {
-                return; // TODO: Implement task purchase logic
-              }}
-              isClickDisabled={task.static.cost > currentRelevantResources}
-            />
-          </motion.div>
+  // Calculate the cost and number of producers to purchase
+  const currentCostStr: string = formatNumber(task.static.cost);
+  return (
+    <motion.div
+      key={props.stageId + " " + props.taskId}
+      variants={taskCardVariant}
+      transition={{ duration: .8 }}
+      className='origin-top'
+    >
+      <div className="text-lg flex flex-row mb-2">
+        <h2 className="uppercase flex-1">
+          {task.static.name}
+        </h2>
+      </div>
+      <SidebarCard
+        color={"red"} // Assuming tasks are always red
+        icon={
+          <TablerIconDisplay icon={task.static.iconOption} size={55} />
         }
-      </AnimatePresence>
-    );
-  }
-);
+        contentElement={<>{task.static.description}</>}
+        suffixElement={
+          <span>{currentCostStr}<ResourceIcon resource={task.static.purchaseResource} size={18} /></span>
+        }
+        onClick={() => {
+          startTaskAction(props.stageId, props.taskId);
+        }}
+        isClickDisabled={taskIsRunning || task.static.cost > currentRelevantResources}
+      />
+    </motion.div>
+  );
+};
 
 export default TaskCard;
