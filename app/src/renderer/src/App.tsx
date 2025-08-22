@@ -48,6 +48,7 @@ const Fade = ({ children, show, onShowCallback }: {children: ReactNode, show: bo
 /* Main App component that renders the game interface */
 const App = () => {
   const tickAction = useGameStore((state) => state.tick);
+  const currentStage = useGameStore((state) => state.currentStage);
   const { saveCurrentGameData } = useSaveStateToLocalStorage();
 
   useEffect(() => {
@@ -76,10 +77,9 @@ const App = () => {
     return () => clearInterval(tickIntervalId);
   }, []);
 
-  const [currentStage, setCurrentStage] = useState("stage_1");
   return (
     <div className="bg-neutral-900 absolute top-0 w-full h-full">
-      <GlobalDrawer setCurrentStage={setCurrentStage} />
+      <GlobalDrawer />
       <OfflineEarningsDialog/>
       <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
         <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />

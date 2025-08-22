@@ -1,18 +1,19 @@
 import { resolve } from 'path'
-import { defineConfig, externalizeDepsPlugin } from 'electron-vite'
+import { defineConfig } from 'electron-vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   main: {
-    plugins: [externalizeDepsPlugin()],
+    plugins: [],
   },
   preload: {
-    plugins: [externalizeDepsPlugin()]
+    plugins: []
   },
   renderer: {
     resolve: {
       alias: {
-        '@renderer': resolve('src/renderer/src')
+        '@renderer': resolve('src/renderer/src'),
+        '@tabler/icons-react': '@tabler/icons-react/dist/esm/icons/index.mjs',
       }
     },
     plugins: [react()]

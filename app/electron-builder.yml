@@ -1,43 +1,37 @@
-appId: com.electron.app
-productName: planet-cracker
-directories:
-  buildResources: build
+## Build configuration for Electron Builder
+appId: com.planet-cracker.app
+compression: maximum
+productName: Planet Cracker
 files:
-  - '!**/.vscode/*'
+  ## Files to exclude from Planet Cracker codebase
   - '!src/*'
+  - "!scripts/"
   - '!electron.vite.config.{js,ts,mjs,cjs}'
-  - '!{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,CHANGELOG.md,README.md}'
-  - '!{.env,.env.*,.npmrc,pnpm-lock.yaml}'
   - '!{tsconfig.json,tsconfig.node.json,tsconfig.web.json}'
-asarUnpack:
-  - resources/**
-# afterSign: build/notarize.js
+  ## Exclude all node_modules except production dependencies
+  - '!node_modules/'  # WARN: excludes all node_modules, remove to include some
+  - '!node_modules/.bin'
+  - "!node_modules/**/test/**"
+  - "!node_modules/**/tests/**"
+  - "!node_modules/**/__tests__/**"
+  ## File types to exclude
+  - '!**/*.{iml,o,hprof,orig,pyc,pyo,rbc,swp,csproj,sln,xproj,map,ts,md,npmrc,env}'
+  - '!**/*{.env.*,pnpm-lock.yaml}'
+  ## Common files and folders to exclude
+  - '!**/.vscode/*'
+  - '!**/{npm-debug.log,yarn.lock,.yarn-integrity,.yarn-metadata.json}'
+  - '!**/{.eslintignore,.eslintrc.cjs,.prettierignore,.prettierrc.yaml,dev-app-update.yml,README,readme}'
+
+## Windows config
 win:
-  executableName: planet-cracker
+  executableName: planetCracker
+  target: nsis
 nsis:
-  artifactName: ${name}-${version}-setup.${ext}
+  artifactName: planetCracker-${version}-setup.${ext}
   shortcutName: ${productName}
   uninstallDisplayName: ${productName}
   createDesktopShortcut: always
-mac:
-  entitlementsInherit: build/entitlements.mac.plist
-  extendInfo:
-    - NSCameraUsageDescription: Application requests access to the device's camera.
-    - NSMicrophoneUsageDescription: Application requests access to the device's microphone.
-    - NSDocumentsFolderUsageDescription: Application requests access to the user's Documents folder.
-    - NSDownloadsFolderUsageDescription: Application requests access to the user's Downloads folder.
-dmg:
-  artifactName: ${name}-${version}.${ext}
-linux:
-  target:
-    - AppImage
-    - snap
-    - deb
-  maintainer: electronjs.org
-  category: Utility
-appImage:
-  artifactName: ${name}-${version}.${ext}
-npmRebuild: false
-publish:
-  provider: generic
-  url: https://example.com/auto-updates
+
+## Build hooks
+afterPack: scripts/cleanup_build.js
+## afterSign: build/notarize.js  # WARN: add back in to notarize

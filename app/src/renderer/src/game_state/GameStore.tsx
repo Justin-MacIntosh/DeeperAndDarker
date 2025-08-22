@@ -9,7 +9,10 @@ import { updateStateForUpgradePurchase } from './state_helpers/upgradeHelpers';
 import { recalculateResourceProduction } from './state_helpers/resourceHelpers';
 import { multiplyBigIntByNumber } from '../number_helpers/bigIntUtils';
 import {
-  updateProducerInStages, updateUpgradeInStages, updateUnlockInStages
+  updateProducerInStages,
+  updateUpgradeInStages,
+  updateUnlockInStages,
+  updateTaskInStages
 } from './state_helpers/spreadHelpers';
 
 // function measureTime<T extends (...args: any[]) => any>(fn: T, actionName: string): T {
@@ -36,6 +39,7 @@ export const useGameStore = create<
     purchaseUnlock: (stageId: string, unlockableId: string) => void;
     setTutorialSeen: (tutorialId: string) => void;
     updateTimeSaved: (timeSaved: number) => void;
+    setCurrentStage: (stageId: string) => void;
     resetGame: () => void;
   }
 >((set, get) => ({
@@ -223,6 +227,13 @@ export const useGameStore = create<
             { ...upgrade, dynamic: { ...upgrade.dynamic, isActive: true, } }
           );
           break;
+        case "task":
+          const task = updatedStages[unlock.stageId].tasks[unlock.taskId];
+          updatedStages = updateTaskInStages(
+            updatedStages, unlock.stageId, unlock.taskId,
+            { ...task, dynamic: { ...task.dynamic, isActive: true, } }
+          );
+          break;
         case "unlock":
           const unlockableToBeUnlocked = updatedStages[unlock.stageId].unlocks[unlock.unlockId];
           updatedStages = updateUnlockInStages(
@@ -236,9 +247,6 @@ export const useGameStore = create<
             updatedStages, unlock.stageId, unlock.unlockId,
             { ...unlockableToBeLocked, dynamic: { ...unlockableToBeLocked.dynamic, isActive: false, } }
           );
-          break;
-        case "buff":
-          // TODO
           break;
         default:
           break;
@@ -265,6 +273,11 @@ export const useGameStore = create<
   // Update the last time the game state was saved
   updateTimeSaved: (lastTimeSaved: number) => {
     set({ lastTimeSaved: lastTimeSaved });
+  },
+
+  // Set the current stage of the game
+  setCurrentStage: (stageId: string) => {
+    set({ currentStage: stageId });
   },
 
   // Reset the game state to the initial state

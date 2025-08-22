@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import ResourceIcon from '../icons/ResourceIcon';
 import ProducerCard from '../shared/ProducerCard';
 import UnlockCard from '../shared/UnlockCard';
+import TaskCard from '../shared/TaskCard';
 import Footer from '../shared/Footer';
 import Header, { CurrentResourcesDisplay } from '../shared/Header';
 import { useGameStore } from '../../game_state/GameStore';
@@ -51,7 +52,7 @@ const settlingYanTutorialSteps = [
     placement: "left" as "left",
   },
   {
-    target: '#current-resources-personnel',
+    target: '#current-resources-yan-personnel',
     title: "Settling Planet Yan",
     content: (
       <>
@@ -167,24 +168,38 @@ const MightDisplay = () => {
           numToPurchaseOption={1}
         />
       </ResourceContainer>
-      <EventContainer show={isYanMightActive} keyPrefix="yan_mil_events">
-        <div className="flex flex-row justify-between items-center">
-          <h3 className="uppercase text-2xl">Military Excursions</h3>
-        </div>
-        <ProducerCard
-          producerId="yan_soldier"
-          stageId="stage_2"
-          numToPurchaseOption={1}
-        />
-        <ProducerCard
-          producerId="yan_soldier"
-          stageId="stage_2"
-          numToPurchaseOption={1}
-        />
-      </EventContainer>
+      <TaskDisplay stageId='stage_2'/>
     </>
   );
 };
+
+const TaskDisplay = memo(({ stageId }: { stageId: string }) => {
+  const taskIds = useGameStore(
+    useShallow((state) => Object.keys(state.stages[stageId].tasks))
+  );
+  const anyTasksActive = useGameStore(
+    useShallow(
+      (state) => Object.values(
+        state.stages[stageId].tasks
+      ).some((task) => task.dynamic.isActive)
+    )
+  );
+
+  return (
+    <ResourceContainer show={anyTasksActive} keyPrefix="yan_mil_tasks">
+      <div className="flex flex-row justify-between items-center mb-3">
+        <h1 className="uppercase text-2xl">Expeditions</h1>
+      </div>
+      <div className="flex flex-col h-auto">
+        {taskIds.map(
+          (taskId) => {
+            return <TaskCard key={taskId} taskId={taskId} stageId={stageId}/>;
+          }
+        )}
+      </div>
+    </ResourceContainer>
+  );
+});
 
 const ResearchDisplay = () => {
   const isYanResearchActive = useGameStore(

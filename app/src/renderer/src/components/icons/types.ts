@@ -1,6 +1,4 @@
 import {
-  Icon,
-  IconProps,
   IconFlowerFilled,
   IconPaperBag,
   IconBuildingBroadcastTower,
@@ -10,7 +8,10 @@ import {
   IconBolt,
   IconUser,
   IconBuilding,
+  IconPlant2,
+  IconPaw
 } from "@tabler/icons-react";
+
 
 export type IconOption =
   | "IconRobot"
@@ -21,12 +22,11 @@ export type IconOption =
   | "IconUser"
   | "IconBuilding"
   | "IconFlowerFilled"
-  | "IconPaperBag";
+  | "IconPaperBag"
+  | "IconPlant2"
+  | "IconPaw";
 
-type iconType = React.ForwardRefExoticComponent<
-  IconProps & React.RefAttributes<Icon>
->;
-export const ICON_MAPPING: { [Key in IconOption]: iconType } = {
+export const ICON_MAPPING: { [Key in IconOption]: any } = {
   // Robotic icons
   IconRobot: IconRobot,
   IconBuildingBroadcastTower: IconBuildingBroadcastTower,
@@ -36,6 +36,8 @@ export const ICON_MAPPING: { [Key in IconOption]: iconType } = {
   IconBuilding: IconBuilding,
   IconBolt: IconBolt,
   IconUser: IconUser,
+  IconPlant2: IconPlant2,
+  IconPaw: IconPaw,
 
   // Planet icons
   IconFlowerFilled: IconFlowerFilled,

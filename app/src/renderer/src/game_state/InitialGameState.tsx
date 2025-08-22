@@ -4,6 +4,7 @@ export const CURRENT_ACCEPTED_VERSION = "0.0.01";
 
 export const INITIAL_GAME_STATE: GameState = {
   version: CURRENT_ACCEPTED_VERSION,
+  currentStage: "stage_1",
   lastTimeSaved: 0,
   resources: {
     copper: {
@@ -14,7 +15,7 @@ export const INITIAL_GAME_STATE: GameState = {
       currentAmount: BigInt(1000000),
       amountPerSecond: BigInt(0),
     },
-    personnel: {
+    yan_personnel: {
       currentAmount: BigInt(10),
       amountPerSecond: BigInt(0),
     },
@@ -23,6 +24,10 @@ export const INITIAL_GAME_STATE: GameState = {
       amountPerSecond: BigInt(0),
     },
     yan_military_presence: {
+      currentAmount: BigInt(0),
+      amountPerSecond: BigInt(0),
+    },
+    yan_specimens: {
       currentAmount: BigInt(0),
       amountPerSecond: BigInt(0),
     }
@@ -179,7 +184,7 @@ export const INITIAL_GAME_STATE: GameState = {
           }
         },
       },
-      buffs: {},
+      tasks: {},
       unlocks: {
         silver_production: {
           static: {
@@ -241,14 +246,14 @@ export const INITIAL_GAME_STATE: GameState = {
       name: "Planet Yan",
       description: "Lush and rich in minerals",
       isActive: false,
-      resourcesToDisplay: ["personnel", "silver"],
+      resourcesToDisplay: ["yan_personnel", "silver"],
       producers: {
         yan_researcher: {
           static: {
             name: "Yan Researcher",
             description: "Researches the mysteries of Planet Yan",
             iconOption: "IconUser",
-            purchaseResource: "personnel",
+            purchaseResource: "yan_personnel",
             baseCost: BigInt(1),
             baseRateOfCostIncrease: 1,
             producedResource: "yan_research",
@@ -267,11 +272,11 @@ export const INITIAL_GAME_STATE: GameState = {
             name: "Yan Soldier",
             description: "Required to face threats on Planet Yan",
             iconOption: "IconUser",
-            purchaseResource: "personnel",
+            purchaseResource: "yan_personnel",
             baseCost: BigInt(1),
             baseRateOfCostIncrease: 1,
             producedResource: "yan_military_presence",
-            baseProduction: BigInt(5),
+            baseProduction: BigInt(2),
             color: "red",
           },
           dynamic: {
@@ -283,7 +288,40 @@ export const INITIAL_GAME_STATE: GameState = {
         }
       },
       upgrades: {},
-      buffs: {},
+      tasks: {
+        explore_plains: {
+          static: {
+            name: "Explore the Plains",
+            description: "Explore vast plains, collecting flora",
+            iconOption: "IconPlant2", // TODO
+            purchaseResource: "yan_military_presence",
+            cost: BigInt(10),
+            duration: 5,
+          },
+          dynamic: {
+            isActive: false,
+            isRunning: false,
+            isCompleted: false,
+            startTime: undefined,
+          }
+        },
+        hunt_wild_creature: {
+          static: {
+            name: "Hunt Wild Creatures",
+            description: "Hunt a creature native to Planet Yan",
+            iconOption: "IconPaw",
+            purchaseResource: "yan_military_presence",
+            cost: BigInt(100),
+            duration: 10,
+          },
+          dynamic: {
+            isActive: false,
+            isRunning: false,
+            isCompleted: false,
+            startTime: undefined,
+          }
+        }
+      },
       unlocks: {
         establish_military_base: {
           static: {
@@ -298,6 +336,16 @@ export const INITIAL_GAME_STATE: GameState = {
                 type: "producer",
                 stageId: "stage_2",
                 producerId: "yan_soldier",
+              },
+              {
+                type: "task",
+                stageId: "stage_2",
+                taskId: "explore_plains",
+              },
+              {
+                type: "task",
+                stageId: "stage_2",
+                taskId: "hunt_wild_creature",
               },
               {
                 type: "unlock",
@@ -321,7 +369,7 @@ export const INITIAL_GAME_STATE: GameState = {
             description: "Begin sending expeditions into the Yan forests",
             iconOption: "IconBuilding",
             purchaseResource: "yan_military_presence",
-            cost: BigInt(100),
+            cost: BigInt(100000),
             color: "red",
             unlocks: [
               {
@@ -341,7 +389,7 @@ export const INITIAL_GAME_STATE: GameState = {
             description: "Begin sending expeditions into the Yan cave systems",
             iconOption: "IconBuilding",
             purchaseResource: "yan_military_presence",
-            cost: BigInt(100000),
+            cost: BigInt(1000000),
             color: "red",
             unlocks: [],
           },

@@ -4,6 +4,7 @@ import { IconOption } from '../components/icons/types';
 /* GameState typing */
 export interface GameState {
   version: string; // Game version for compatibility checks
+  currentStage: string; // ID of the current stage
   lastTimeSaved: number; // Timestamp of the last save
   resources: {
     [key: string]: {
@@ -38,8 +39,8 @@ export interface Stage {
   upgrades: {
     [key: string]: Upgrade; // Keyed by upgrade ID
   };
-  buffs: {
-    [key: string]: Buff; // Keyed by buff ID
+  tasks: {
+    [key: string]: Task; // Keyed by task ID
   };
   unlocks: {
     [key: string]: Unlockable; // Keyed by unlockable ID
@@ -67,7 +68,7 @@ export interface Producer {
   }
 }
 
-/* Buff and Upgrade typing */
+/* Upgrade and Task typing */
 export interface Upgrade {
   static: {
     name: string;
@@ -84,21 +85,24 @@ export interface Upgrade {
     isActive: boolean;
   }
 }
-export interface Buff {
+export interface Task {
   static: {
     name: string;
     description: string;
     iconOption: IconOption; // Optional icon for UI representation
-    resourceToPurchase: string; // Resource required to purchase the upgrade
-    cost: bigint;
-    effect: ProductionMultiplier | CostReducer;
-    duration: number; // Optional duration for buffs
+    duration: number; // Duration of the event in seconds
+    purchaseResource: string; // Resource required to trigger the event
+    cost: bigint; // Cost to trigger the event
   },
   dynamic: {
-    isActive: boolean;
-    isBuffing?: boolean; // Optional, used to indicate if the buff is currently buffing
+    isActive: boolean; // Whether the event is currently active in the UI
+    isRunning: boolean; // Whether the event is currently running
+    isCompleted: boolean; // Whether the event has been completed
+    startTime?: number; // Optional, used to track when the event started
   }
 }
+
+
 interface ProductionMultiplier {
   type: "productionMultiplier";
   multiplier: FlatMultiplier | LogMultiplier;
@@ -134,7 +138,7 @@ export interface Unlockable {
     iconOption: IconOption; // Optional icon for UI representation
     purchaseResource: string; // Resource required to unlock
     cost: bigint;
-    unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | BuffUnlock | UnlockableUnlock | LockUnlock>;
+    unlocks: Array<StageUnlock | ProducerUnlock | UpgradeUnlock | TaskUnlock | UnlockableUnlock | LockUnlock>;
     color: string; // Optional color for UI representation
   },
   dynamic: {
@@ -155,10 +159,10 @@ interface UpgradeUnlock {
   stageId: string;
   upgradeId: string;
 }
-interface BuffUnlock {
-  type: "buff";
+interface TaskUnlock {
+  type: "task";
   stageId: string;
-  buffId: string;
+  taskId: string;
 }
 interface UnlockableUnlock {
   type: "unlock";
@@ -170,3 +174,20 @@ interface LockUnlock {
   stageId: string;
   unlockId: string;
 }
+
+/* Unused */
+// export interface Buff {
+//   static: {
+//     name: string;
+//     description: string;
+//     iconOption: IconOption; // Optional icon for UI representation
+//     resourceToPurchase: string; // Resource required to purchase the upgrade
+//     cost: bigint;
+//     effect: ProductionMultiplier | CostReducer;
+//     duration: number; // Optional duration for buffs
+//   },
+//   dynamic: {
+//     isActive: boolean;
+//     isBuffing?: boolean; // Optional, used to indicate if the buff is currently buffing
+//   }
+// }

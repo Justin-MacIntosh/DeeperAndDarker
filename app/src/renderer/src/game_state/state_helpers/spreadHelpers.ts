@@ -1,4 +1,4 @@
-import { Producer, Stage, Unlockable, Upgrade } from '../types';
+import { Producer, Stage, Task, Unlockable, Upgrade } from '../types';
 
 export const updateProducerInStages = (
   stages: { [key: string]: Stage }, stageId: string, producerId: string, newProducerState: Producer
@@ -43,3 +43,17 @@ export const updateUnlockInStages = (
   };
   return updatedStages;
 };
+
+export const updateTaskInStages = (
+  stages: { [key: string]: Stage }, stageId: string, taskId: string, newTaskState: Task
+) => {
+  const updatedStages = { ...stages };
+  updatedStages[stageId] = {
+    ...stages[stageId],
+    tasks: {
+      ...stages[stageId].tasks,
+      [taskId]: { ...newTaskState },
+    },
+  };
+  return updatedStages;
+}
