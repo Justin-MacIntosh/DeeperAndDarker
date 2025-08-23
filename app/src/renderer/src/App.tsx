@@ -81,7 +81,7 @@ const App = () => {
   return (
     <div className="bg-neutral-900 absolute top-0 w-full h-full">
       <GlobalDrawer />
-      <OfflineEarningsDialog/>
+      {/* <OfflineEarningsDialog/> */}
 
       <CorporateLayout />
       {/* <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
