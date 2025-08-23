@@ -53,11 +53,11 @@ const GlobalDrawer = () => {
             />
           ))}
         </div>
-        <button className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl" />
+        <button className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl border-gray-500 border-r-solid border-r-[3px]" />
       </Drawer>
       <button
         id="global-drawer-btn"
-        className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl"
+        className="cursor-default fixed top-[120px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl border-gray-500 border-r-solid border-r-[3px]"
         onMouseOver={() => { setIsDrawerOpen(true); }}
       />
     </>

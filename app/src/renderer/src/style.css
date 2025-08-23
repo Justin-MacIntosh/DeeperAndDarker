@@ -87,6 +87,16 @@
   } */
 }
 
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
 /* Global Style Reset */
 * {
   margin: 0;
@@ -133,13 +143,11 @@ body {
   background-position: center;
   background-size: 130%;
   background-repeat: no-repeat;
-  animation: heartbeat 30s infinite;
-
   font-family: "Roboto", sans-serif;
   font-optical-sizing: auto;
   font-style: normal;
-  font-variation-settings:
-    "wdth" 100;
+  font-variation-settings: "wdth" 100;
+  animation: heartbeat 30s infinite;
 }
 #corporate-main::after {
   content: "";

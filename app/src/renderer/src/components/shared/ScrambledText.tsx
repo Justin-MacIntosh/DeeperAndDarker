@@ -17,12 +17,12 @@ const ScrambledText = ({targetText}: {targetText: string}) => {
   let [displayedText, setDisplayedText] = useState(
     scrambleString(targetText, [])
   );
-  let unsafeIndexes = useRef<number[]>(targetText.split('').map((_, idx) => idx));
   let safeIndexes = useRef<number[]>([]);
+  let unsafeIndexes = useRef<number[]>(targetText.split('').map((_, idx) => idx));
 
   const updateScrambleState = (unscrambleIntervalId: NodeJS.Timeout) => {
     const nextSafeIndex: number = unsafeIndexes.current[Math.floor(Math.random() * unsafeIndexes.current.length)];
-    safeIndexes.current = [ ...safeIndexes.current, nextSafeIndex ];
+    safeIndexes.current = [ ...safeIndexes.current, nextSafeIndex];
     unsafeIndexes.current = unsafeIndexes.current.filter((idx) => idx !== nextSafeIndex);
 
     setDisplayedText(scrambleString(targetText, safeIndexes.current));
@@ -34,11 +34,15 @@ const ScrambledText = ({targetText}: {targetText: string}) => {
   }
 
   useEffect(() => {
+    setDisplayedText(scrambleString(targetText, []));
+    safeIndexes.current = [];
+    unsafeIndexes.current = targetText.split('').map((_, idx) => idx);
+
     const unscrambleIntervalId = setInterval(() => {
       updateScrambleState(unscrambleIntervalId);
-    }, 80);
+    }, 150);
     return () => clearInterval(unscrambleIntervalId);
-  }, []);
+  }, [targetText]);
 
   return <>{displayedText}</>;
 }
