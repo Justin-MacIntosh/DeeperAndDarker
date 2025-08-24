@@ -1,9 +1,9 @@
-import './corporate-style.css';
-
-import { useEffect, useState } from 'react';
+import React, { memo, ReactNode, useEffect, useState } from 'react';
+import { motion } from "motion/react";
 
 import ScrambledText from '../shared/ScrambledText';
-import { motion } from "motion/react";
+
+import './corporate-style.css';
 
 const CompanyMessage = ({ key, children }: { key: string, children: React.ReactNode }) => {
   return (
@@ -35,61 +35,87 @@ const UserMessage = ({ key, children }: { key: string, children: React.ReactNode
   );
 }
 
+const Fakeout = memo((
+  { fakeoutElement, fakeoutMilliseconds, realElement }:
+  { fakeoutElement: ReactNode, fakeoutMilliseconds: number, realElement: ReactNode}
+) => {
+  const [fakingOut, setFakingOut] = useState(true);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setFakingOut(false);
+    }, fakeoutMilliseconds);
+
+    return () => clearTimeout(timeoutId);
+  }, []);
+
+  if (fakingOut) {
+    return fakeoutElement;
+  }
+  return realElement;
+});
+
 const messageArray = [
   <CompanyMessage key="message1">
-    Greetings, <ScrambledText targetText='trusted partner'/>!
+    Greetings, <ScrambledText targetText="trusted partner" />!
   </CompanyMessage>,
   <CompanyMessage key="message2">
-    How are things going with the <ScrambledText targetText='Braxios System'/>?
+    How are things going with the <ScrambledText targetText="Braxios System" />?
   </CompanyMessage>,
-  <UserMessage key="message3">
-    Running into resistance.
-  </UserMessage>,
+  <UserMessage key="message3">Running into resistance.</UserMessage>,
   <CompanyMessage key="message4">
     Oh no! This must be amended immediately.
   </CompanyMessage>,
   <CompanyMessage key="message5">
-    <ScrambledText targetText='Entrepreneur satisfaction'/> is a highly valued Key Performance Indicator.
+    <ScrambledText targetText="Entrepreneur satisfaction" /> is a highly valued
+    Key Performance Indicator.
   </CompanyMessage>,
-  <CompanyMessage key="message6">
-    What seems to be the issue?
-  </CompanyMessage>,
-  <UserMessage key="message7">
-    Dangerous local wildlife.
-  </UserMessage>,
+  <CompanyMessage key="message6">What seems to be the issue?</CompanyMessage>,
+  <UserMessage key="message7">Dangerous local wildlife.</UserMessage>,
   <CompanyMessage key="message8">
-    Oh, so you're having trouble with <ScrambledText targetText='dangerous local wildlife'/>!
+    Oh, so you're having trouble with{" "}
+    <ScrambledText targetText="dangerous local wildlife" />!
   </CompanyMessage>,
-  <CompanyMessage key="message9">
-    We have a solution for that!
-  </CompanyMessage>,
+  <CompanyMessage key="message9">We have a solution for that!</CompanyMessage>,
   <CompanyMessage key="message10">
-    We are deploying <ScrambledText targetText='1 Aspector Missile Platform'/> to the <ScrambledText targetText='Braxios System'/> now!
+    We are deploying <ScrambledText targetText="1 Aspector Missile Platform" />{" "}
+    to the <ScrambledText targetText="Braxios System" /> now!
   </CompanyMessage>,
   <CompanyMessage key="message11">
-    If this solves your problem, mentioning it in your quarterly satsifaction survey goes a long way!
+    If this solves your problem, mentioning it in your quarterly satsifaction
+    survey goes a long way!
   </CompanyMessage>,
-  <UserMessage key="message12">
-    No further assistance needed.
-  </UserMessage>,
+  <UserMessage key="message12">No further assistance needed.</UserMessage>,
   <CompanyMessage key="message13">
-    Of course <ScrambledText targetText='Entrepreneur-10397'/>, your satifaction is our priority!
+    Of course <ScrambledText targetText="Entrepreneur-10397" />, your
+    satifaction is our priority!
   </CompanyMessage>,
   <CompanyMessage key="message14">
-    Good luck with the <ScrambledText targetText='colonization'/> the <ScrambledText targetText='the Braxios System'/>!
-  </CompanyMessage>
+    Good luck with {" "}
+    <Fakeout
+      fakeoutElement="%ENTREPRENEUR_REASON%"
+      fakeoutMilliseconds={1750}
+      realElement={
+        <ScrambledText targetText={"colonization"} scrambleMilliseconds={75} />
+      }
+    />{" "}
+    of <ScrambledText targetText="the Braxios System" />!
+  </CompanyMessage>,
 ];
 
 
 const CorporateLayout = () => {
   const [messageIndexes, setMessageIndexes] = useState<number[]>([0]);
 
+  const messagesEndRef: React.RefObject<null | HTMLDivElement> = React.createRef();
+
   useEffect(() => {
     if (messageIndexes.length >= messageArray.length) return;
 
     const interval = setInterval(() => {
       setMessageIndexes((prev) => [...prev, prev.length]);
-    }, 4000);
+      messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    }, 3000);
 
     return () => clearInterval(interval);
   }, [messageIndexes]);
@@ -106,7 +132,9 @@ const CorporateLayout = () => {
           absolute z-[2] top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2
            w-[900px] h-[800px] px-20 py-10 overflow-scroll no-scrollbar bg-gray-300"
       >
+        { /* Reverse the messages to have the div's focus be pinned at the bottom */ }
         <div className="my-32 flex flex-col-reverse justify-end w-full">
+          <div ref={messagesEndRef} /> {/* Dummy element at the bottom for scrolling */}
           {messageIndexes.map((index) => messageArray[index]).reverse()}
         </div>
       </div>

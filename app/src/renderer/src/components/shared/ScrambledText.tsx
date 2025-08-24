@@ -13,7 +13,7 @@ const scrambleString = (str: string, safeIndexes: number[]) => {
   return scrambled;
 }
 
-const ScrambledText = ({targetText}: {targetText: string}) => {
+const ScrambledText = ({targetText, scrambleMilliseconds = 125}: {targetText: string, scrambleMilliseconds?: number}) => {
   let [displayedText, setDisplayedText] = useState(
     scrambleString(targetText, [])
   );
@@ -40,7 +40,7 @@ const ScrambledText = ({targetText}: {targetText: string}) => {
 
     const unscrambleIntervalId = setInterval(() => {
       updateScrambleState(unscrambleIntervalId);
-    }, 150);
+    }, scrambleMilliseconds);
     return () => clearInterval(unscrambleIntervalId);
   }, [targetText]);
 
