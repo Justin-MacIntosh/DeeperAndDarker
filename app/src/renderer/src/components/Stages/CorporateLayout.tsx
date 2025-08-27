@@ -1,5 +1,7 @@
 import React, { memo, ReactNode, useEffect, useState } from 'react';
+
 import { motion } from "motion/react";
+import { Howl } from 'howler';
 
 import ScrambledText from '../shared/ScrambledText';
 
@@ -103,11 +105,71 @@ const messageArray = [
   </CompanyMessage>,
 ];
 
-
 const CorporateLayout = () => {
-  const [messageIndexes, setMessageIndexes] = useState<number[]>([0]);
+  console.log("Rendering CorporateLayout");
+  const [messageIndexes, setMessageIndexes] = useState<number[]>([]);
 
   const messagesEndRef: React.RefObject<null | HTMLDivElement> = React.createRef();
+  
+  const buzzingSoundRef = React.useRef<Howl>(new Howl({
+    src: ['src/assets/audio/Fluorescent_Noise.m4a'],
+    volume: 0.01,
+    loop: true,
+    onfade: () => {
+      if (buzzingSoundRef.current.volume() === 0.0) {
+        buzzingSoundRef.current.unload();
+        console.log("unloaded buzzing sound");
+      }
+      console.log('Faded!');
+    }
+  }));
+  const caveSoundRef = React.useRef<Howl>(new Howl({
+    src: ['src/assets/audio/Cave_Sound.wav'],
+    volume: 0.01,
+    onfade: () => {
+      if (caveSoundRef.current.volume() === 0.0) {
+        caveSoundRef.current.unload();
+        console.log("unloaded cave sound");
+      }
+      console.log('Faded!');
+    }
+  }));
+
+  const popupSound = new Howl({
+    src: ['src/assets/audio/Popup_Open.mp3'],
+    volume: 0.1,
+  });
+
+  useEffect(() => {
+    console.log("useEffect for background sounds in CorporateLayout");
+    const initialCaveSoundTimeoutId = setTimeout(() => {
+      caveSoundRef.current.volume(0.0);
+      caveSoundRef.current.play();
+      caveSoundRef.current.fade(0.01, 0.2, 5000);
+      console.log(buzzingSoundRef.current.volume());
+    }, 2000);
+
+    const caveNoiseIntervalId = setInterval(() => {
+      caveSoundRef.current.volume(0.01);
+      caveSoundRef.current.play();
+      caveSoundRef.current.fade(0.01, 0.2, 5000);
+    }, 50000);
+
+    buzzingSoundRef.current.play();
+    buzzingSoundRef.current.fade(0.01, 0.4, 5000);
+
+    return () => {
+      clearTimeout(initialCaveSoundTimeoutId);
+      clearInterval(caveNoiseIntervalId);
+      if (buzzingSoundRef.current.playing()) {
+        buzzingSoundRef.current.fade(buzzingSoundRef.current.volume(), 0.0, 3000);
+      }
+      if (caveSoundRef.current.playing()) {
+        caveSoundRef.current.fade(caveSoundRef.current.volume(), 0.0, 3000);
+      }
+      console.log("when does this happen?");
+    };
+  }, []);
 
   useEffect(() => {
     if (messageIndexes.length >= messageArray.length) return;
@@ -115,7 +177,8 @@ const CorporateLayout = () => {
     const interval = setInterval(() => {
       setMessageIndexes((prev) => [...prev, prev.length]);
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-    }, 3000);
+      popupSound.play();
+    }, 4000);
 
     return () => clearInterval(interval);
   }, [messageIndexes]);

@@ -1,72 +1,80 @@
-import { memo } from 'react';
+import { useContext } from 'react';
 import { AnimatePresence, motion } from "motion/react"
 
-import ResourceIcon from '../icons/ResourceIcon';
 import SidebarCard from './Card';
+import ResourceIcon from '../icons/ResourceIcon';
+import TablerIconDisplay from '../icons/TablerIconDisplay';
 
 import { Unlockable } from '../../game_state/types';
 import { useGameStore } from '../../game_state/GameStore';
 import { formatNumber } from '../../number_helpers/formatNumber';
-import TablerIconDisplay from '../icons/TablerIconDisplay';
+import { CommonSoundsContext } from "../../audio/CommonSoundsContext";
 
 
-const UnlockCard = memo(
-  (props: { unlockId: string; stageId: string; optionalCallback?: () => void }) => {
-    // Actions and state from the game store
-    const unlock: Unlockable = useGameStore(
-      (state) => state.stages[props.stageId].unlocks[props.unlockId]
-    );
-    const unlockIsActive = useGameStore(
-      (state) => state.stages[props.stageId].unlocks[props.unlockId].dynamic.isActive
-    );
-    const purchaseUnlockAction = useGameStore((state) => state.purchaseUnlock);
+const UnlockCard = (
+  props: { unlockId: string; stageId: string; optionalCallback?: () => void }
+) => {
+  // Actions and state from the game store
+  const unlock: Unlockable = useGameStore(
+    (state) => state.stages[props.stageId].unlocks[props.unlockId]
+  );
+  const unlockIsActive = useGameStore(
+    (state) => state.stages[props.stageId].unlocks[props.unlockId].dynamic.isActive
+  );
+  const purchaseUnlockAction = useGameStore((state) => state.purchaseUnlock);
 
-    // Get the current amount of the resource required to purchase this producer
-    const relevantResource = unlock.static.purchaseResource;
-    const currentRelevantResources: bigint = useGameStore(
-      (state) => state.resources[relevantResource].currentAmount
-    );
-
-    // Calculate the cost and number of producers to purchase
-    const currentCostStr: string = formatNumber(unlock.static.cost);
-    return (
-      <AnimatePresence initial={false}>
-        {
-          unlockIsActive &&
-          <motion.div
-            transition={{ duration: .8 }}
-            initial={{ opacity: 0, scale: 0, height: 0 }}
-            animate={{ opacity: 1, scale: 1, height: "111px", transition: { duration: .8 } }}
-            exit={{ opacity: 0, scale: 0, height: 0, margin: 0, transition: { duration: .8 } }}
-            className='[&:not(:last-child)]:mb-5 origin-top'
-          >
-            <div className="text-lg flex flex-row mb-2">
-              <h2 className="uppercase flex-1">
-                {unlock.static.name}
-              </h2>
-            </div>
-            <SidebarCard
-              color={unlock.static.color as any}
-              icon={
-                <TablerIconDisplay icon={unlock.static.iconOption} size={55} />
-              }
-              contentElement={<>{unlock.static.description}</>}
-              suffixElement={
-                <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
-              }
-              onClick={() => {
-                purchaseUnlockAction(props.stageId, props.unlockId);
-                if (props.optionalCallback) {
-                  props.optionalCallback();
-                }
-              }}
-              isClickDisabled={unlock.static.cost > currentRelevantResources}
-            />
-          </motion.div>
-        }
-      </AnimatePresence>
-    );
+  const commonSounds = useContext(CommonSoundsContext);
+  const pressButton = () => {
+    commonSounds.buttonPress.play();
+    purchaseUnlockAction(props.stageId, props.unlockId);
   }
-);
+
+  // Get the current amount of the resource required to purchase this producer
+  const relevantResource = unlock.static.purchaseResource;
+  const currentRelevantResources: bigint = useGameStore(
+    (state) => state.resources[relevantResource].currentAmount
+  );
+
+  const isClickDisabled = unlock.static.cost > currentRelevantResources;
+
+  // Calculate the cost and number of producers to purchase
+  const currentCostStr: string = formatNumber(unlock.static.cost);
+  return (
+    <AnimatePresence initial={false}>
+      {
+        unlockIsActive &&
+        <motion.div
+          transition={{ duration: .8 }}
+          initial={{ opacity: 0, scale: 0, height: 0 }}
+          animate={{ opacity: 1, scale: 1, height: "111px", transition: { duration: .8 } }}
+          exit={{ opacity: 0, scale: 0, height: 0, margin: 0, transition: { duration: .8 } }}
+          className='[&:not(:last-child)]:mb-5 origin-top'
+        >
+          <div className="text-lg flex flex-row mb-2">
+            <h2 className="uppercase flex-1">{unlock.static.name}</h2>
+          </div>
+          <SidebarCard
+            color={unlock.static.color as any}
+            icon={<TablerIconDisplay icon={unlock.static.iconOption} size={55} />}
+            contentElement={<>{unlock.static.description}</>}
+            suffixElement={
+              <span>{currentCostStr}<ResourceIcon resource={unlock.static.purchaseResource} size={18} /></span>
+            }
+            onClick={() => {
+              if (isClickDisabled) {
+                return;
+              }
+              pressButton();
+              if (props.optionalCallback) {
+                props.optionalCallback();
+              }
+            }}
+            isClickDisabled={isClickDisabled}
+          />
+        </motion.div>
+      }
+    </AnimatePresence>
+  );
+};
 
 export default UnlockCard;

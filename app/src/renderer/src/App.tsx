@@ -53,20 +53,25 @@ const App = () => {
   const { saveCurrentGameData } = useSaveStateToLocalStorage();
 
   useEffect(() => {
-    document.addEventListener("mousemove", graphicManip);
+    document.addEventListener("mousemove", adjustMouseAffectedBgs);
 
-    function graphicManip(e: MouseEvent) {
-      const elems = document.getElementsByClassName("mouse-affected-bg");
-      if (!elems.length) return;
-      const elem = elems[0] as HTMLElement;
+    function adjustMouseAffectedBgs(e: MouseEvent) {
+      const mouseAffectedBgs = document.getElementsByClassName("mouse-affected-bg");
+      if (!mouseAffectedBgs.length) {
+        return;
+      }
 
-      let _w = window.innerWidth/2;
-      let _h = window.innerHeight/2;
-      let _mouseX = e.clientX;
-      let _mouseY = e.clientY;
-      let _depth3 = `${50 - (_mouseX - _w) * 0.002}% ${50 - (_mouseY - _h) * 0.002}%`;
-      let x = `${_depth3}`;
-      elem.style.backgroundPosition = x;
+      const windowHalfWidth = window.innerWidth / 2;
+      const windowHalfheight = window.innerHeight/2;
+      const mouseX = e.clientX;
+      const mouseY = e.clientY;
+
+      const finalXPercent = 50 - (mouseX - windowHalfWidth) * 0.001;
+      const finalYPercent = 50 - (mouseY - windowHalfheight) * 0.001;
+      let positionString = `${finalXPercent}% ${finalYPercent}%`;
+
+      const background = mouseAffectedBgs[0] as HTMLElement;
+      background.style.backgroundPosition = `${positionString}`;
     }
   }, []);
 
@@ -83,13 +88,15 @@ const App = () => {
       <GlobalDrawer />
       {/* <OfflineEarningsDialog/> */}
 
-      <CorporateLayout />
-      {/* <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
+      <Fade show={currentStage === "corporate_convo_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
+        <CorporateLayout />
+      </Fade>
+      <Fade show={currentStage === "stage_1"} onShowCallback={() => {document.body.setAttribute("data-theme", "deep-space");}}>
         <BraxiosLayout saveCurrentGameData={saveCurrentGameData} key="deep-space" />
       </Fade>
       <Fade show={currentStage === "stage_2"} onShowCallback={() => {document.body.setAttribute("data-theme", "planet-yan");}}>
         <YanLayout saveCurrentGameData={saveCurrentGameData} key="planet-yan" />
-      </Fade> */}
+      </Fade>
     </div>
   );
 }

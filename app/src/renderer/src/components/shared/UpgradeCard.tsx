@@ -1,4 +1,5 @@
-import { AnimatePresence, motion } from "motion/react"
+import { useContext } from "react";
+import { motion } from "motion/react"
 import { clsx } from "clsx"
 
 import { useGameStore } from '../../game_state/GameStore';
@@ -6,6 +7,7 @@ import TablerIconDisplay from '../icons/TablerIconDisplay';
 import ResourceIcon from '../icons/ResourceIcon';
 import { formatNumber } from '../../number_helpers/formatNumber';
 import { multiplyBigIntByNumber } from "../../number_helpers/bigIntUtils";
+import { CommonSoundsContext } from "../../audio/CommonSoundsContext";
 
 
 const upgradeCardVariant = {
@@ -24,6 +26,12 @@ export const UpgradeCard = (
   const purchaseUpgradeAction = useGameStore(
     (state) => state.purchaseUpgrade
   );
+
+  const commonSounds = useContext(CommonSoundsContext);
+  const pressButton = () => {
+    commonSounds.buttonPress.play();
+    purchaseUpgradeAction(stageId, upgradeId);
+  }
 
   const relevantResource = upgrade.static.purchaseResource;
   const resourceAmount = useGameStore(
@@ -57,7 +65,7 @@ export const UpgradeCard = (
         )}
         onClick={() => {
           if (!isClickDisabled) {
-            purchaseUpgradeAction(stageId, upgradeId);
+            pressButton();
           }
         }}
       >

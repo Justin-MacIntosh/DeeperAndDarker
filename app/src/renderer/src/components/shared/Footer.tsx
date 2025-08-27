@@ -1,5 +1,8 @@
+import { useContext } from 'react';
+
 import { useGameStore } from '../../game_state/GameStore';
 import SettingsButton from '../global/SettingsButton';
+import { CommonSoundsContext } from '../../audio/CommonSoundsContext';
 
 /* 
  * Footer component displays the footer with save and reset buttons,
@@ -8,12 +11,18 @@ import SettingsButton from '../global/SettingsButton';
 const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => {
   console.log("Footer render");
 
+  const commonSounds = useContext(CommonSoundsContext);
+  const pressButton = () => {
+    commonSounds.buttonPress.play();
+    saveCurrentGameData();
+  }
+
   return (
     <footer className="py-5 mx-8 flex content-center">
       <div className="flex-1"></div>
       <div className="min-w-[400px] text-right">
         <LastDateTimeSavedDisplay />
-        <button className="btn-default bg-primary mr-3" onClick={saveCurrentGameData}>Save</button>
+        <button className="btn-default bg-primary mr-3" onClick={pressButton}>Save</button>
         <SettingsButton />
       </div>
     </footer>
@@ -22,7 +31,6 @@ const Footer = ({ saveCurrentGameData }: { saveCurrentGameData: () => void}) => 
 
 /* LastDateTimeSavedDisplay component displays the last date and time the game was saved. */
 const LastDateTimeSavedDisplay = () => {
-  console.log("LastDateTimeSavedDisplay render");
 
   const timeSaved = useGameStore((state) => state.lastTimeSaved);
   if (!timeSaved) {

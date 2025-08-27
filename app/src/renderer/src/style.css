@@ -29,14 +29,14 @@
   background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('./assets/img/Deep_Space_Bg.png');
   background-position: center;
   background-repeat: no-repeat;
-  /* filter: brightness(0.8); */
+  background-size: 180%;
 }
 
 #planet-yan-main {
   background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.3)), url('./assets/img/Planet_Yan_Bg.png');
   background-position: center;
   background-repeat: no-repeat;
-  /* filter: brightness(0.8); */
+  background-size: 180%;
 }
 
 @layer base {
@@ -148,6 +148,7 @@ body {
   font-style: normal;
   font-variation-settings: "wdth" 100;
   animation: heartbeat 30s infinite;
+  filter: blur(0);
 }
 #corporate-main::after {
   content: "";

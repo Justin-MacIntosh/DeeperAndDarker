@@ -1,4 +1,4 @@
-import { memo } from 'react';
+import { useContext } from 'react';
 
 import { motion } from "motion/react"
 
@@ -13,6 +13,7 @@ import {
   calculateMaxPossiblePurchase,
 } from '../../game_state/state_helpers/producerHelpers';
 import TablerIconDisplay from '../icons/TablerIconDisplay';
+import { CommonSoundsContext } from '../../audio/CommonSoundsContext';
 
 type PurchaseAmount = 1 | 5 | 10 | 'Max';
 
@@ -29,6 +30,12 @@ export const ProducerCard = (props: { producerId: string; stageId: string; numTo
     (state) => state.stages[props.stageId].producers[props.producerId]
   );
   const purchaseProducerAction = useGameStore((state) => state.purchaseProducer)
+
+  const commonSounds = useContext(CommonSoundsContext);
+  const pressButton = () => {
+    commonSounds.buttonPress.play();
+    purchaseProducerAction(props.stageId, props.producerId, numToPurchase);
+  }
 
   // Get the current amount of the resource required to purchase this producer
   const relevantResource = producer.static.purchaseResource;
@@ -58,6 +65,8 @@ export const ProducerCard = (props: { producerId: string; stageId: string; numTo
   if (currentCost > currentRelevantResources) {
     amountToPurchaseDisplay = "0";
   }
+
+  const isClickDisabled = currentCost > currentRelevantResources;
   return (
     <motion.div
       key={props.stageId + " " + props.producerId}
@@ -83,9 +92,11 @@ export const ProducerCard = (props: { producerId: string; stageId: string; numTo
           <>{formatNumber(currentCost)}<ResourceIcon resource={producer.static.purchaseResource} size={18} /></>
         }
         onClick={() => {
-          purchaseProducerAction(props.stageId, props.producerId, numToPurchase)
+          if (!isClickDisabled) {
+            pressButton();
+          }
         }}
-        isClickDisabled={currentCost > currentRelevantResources}
+        isClickDisabled={isClickDisabled}
       />
     </motion.div>
   );

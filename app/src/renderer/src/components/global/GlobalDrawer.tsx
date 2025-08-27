@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-
 import Drawer from 'react-modern-drawer'
 import { useShallow } from 'zustand/react/shallow';
 
@@ -9,8 +8,6 @@ import { useGameStore } from '../../game_state/GameStore';
 
 // GlobalDrawer component that provides a navigation drawer for stage selection
 const GlobalDrawer = () => {
-  const setCurrentStage = useGameStore((state) => state.setCurrentStage);
-
   const stageIds = useGameStore(
     useShallow((state) => Object.keys(state.stages))
   );
@@ -49,9 +46,12 @@ const GlobalDrawer = () => {
             <StageSelectButton
               key={stageId}
               stageId={stageId}
-              setCurrentStage={setCurrentStage}
             />
           ))}
+          <CorporateButton
+            key={"corporate_convo_1"}
+            stageId={"corporate_convo_1"}
+          />
         </div>
         <button className="cursor-default fixed top-[120px] left-[200px] z-20 w-2 bg-gray-300 h-20 rounded-r-xl border-gray-500 border-r-solid border-r-[3px]" />
       </Drawer>
@@ -65,10 +65,9 @@ const GlobalDrawer = () => {
 }
 
 // StageSelectButton component that renders a button for navigating to each stage
-const StageSelectButton = (
-  { stageId, setCurrentStage }:
-  { stageId: string; setCurrentStage: (stageId: string) => void }
-) => {
+const StageSelectButton = ({ stageId }: { stageId: string }) => {
+  const setCurrentStage = useGameStore((state) => state.setCurrentStage);
+
   const stageName = useGameStore(
     (state) => state.stages[stageId].name
   );
@@ -89,6 +88,19 @@ const StageSelectButton = (
       {stageName}
     </button>
   );
+}
+
+const CorporateButton = ({ stageId }: { stageId: string }) => {
+  const setCurrentStage = useGameStore((state) => state.setCurrentStage);
+
+  return (
+    <button
+      className="btn-default bg-gray-600 mb-5"
+      onClick={() => { setCurrentStage(stageId); }}
+    >
+      Corporate
+    </button>
+  )
 }
 
 export default GlobalDrawer;
