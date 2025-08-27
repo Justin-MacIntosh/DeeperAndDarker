@@ -117,10 +117,9 @@ const CorporateLayout = () => {
     loop: true,
     onfade: () => {
       if (buzzingSoundRef.current.volume() === 0.0) {
+        // Unload the sound after a fade out to free up resources
         buzzingSoundRef.current.unload();
-        console.log("unloaded buzzing sound");
       }
-      console.log('Faded!');
     }
   }));
   const caveSoundRef = React.useRef<Howl>(new Howl({
@@ -128,46 +127,51 @@ const CorporateLayout = () => {
     volume: 0.01,
     onfade: () => {
       if (caveSoundRef.current.volume() === 0.0) {
+        // Unload the sound after a fade out to free up resources
         caveSoundRef.current.unload();
-        console.log("unloaded cave sound");
       }
-      console.log('Faded!');
     }
   }));
 
-  const popupSound = new Howl({
+  const popupSoundRef = React.useRef<Howl>(new Howl({
     src: ['src/assets/audio/Popup_Open.mp3'],
     volume: 0.1,
-  });
+  }));
+
+  const playCaveSound = () => {
+    caveSoundRef.current.volume(0.0);
+    caveSoundRef.current.play();
+    caveSoundRef.current.fade(0.01, 0.2, 5000);
+  }
 
   useEffect(() => {
-    console.log("useEffect for background sounds in CorporateLayout");
+    // Start the cave sound after a short delay,
+    // then repeat every 50 seconds for a weird ambient effect
     const initialCaveSoundTimeoutId = setTimeout(() => {
-      caveSoundRef.current.volume(0.0);
-      caveSoundRef.current.play();
-      caveSoundRef.current.fade(0.01, 0.2, 5000);
+      playCaveSound();
       console.log(buzzingSoundRef.current.volume());
     }, 2000);
-
     const caveNoiseIntervalId = setInterval(() => {
-      caveSoundRef.current.volume(0.01);
-      caveSoundRef.current.play();
-      caveSoundRef.current.fade(0.01, 0.2, 5000);
+      playCaveSound();
     }, 50000);
 
+    // Start the buzzing sound immediately
+    buzzingSoundRef.current.volume(0.0);
     buzzingSoundRef.current.play();
     buzzingSoundRef.current.fade(0.01, 0.4, 5000);
 
     return () => {
+      // Clean up the timeouts and intervals
       clearTimeout(initialCaveSoundTimeoutId);
       clearInterval(caveNoiseIntervalId);
+
+      // Fade out and unload the sounds when the component unmounts
       if (buzzingSoundRef.current.playing()) {
         buzzingSoundRef.current.fade(buzzingSoundRef.current.volume(), 0.0, 3000);
       }
       if (caveSoundRef.current.playing()) {
         caveSoundRef.current.fade(caveSoundRef.current.volume(), 0.0, 3000);
       }
-      console.log("when does this happen?");
     };
   }, []);
 
@@ -177,7 +181,7 @@ const CorporateLayout = () => {
     const interval = setInterval(() => {
       setMessageIndexes((prev) => [...prev, prev.length]);
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      popupSound.play();
+      popupSoundRef.current.play();
     }, 4000);
 
     return () => clearInterval(interval);
