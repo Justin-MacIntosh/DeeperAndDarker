@@ -13,7 +13,20 @@ import ProducerCard from '../shared/ProducerCard';
 import UpgradeCard from '../shared/UpgradeCard';
 import UnlockCard from '../shared/UnlockCard';
 import ResourceContainer from '../shared/ResourceContainer';
+import { useBackgroundMusic, BackgroundMusicConfig } from '../../hooks/useBackgroundMusic';
 
+
+const DEEP_SPACE_BG_MUCIC_CONFIG: BackgroundMusicConfig = {
+  sounds: [
+    {
+      soundPath: 'src/assets/audio/DeepSpace_Bg.mp3',
+      loop: true,
+      targetVolume: 0.4,
+      startPosition: 7.5,
+      fadeInDuration: 5000,
+    }
+  ]
+};
 
 const stageSelectionTutorialSteps = [
   {
@@ -47,6 +60,8 @@ const BraxiosLayout = ({
   saveCurrentGameData: () => void;
 }) => {
   const [showStage2Tutorial, setShowStage2Tutorial] = useState(false);
+
+  useBackgroundMusic(DEEP_SPACE_BG_MUCIC_CONFIG);
 
   return (
     <main

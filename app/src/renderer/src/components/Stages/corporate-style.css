@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 @layer components {
-  .corporate-container {
+  .corporate-message {
     @apply text-gray-800 px-6 py-4 font-bold select-none bg-gray-300 mb-9;
   }
 }
@@ -25,7 +25,7 @@
     inset 10px 0px 15px #eee;
 }
 
-.corporate-container {
+.corporate-message {
   border-radius: 20px;
   /* border-radius: 0px 20px 20px 20px; */
   background: linear-gradient(145deg, #bcc0c5, #e0e4ea);
@@ -36,6 +36,6 @@
   border-radius: 20px 20px 0px 20px;
 } */
 
-.corporate-container:hover {
+.corporate-message:hover {
   transform: scale(1.1);
 }

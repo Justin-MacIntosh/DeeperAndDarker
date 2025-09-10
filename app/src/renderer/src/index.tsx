@@ -9,5 +9,5 @@ createRoot(document.getElementById('root')!).render(
     <CommonSoundsContext.Provider value={COMMON_SOUNDS}>
       <App/>
     </CommonSoundsContext.Provider>
-  </StrictMode>,
+  </StrictMode>
 );

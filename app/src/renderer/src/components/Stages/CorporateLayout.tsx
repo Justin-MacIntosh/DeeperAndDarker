@@ -1,18 +1,43 @@
-import React, { memo, ReactNode, useEffect, useState } from 'react';
+import React, { memo, ReactNode, useContext, useEffect, useState } from 'react';
 
 import { motion } from "motion/react";
 import { Howl } from 'howler';
 
+import { CommonSoundsContext } from '../../audio/CommonSoundsContext';
 import ScrambledText from '../shared/ScrambledText';
 
+import { useBackgroundMusic, BackgroundMusicConfig } from '../../hooks/useBackgroundMusic';
+
 import './corporate-style.css';
+
+const CORP_BG_MUCIC_CONFIG: BackgroundMusicConfig = {
+  sounds: [
+    {
+      soundPath: 'src/assets/audio/Corp_FluorescentNoise.m4a',
+      loop: true,
+      targetVolume: 0.4,
+      fadeInDuration: 5000,
+    },
+    {
+      soundPath: 'src/assets/audio/Corp_CaveSound.wav',
+      loop: false,
+      targetVolume: 0.2,
+      fadeInDuration: 10000,
+
+      // Repeat every 50 seconds
+      interval: {
+        intervalMilliseconds: 50000,
+      }
+    }
+  ]
+};
 
 const CompanyMessage = ({ key, children }: { key: string, children: React.ReactNode }) => {
   return (
     <motion.div
       key={key}
       style={{ originX: 0, originY: 0 }}
-      className='corporate-container self-start'
+      className='corporate-message self-start'
       initial={{ opacity: 1, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0 }}
@@ -27,7 +52,7 @@ const UserMessage = ({ key, children }: { key: string, children: React.ReactNode
     <motion.div
       key={key}
       style={{ originX: "100%", originY: 0 }}
-      className='corporate-container self-end'
+      className='corporate-message self-end'
       initial={{ opacity: 1, scale: 0 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.8, delay: 0 }}
@@ -110,70 +135,11 @@ const CorporateLayout = () => {
   const [messageIndexes, setMessageIndexes] = useState<number[]>([]);
 
   const messagesEndRef: React.RefObject<null | HTMLDivElement> = React.createRef();
-  
-  const buzzingSoundRef = React.useRef<Howl>(new Howl({
-    src: ['src/assets/audio/Fluorescent_Noise.m4a'],
-    volume: 0.01,
-    loop: true,
-    onfade: () => {
-      if (buzzingSoundRef.current.volume() === 0.0) {
-        // Unload the sound after a fade out to free up resources
-        buzzingSoundRef.current.unload();
-      }
-    }
-  }));
-  const caveSoundRef = React.useRef<Howl>(new Howl({
-    src: ['src/assets/audio/Cave_Sound.wav'],
-    volume: 0.01,
-    onfade: () => {
-      if (caveSoundRef.current.volume() === 0.0) {
-        // Unload the sound after a fade out to free up resources
-        caveSoundRef.current.unload();
-      }
-    }
-  }));
 
-  const popupSoundRef = React.useRef<Howl>(new Howl({
-    src: ['src/assets/audio/Popup_Open.mp3'],
-    volume: 0.1,
-  }));
+  // Set up background music using the custom hook
+  useBackgroundMusic(CORP_BG_MUCIC_CONFIG);
 
-  const playCaveSound = () => {
-    caveSoundRef.current.volume(0.0);
-    caveSoundRef.current.play();
-    caveSoundRef.current.fade(0.01, 0.2, 5000);
-  }
-
-  useEffect(() => {
-    // Start the cave sound after a short delay,
-    // then repeat every 50 seconds for a weird ambient effect
-    const initialCaveSoundTimeoutId = setTimeout(() => {
-      playCaveSound();
-      console.log(buzzingSoundRef.current.volume());
-    }, 2000);
-    const caveNoiseIntervalId = setInterval(() => {
-      playCaveSound();
-    }, 50000);
-
-    // Start the buzzing sound immediately
-    buzzingSoundRef.current.volume(0.0);
-    buzzingSoundRef.current.play();
-    buzzingSoundRef.current.fade(0.01, 0.4, 5000);
-
-    return () => {
-      // Clean up the timeouts and intervals
-      clearTimeout(initialCaveSoundTimeoutId);
-      clearInterval(caveNoiseIntervalId);
-
-      // Fade out and unload the sounds when the component unmounts
-      if (buzzingSoundRef.current.playing()) {
-        buzzingSoundRef.current.fade(buzzingSoundRef.current.volume(), 0.0, 3000);
-      }
-      if (caveSoundRef.current.playing()) {
-        caveSoundRef.current.fade(caveSoundRef.current.volume(), 0.0, 3000);
-      }
-    };
-  }, []);
+  const commonSounds = useContext(CommonSoundsContext);
 
   useEffect(() => {
     if (messageIndexes.length >= messageArray.length) return;
@@ -181,7 +147,7 @@ const CorporateLayout = () => {
     const interval = setInterval(() => {
       setMessageIndexes((prev) => [...prev, prev.length]);
       messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-      popupSoundRef.current.play();
+      commonSounds.popup.play();
     }, 4000);
 
     return () => clearInterval(interval);

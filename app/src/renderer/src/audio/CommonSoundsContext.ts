@@ -3,17 +3,22 @@ import { Howl } from 'howler';
 
 export type CommonSoundsContextType = {
   buttonPress: Howl;
+  popup: Howl;
 };
 
-const popupSound = new Howl({
-  src: ['src/assets/audio/Button_Press.mp3'],
-  onend: () => {
-    console.log('Sound finished playing!');
-  },
+
+const popupSoundRef = new Howl({
+  src: ['src/assets/audio/common/Popup_Open.mp3'],
+  volume: 0.1,
+});
+
+const buttonPressSound = new Howl({
+  src: ['src/assets/audio/common/Button_Press.mp3'],
   volume: 0.1,
 });
 export const COMMON_SOUNDS: CommonSoundsContextType = {
-  buttonPress: popupSound,
+  buttonPress: buttonPressSound,
+  popup: popupSoundRef,
 };
 
 export const CommonSoundsContext = createContext<CommonSoundsContextType>(COMMON_SOUNDS);
